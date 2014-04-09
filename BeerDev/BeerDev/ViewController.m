@@ -10,7 +10,7 @@
 
 @interface ViewController (){
     //declare variables here to be global thru this class
-    
+
 }
 
 @end
