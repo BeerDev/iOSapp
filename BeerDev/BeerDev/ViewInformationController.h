@@ -14,4 +14,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *pris;
 @property (weak, nonatomic) IBOutlet UILabel *info;
 
+
+
 @end

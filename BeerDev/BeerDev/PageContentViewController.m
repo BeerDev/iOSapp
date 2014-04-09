@@ -33,6 +33,9 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
     
+    
+
+    
     JsonDataArray = [jsonData GetArray];
 
     // Do any additional setup after loading the view.
@@ -101,8 +104,13 @@
 
 #pragma mark - Gesture Recognizer functions
 - (IBAction)SetInformationView:(id)sender {
+    
+    if(_informationIsShowing == NO){
     NSLog(@"adding informationView");
+
+    }
 }
+
 
 /*
 #pragma mark - Navigation

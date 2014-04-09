@@ -12,10 +12,12 @@
 
 @interface PageContentViewController : UIViewController
 
-@property (strong, nonatomic) UIViewController * PageContentViewController;
-@property (weak, nonatomic) IBOutlet UIImageView *displayImage;
+@property (strong, nonatomic) UIViewController * ViewInformationController;
+
+@property (strong, nonatomic) IBOutlet UIImageView *displayImage;
 @property (weak, nonatomic) IBOutlet UILabel *artikelnamnLabel;
 @property NSUInteger pageIndex;
+@property BOOL informationIsShowing;
 
 
 //connection functions from NSURLConnection. 
