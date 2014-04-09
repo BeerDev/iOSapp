@@ -26,6 +26,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    
+    
+    //här tar vi emot alla värden som ska visar. Dessa ställs in i pagecontentcontroller klassen när man "swipar" uppåt.
+    self.artikelnamn.text = _name;
+    self.pris.text = [[NSString alloc]initWithFormat:@"%@ SEK", _SEK];
+    self.info.text = _information;
+    
     // Do any additional setup after loading the view.
 }
 
@@ -34,6 +43,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 /*
 #pragma mark - Navigation

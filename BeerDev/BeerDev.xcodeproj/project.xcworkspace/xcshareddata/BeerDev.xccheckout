@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>86B96C97-4CD4-4EF1-B8D0-03FD798610D9</string>
+	<string>7783ED8E-1EB7-49C3-8CBA-1EF4827B20A1</string>
 	<key>IDESourceControlProjectName</key>
 	<string>BeerDev</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>2B145506-5F47-4850-B656-5E447B19F894</key>
-		<string>https://github.com/BeerDev/IOSapp.git</string>
+		<key>DBD32B7D-96CA-4885-9BED-976CFC18D8EE</key>
+		<string>https://github.com/BeerDev/iOSapp.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>BeerDev/BeerDev.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>2B145506-5F47-4850-B656-5E447B19F894</key>
+		<key>DBD32B7D-96CA-4885-9BED-976CFC18D8EE</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/BeerDev/IOSapp.git</string>
+	<string>https://github.com/BeerDev/iOSapp.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>2B145506-5F47-4850-B656-5E447B19F894</string>
+	<string>DBD32B7D-96CA-4885-9BED-976CFC18D8EE</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2B145506-5F47-4850-B656-5E447B19F894</string>
+			<string>DBD32B7D-96CA-4885-9BED-976CFC18D8EE</string>
 			<key>IDESourceControlWCCName</key>
-			<string>cache</string>
+			<string>iOSapp</string>
 		</dict>
 	</array>
 </dict>

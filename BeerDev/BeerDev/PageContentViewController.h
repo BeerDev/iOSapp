@@ -8,14 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "jsonData.h"
-#import "PageContentViewController.h"
+#import "ViewInformationController.h"
+
+
+
 
 @interface PageContentViewController : UIViewController
 
-@property (strong, nonatomic) UIViewController * ViewInformationController;
-
 @property (strong, nonatomic) IBOutlet UIImageView *displayImage;
 @property (weak, nonatomic) IBOutlet UILabel *artikelnamnLabel;
+@property (strong, nonatomic) ViewInformationController* InformationController;
+//
 @property NSUInteger pageIndex;
 @property BOOL informationIsShowing;
 
