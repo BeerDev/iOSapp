@@ -26,18 +26,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    //anropa funktioner här
     // Do any additional setup after loading the view.
 }
-- (IBAction)MailButton:(id)sender
-{
-    
-    NSString *recipients = @"mailto:beerdev@gmail.com?cc=second@example.com&subject=BeerDev Application";
-    
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:recipients]];
-    
-}
+
 
 
 @end
