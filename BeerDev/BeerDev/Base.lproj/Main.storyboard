@@ -50,13 +50,13 @@
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="29" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="262" translatesAutoresizingMaskIntoConstraints="NO" id="Uec-XD-ddb">
                                 <rect key="frame" x="29" y="121" width="262" height="335"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <mutableString key="text">Denna applikation hjälper dig att få en överblick över ölutbudet i Kistan. Kistan är INsektionens sektionslokal på KTH Campus Kista. 
+                                <string key="text">Denna applikation hjälper dig att få en överblick över ölutbudet i Kistan. Kistan är INsektionens sektionslokal på KTH Campus Kista. 
 
 Applikation är skapad av BeerDev, en projektgrupp bestående av 9 KTH studenter. Vi skapade denna applikation i en IT-projektkurs under våren 2014. Vi har arbetat med detta projekt under 5 veckor och har skapat en applikation anpassad för iOS och en för Andriod.
 
 Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, Jesper Nowak, Lina Poon, Christopher State, Patrik Stigeborn, Emma Ström,  Jonathan Strömgren.
 
-*Observera att alla priser gälller medlemmar i INsektionen. </mutableString>
+*Observera att alla priser gälller medlemmar i INsektionen. </string>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
