@@ -11,6 +11,7 @@
 @implementation jsonData
 
 static NSMutableArray* JSONARRAY = nil;
+static bool InfoBOOL;
 
 //@synthesize jsonObjects = _jsonObjects;
 
@@ -55,8 +56,15 @@ static NSMutableArray* JSONARRAY = nil;
 }
 
 +(void)CacheThoseImages{
+    
+}
 
++(void)SetBOOL:(BOOL)yesOrNo{
+    InfoBOOL = yesOrNo;
+}
 
++(BOOL)GetBOOL{
+    return InfoBOOL;
 }
 
 @end
