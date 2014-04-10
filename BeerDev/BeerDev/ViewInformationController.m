@@ -23,17 +23,23 @@
     return self;
 }
 
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    
     
     
     //här tar vi emot alla värden som ska visar. Dessa ställs in i pagecontentcontroller klassen när man "swipar" uppåt.
     self.artikelnamn.text = _name;
-    self.pris.text = [[NSString alloc]initWithFormat:@"%@ SEK", _SEK];
+    self.pris.text = [[NSString alloc]initWithFormat:@"%@ kr*", _SEK];
     self.info.text = _information;
+    self.proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", _pro];
+    self.sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ cl", _size];
     
     // Do any additional setup after loading the view.
 }
