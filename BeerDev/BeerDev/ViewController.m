@@ -51,11 +51,6 @@
     return UIStatusBarStyleLightContent;
 }
 
-- (IBAction)swipeDown:(id)sender {
-    
-    NSLog(@"hej du har swipat uppåt");
-}
-
 #pragma mark PageViewController 
 - (PageContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
@@ -92,6 +87,7 @@
     if (index == [[jsonData GetArray] count]-1) {
         return nil;
     }
+  
     return [self viewControllerAtIndex:index];
 }
 
