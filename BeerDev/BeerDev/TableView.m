@@ -75,7 +75,7 @@
     
     //ställ in texten i cellen
     cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
-    cell.imageView.image =image;
+    cell.imageView.image = image;
     return cell;
 }
 
