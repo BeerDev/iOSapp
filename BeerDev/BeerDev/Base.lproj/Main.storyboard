@@ -44,6 +44,8 @@
                             <outlet property="delegate" destination="HgU-cM-D0j" id="CEK-31-VKi"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7gr-HK-h35" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -61,32 +63,30 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vSe-a3-WCM">
-                                <rect key="frame" x="71" y="479" width="51" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="om oss">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="Ivm-IU-S0x" kind="modal" id="V0J-g5-pEx"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oFE-yg-yHE">
-                                <rect key="frame" x="198" y="479" width="34" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="table">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="HgU-cM-D0j" kind="modal" id="Ctz-Ot-bxo"/>
-                                </connections>
-                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DSC05818.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="aKy-Xn-7xE">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="FDs-vE-EXh" appends="YES" id="5rZ-LL-hCm"/>
+                            <outletCollection property="gestureRecognizers" destination="wTK-Hn-bxv" appends="YES" id="BXt-Qo-sSp"/>
+                        </connections>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="FDs-vE-EXh">
+                    <connections>
+                        <segue destination="Ivm-IU-S0x" kind="modal" id="FVc-3t-sfr"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="3" id="wTK-Hn-bxv">
+                    <connections>
+                        <segue destination="HgU-cM-D0j" kind="modal" id="K8i-bb-jgA"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-193" y="8"/>
         </scene>
@@ -102,8 +102,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DSC05818.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="5WA-sk-4NW">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="DSC05818.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="vcP-K4-puh">
+                                <rect key="frame" x="-4" y="0.0" width="324" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Välkommen!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sqW-6T-nyn">
@@ -135,12 +135,12 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ORW-73-w1l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-626" y="725"/>
+            <point key="canvasLocation" x="-358" y="745"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="zy0-3m-lsW">
