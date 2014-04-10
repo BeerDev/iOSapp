@@ -30,7 +30,7 @@
     self.pris.text = [[NSString alloc]initWithFormat:@"%@ kr*", _SEK];
     self.info.text = _information;
     self.proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", _pro];
-    self.sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ ml", _size];
+    self.sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ cl", _size];
     
     // Do any additional setup after loading the view.
 }
