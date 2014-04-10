@@ -56,4 +56,8 @@
  */
 +(void)CacheThoseImages;
 
++(void)SetBOOL:(BOOL)yesOrNo;
+
++(BOOL)GetBOOL;
+
 @end

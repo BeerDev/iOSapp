@@ -50,9 +50,35 @@
 
     [self startDownload:(int)_pageIndex];
     
-    // check if you were on the information screen or not
+    
+    _informationIsShowing = [jsonData GetBOOL];
+   
     if (_informationIsShowing == YES) {
-        NSLog(@"information was showing on the screen after or before the current view.");
+        
+        self.artikelnamnLabel.hidden = YES;
+        self.priceLabel.hidden = YES;
+        self.infoLabel.hidden = YES;
+        
+        [jsonData SetBOOL:YES];
+        
+        //set the ViewInformationController by storyboard ID.
+        _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
+        
+        //set values for the information screen.
+        _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
+        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl. moms"];
+        _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
+        _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
+        _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
+        
+        //denna behövs egentligen inte just nu, men eventuellt i framtiden.
+        _InformationController.pageIndex = _pageIndex;
+        
+        // Change the size of page view controller if needed.
+        // self.ViewInformationController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        [self addChildViewController:_InformationController];
+        [self.view addSubview:_InformationController.view];
+        //this method is setting an animation for transaction between page and information
     }
 }
 
@@ -122,29 +148,43 @@
     [self information];
 
 }
-- (IBAction)closeInformationView:(id)sender {
-    
+
+- (IBAction)downSwipe:(id)sender {
+    NSLog(@"swipe");
     if(_informationIsShowing == YES){
-        NSLog(@"pushed on screen");
+   
         _informationIsShowing = NO;
+        [jsonData SetBOOL:NO];
         
         
-        [UIView animateWithDuration:1 animations:^{_InformationController.view.alpha = 0.0;}
+        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;}
                          completion:^(BOOL finished){
                              [_InformationController.view removeFromSuperview];
-                             NSLog(@"removed the information view");
+                             self.artikelnamnLabel.hidden = NO;
+                             self.priceLabel.hidden = NO;
+                             self.infoLabel.hidden = NO;
                          }];
-
+        
     }
+
+}
+- (IBAction)taptap:(id)sender {
+    NSLog(@"hejhej");
 }
 
 #pragma mark important functions
 
 -(void)information{
-    
-    if(_informationIsShowing == NO){
-        _informationIsShowing = YES;
         NSLog(@"adding informationView");
+    if(_informationIsShowing == NO){
+       
+        self.artikelnamnLabel.hidden = YES;
+        self.priceLabel.hidden = YES;
+        self.infoLabel.hidden = YES;
+        
+        _informationIsShowing = YES;
+        [jsonData SetBOOL:YES];
+    
         
         //set the ViewInformationController by storyboard ID.
         _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
@@ -156,39 +196,35 @@
          _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
          _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
         
-        
-        
         //denna behövs egentligen inte just nu, men eventuellt i framtiden.
         _InformationController.pageIndex = _pageIndex;
+        [self addChildViewController:_InformationController];
+        _InformationController.view.alpha = 0;
+        [self.view addSubview:_InformationController.view];
+        
+        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 1;}
+                         completion:^(BOOL finished){
+                             NSLog(@"klar");
+                         }];
+
         
         // Change the size of page view controller if needed.
         // self.ViewInformationController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-        [self addChildViewController:_InformationController];
+
         
-        
+      /*
         //this method is setting an animation for transaction between page and information
-        [UIView transitionWithView:self.view duration:1 options:UIViewAnimationOptionTransitionCrossDissolve
+        [UIView transitionWithView:self.view duration:0.8 options:UIViewAnimationOptionTransitionCrossDissolve
                         animations:^ {
-                            [self.view addSubview:_InformationController.view];
+                           
                         }
                         completion:^(BOOL finished){
                             NSLog(@"finished animation to information view");
-                        }];
+                        }];*/
         }
 
 
 }
 
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
