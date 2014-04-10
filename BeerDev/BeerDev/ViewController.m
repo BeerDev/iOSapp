@@ -47,6 +47,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
+}
+
 - (IBAction)swipeDown:(id)sender {
     
     NSLog(@"hej du har swipat uppåt");
