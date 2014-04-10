@@ -151,6 +151,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="TdF-SW-SJ2" appends="YES" id="kJU-Kk-ljx"/>
+                            <outletCollection property="gestureRecognizers" destination="jMK-NU-EKV" appends="YES" id="rjy-MS-kLm"/>
                         </connections>
                     </view>
                     <connections>
@@ -164,6 +165,11 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                         <action selector="SetInformationView:" destination="FCD-GJ-ULf" id="dbh-cx-s0g"/>
                     </connections>
                 </swipeGestureRecognizer>
+                <tapGestureRecognizer id="jMK-NU-EKV">
+                    <connections>
+                        <action selector="closeInformationView:" destination="FCD-GJ-ULf" id="jwc-NR-9rv"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="291" y="333"/>
         </scene>
@@ -182,11 +188,12 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Information text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j4m-6Q-Asi">
                                 <rect key="frame" x="20" y="137" width="280" height="306"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pris" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D0p-cu-Q8n">
-                                <rect key="frame" x="20" y="75" width="30" height="21"/>
+                                <rect key="frame" x="20" y="75" width="87" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
@@ -199,6 +206,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                     </view>
                     <connections>
                         <outlet property="artikelnamn" destination="k93-GI-UDy" id="Faa-ts-6N6"/>
@@ -208,7 +216,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qUg-lR-W2f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="635" y="333"/>
+            <point key="canvasLocation" x="779" y="511"/>
         </scene>
     </scenes>
     <resources>

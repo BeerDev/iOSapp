@@ -15,6 +15,7 @@
     
 }
 @end
+@class ViewInformationController;
 
 @implementation PageContentViewController
 
@@ -23,6 +24,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+ 
     }
     return self;
 }
@@ -32,14 +34,17 @@
 
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
-    
+    //get the json array for setting the information in this class
     JsonDataArray = [jsonData GetArray];
-
-    // Do any additional setup after loading the view.
-    //  self.ImageBottle.image = self.bilden;
     
+    // Do any additional setup after loading the view.
     self.artikelnamnLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
     [self startDownload:(int)_pageIndex];
+    
+    // check if you were on the information screen or not
+    if (_informationIsShowing == YES) {
+        NSLog(@"information was showing on the screen after or before the current view.");
+    }
 }
 
 
@@ -50,7 +55,7 @@
 }
 
 
-#pragma download connection
+#pragma mark - download connection
 - (void)startDownload:(int)index{
     self.activeDownload = [NSMutableData data];
    // NSLog(@"%@",[_jsonObjects[index] objectForKey:(NSString*)@"URL"]);
@@ -101,8 +106,64 @@
 
 #pragma mark - Gesture Recognizer functions
 - (IBAction)SetInformationView:(id)sender {
-    NSLog(@"adding informationView");
+    //calls information method which sets the information.
+    //the reason why this is in a seperet method is that we want to call this in other situations
+    [self information];
+
 }
+- (IBAction)closeInformationView:(id)sender {
+    
+    if(_informationIsShowing == YES){
+        NSLog(@"pushed on screen");
+        _informationIsShowing = NO;
+        
+        
+        [UIView animateWithDuration:1 animations:^{_InformationController.view.alpha = 0.0;}
+                         completion:^(BOOL finished){
+                             [_InformationController.view removeFromSuperview];
+                             NSLog(@"removed the information view");
+                         }];
+
+    }
+}
+
+#pragma mark important functions
+
+-(void)information{
+    
+    if(_informationIsShowing == NO){
+        _informationIsShowing = YES;
+        NSLog(@"adding informationView");
+        
+        //set the ViewInformationController by storyboard ID.
+        _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
+        
+        //set values for the information screen.
+        _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
+        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris"];
+        _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
+        
+        //denna behövs egentligen inte just nu, men eventuellt i framtiden.
+        _InformationController.pageIndex = _pageIndex;
+        
+        // Change the size of page view controller if needed.
+        // self.ViewInformationController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        [self addChildViewController:_InformationController];
+        
+        
+        //this method is setting an animation for transaction between page and information
+        [UIView transitionWithView:self.view duration:1 options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^ {
+                            [self.view addSubview:_InformationController.view];
+                        }
+                        completion:^(BOOL finished){
+                            NSLog(@"finished animation to information view");
+                        }];
+        }
+
+
+}
+
 
 /*
 #pragma mark - Navigation

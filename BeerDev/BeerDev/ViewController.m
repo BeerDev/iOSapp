@@ -10,9 +10,8 @@
 
 @interface ViewController (){
     //declare variables here to be global thru this class
-    
+    BOOL setInfoOrNot;
 }
-
 @end
 
 @implementation ViewController
@@ -56,16 +55,15 @@
 #pragma mark PageViewController 
 - (PageContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
-    if (([[jsonData GetArray] count]-1 == 0) ||( index >= [[jsonData GetArray] count]-1)) {
+    if (([[jsonData GetArray] count] == 0) ||( index >= [[jsonData GetArray] count]-1)) {
         return nil;
     }
     // Create a new view controller and pass suitable data.
     PageContentViewController *pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
-    
+
     // [jsonData startDownload:(int)index];
     pageContentViewController.pageIndex = index;
-    
-    
+
     return pageContentViewController;
 }
 
@@ -73,6 +71,7 @@
 {
     NSUInteger index = ((PageContentViewController*) viewController).pageIndex;
     
+
     if ((index == 0) || (index == NSNotFound)) {
         return nil;
     }
@@ -84,16 +83,24 @@
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
 {
     NSUInteger index = ((PageContentViewController*) viewController).pageIndex;
+ 
+    
     
     if (index == NSNotFound) {
         return nil;
     }
     
+  
     index++;
     if (index == [[jsonData GetArray] count]-1) {
         return nil;
     }
     return [self viewControllerAtIndex:index];
+}
+
+//visa eller göm statusBar
+- (BOOL)prefersStatusBarHidden {
+    return NO;
 }
 
 

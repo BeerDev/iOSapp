@@ -14,4 +14,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *pris;
 @property (weak, nonatomic) IBOutlet UILabel *info;
 
+@property NSUInteger pageIndex;
+@property NSString* name;
+@property NSString* information;
+@property NSString* SEK;
+
+
+
+
 @end
