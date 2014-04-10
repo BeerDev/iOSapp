@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "jsonData.h"
 
-@interface TableView : UITableViewController  <UITableViewDelegate, UITableViewDataSource>
+@interface TableView : UIViewController  <UITableViewDelegate, UITableViewDataSource>
 
 
 @end

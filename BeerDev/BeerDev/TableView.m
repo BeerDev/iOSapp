@@ -19,20 +19,9 @@
 @end
 
 @implementation TableView
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+
 	// Do any additional setup after loading the view, typically from a nib.
     array = [jsonData GetArray];
     tableViewArray = [[NSMutableArray alloc] init];
@@ -44,6 +33,8 @@
         [tableViewArray addObject:[array[i] objectForKey:@"Artikelnamn"]];
         [imageArray addObject:[array[i] objectForKey:@"URL"]];
     }
+    
+
     //[tableViewArray addObject:nil];
    //  NSLog(@"%@",tableViewArray);
  
@@ -58,7 +49,7 @@
 //datan som en cell innehåller i min tableView
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //används för identifiering
-    static NSString *simpleTableIdentifier = @"myTableView";
+    static NSString *simpleTableIdentifier = @"myCell";
     
     //skapa en cell med identifieraren ovan
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
@@ -74,16 +65,13 @@
     }
     
     //ställ in texten i cellen
+    cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
     cell.imageView.image = image;
     return cell;
 }
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
 }
-
 
 @end
