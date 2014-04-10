@@ -64,10 +64,7 @@
     }
     // Create a new view controller and pass suitable data.
     PageContentViewController *pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
-
-    // [jsonData startDownload:(int)index];
     pageContentViewController.pageIndex = index;
-
     return pageContentViewController;
 }
 
@@ -75,7 +72,6 @@
 {
     NSUInteger index = ((PageContentViewController*) viewController).pageIndex;
     
-
     if ((index == 0) || (index == NSNotFound)) {
         return nil;
     }
@@ -88,13 +84,10 @@
 {
     NSUInteger index = ((PageContentViewController*) viewController).pageIndex;
  
-    
-    
     if (index == NSNotFound) {
         return nil;
     }
     
-  
     index++;
     if (index == [[jsonData GetArray] count]-1) {
         return nil;

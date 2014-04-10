@@ -7,6 +7,7 @@
 //
 
 #import "PageContentViewController.h"
+#import "constans.h"
 
 @interface PageContentViewController (){
 
@@ -24,7 +25,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
- 
     }
     return self;
 }
@@ -35,38 +35,32 @@
 
 - (void)viewDidLoad
 {
-
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
     //get the json array for setting the information in this class
     JsonDataArray = [jsonData GetArray];
     
+    _informationIsShowing = [jsonData GetBOOL];
+    
     // Do any additional setup after loading the view.
     self.artikelnamnLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
-    
-    self.priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr *", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl. moms"]];
+    self.priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr *", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"]];
     
     self.infoLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
 
     [self startDownload:(int)_pageIndex];
     
-    
-    _informationIsShowing = [jsonData GetBOOL];
-   
     if (_informationIsShowing == YES) {
-        
         self.artikelnamnLabel.hidden = YES;
         self.priceLabel.hidden = YES;
         self.infoLabel.hidden = YES;
-        
-        [jsonData SetBOOL:YES];
         
         //set the ViewInformationController by storyboard ID.
         _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
         
         //set values for the information screen.
         _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
-        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl. moms"];
+        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"];
         _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
         _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
         _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
@@ -80,7 +74,9 @@
         [self.view addSubview:_InformationController.view];
         //this method is setting an animation for transaction between page and information
     }
-}
+
+   
+    }
 
 
 
@@ -152,9 +148,8 @@
 - (IBAction)downSwipe:(id)sender {
     NSLog(@"swipe");
     if(_informationIsShowing == YES){
-   
-        _informationIsShowing = NO;
         [jsonData SetBOOL:NO];
+        _informationIsShowing = NO;
         
         
         [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;}
@@ -168,22 +163,21 @@
     }
 
 }
-- (IBAction)taptap:(id)sender {
-    NSLog(@"hejhej");
-}
 
 #pragma mark important functions
 
 -(void)information{
         NSLog(@"adding informationView");
     if(_informationIsShowing == NO){
-       
+        [jsonData SetBOOL:YES];
+        _informationIsShowing = YES;
+        
         self.artikelnamnLabel.hidden = YES;
         self.priceLabel.hidden = YES;
         self.infoLabel.hidden = YES;
         
-        _informationIsShowing = YES;
-        [jsonData SetBOOL:YES];
+        
+
     
         
         //set the ViewInformationController by storyboard ID.
@@ -191,7 +185,7 @@
         
         //set values for the information screen.
         _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
-        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl. moms"];
+        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"];
         _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
          _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
          _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];

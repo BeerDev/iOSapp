@@ -61,10 +61,11 @@ static bool InfoBOOL;
 
 +(void)SetBOOL:(BOOL)yesOrNo{
     InfoBOOL = yesOrNo;
+    NSLog(@"%d",InfoBOOL);
 }
 
 +(BOOL)GetBOOL{
-    NSLog(@"this boos is %d",InfoBOOL);
+    NSLog(@"this booL is %d",InfoBOOL);
     return InfoBOOL;
 }
 
