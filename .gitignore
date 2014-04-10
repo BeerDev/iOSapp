@@ -18,3 +18,5 @@ DerivedData
 *.ipa
 
 BeerDev/BeerDev.xcodeproj/project.xcworkspace/xcuserdata/maximfrisk.xcuserdatad/UserInterfaceState.xcuserstate
+
+*.xcuserstate
