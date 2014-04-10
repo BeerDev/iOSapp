@@ -39,6 +39,11 @@
     
     // Do any additional setup after loading the view.
     self.artikelnamnLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
+    
+    self.priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr *", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl. moms"]];
+    
+    self.infoLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
+
     [self startDownload:(int)_pageIndex];
     
     // check if you were on the information screen or not
@@ -46,6 +51,8 @@
         NSLog(@"information was showing on the screen after or before the current view.");
     }
 }
+
+
 
 
 - (void)didReceiveMemoryWarning
@@ -140,8 +147,12 @@
         
         //set values for the information screen.
         _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
-        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris"];
+        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl. moms"];
         _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
+         _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
+         _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
+        
+        
         
         //denna behövs egentligen inte just nu, men eventuellt i framtiden.
         _InformationController.pageIndex = _pageIndex;

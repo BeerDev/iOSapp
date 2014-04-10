@@ -14,15 +14,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-
-    if([jsonData GetJsonArray:@"JSON"] == 0){
+   [jsonData SetJSON];
+   /* if([jsonData GetJsonArray:@"JSON"] == 0){
         NSLog(@"not in memory");
-        [jsonData SetJSON];
+     
     }else{
          NSLog(@"already in memory");
         [jsonData SetArrayWithoutInternet:[jsonData GetJsonArray:@"JSON"]] ;
     }
-
+*/
     // Override point for customization after application launch.
     return YES;
 }
