@@ -15,6 +15,8 @@
 @property (strong, nonatomic) IBOutlet UIImageView *displayImage;
 @property (weak, nonatomic) IBOutlet UILabel *artikelnamnLabel;
 @property (strong, nonatomic) ViewInformationController* InformationController;
+@property (weak, nonatomic) IBOutlet UILabel *priceLabel;
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 
 
 @property NSUInteger pageIndex;
