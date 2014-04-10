@@ -64,6 +64,7 @@ static bool InfoBOOL;
 }
 
 +(BOOL)GetBOOL{
+    NSLog(@"this boos is %d",InfoBOOL);
     return InfoBOOL;
 }
 
