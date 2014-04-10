@@ -14,6 +14,7 @@
     NSMutableArray * tableViewArray;
     NSMutableArray * array;
     NSMutableArray * imageArray;
+    int imageCount;
 }
 @end
 
@@ -33,16 +34,15 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
 	// Do any additional setup after loading the view, typically from a nib.
-    
     array = [jsonData GetArray];
     tableViewArray = [[NSMutableArray alloc] init];
     imageArray = [[NSMutableArray alloc] init];
+    imageCount = 0;
+
     
-    for (int i = 0; i < 3; i++){
-        NSString * temp = [array[i] objectForKey:@"Artikelnamn"];
-      // NSLog(@"%@",temp);
-        [tableViewArray addObject:temp];
-        [self startDownload:i];
+    for (int i = 0; i < 10; i++){
+        [tableViewArray addObject:[array[i] objectForKey:@"Artikelnamn"]];
+        [imageArray addObject:[array[i] objectForKey:@"URL"]];
     }
     //[tableViewArray addObject:nil];
    //  NSLog(@"%@",tableViewArray);
@@ -63,6 +63,11 @@
     //skapa en cell med identifieraren ovan
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
     
+    NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[imageArray objectAtIndex:indexPath.row]]];
+    UIImage* image = [[UIImage alloc] initWithData:imageData];
+    
+    
+
     //om den inte är nil så allocera en ny cell, skapa med en stil och använd identifieraren ovan
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
@@ -70,7 +75,7 @@
     
     //ställ in texten i cellen
     cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
-    cell.imageView.image = [imageArray objectAtIndex:indexPath.row];
+    cell.imageView.image =image;
     return cell;
 }
 
@@ -79,55 +84,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (void)startDownload:(int)index{
-    self.activeDownload = [NSMutableData data];
-    // NSLog(@"%@",[_jsonObjects[index] objectForKey:(NSString*)@"URL"]);
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[array[index] objectForKey:(NSString*)@"URL"]]];
-    
-    // alloc+init and start an NSURLConnection; release on completion/failure
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    self.imageConnection = conn;
-}
 
-- (void)cancelDownload
-{
-    [self.imageConnection cancel];
-    self.imageConnection = nil;
-    self.activeDownload = nil;
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    [self.activeDownload appendData:data];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-	// Clear the activeDownload property to allow later attempts
-    self.activeDownload = nil;
-    // Release the connection now that it's finished
-    self.imageConnection = nil;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    // Set appIcon and clear temporary data/image
-    UIImage *image = [[UIImage alloc] initWithData:self.activeDownload];
-    NSLog(@"finsihed");
-    
-    if(image!= nil){
-        [imageArray addObject:image];
-    }
-  
-    self.activeDownload = nil;
-    
-    // Release the connection now that it's finished
-    self.imageConnection = nil;
-    
-    // call our delegate and tell it that our icon is ready for display
-    if (self.completionHandler)
-        self.completionHandler();
-    
-}
 
 @end

@@ -12,11 +12,4 @@
 @interface TableView : UITableViewController  <UITableViewDelegate, UITableViewDataSource>
 
 
-
-//connection functions from NSURLConnection.
-@property (nonatomic,retain) NSMutableArray* jsonObjects;
-@property (nonatomic, copy) void (^completionHandler)(void);
-@property (nonatomic, strong) NSMutableData *activeDownload;
-@property (nonatomic, strong) NSURLConnection *imageConnection;
-
 @end
