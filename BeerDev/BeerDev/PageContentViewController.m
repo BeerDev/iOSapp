@@ -123,12 +123,15 @@
     if(_informationIsShowing == YES){
         _informationIsShowing = NO;
         
-        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;}
+        [UIView animateWithDuration:0.5 animations:^{
+        _InformationController.view.alpha = 0.0;
+        self.displayImage.alpha = 1;}
                          completion:^(BOOL finished){
                              [_InformationController.view removeFromSuperview];
                              self.artikelnamnLabel.hidden = NO;
                              self.priceLabel.hidden = NO;
                              self.infoLabel.hidden = NO;
+                             
                          }];
     }
 
@@ -144,13 +147,7 @@
         self.artikelnamnLabel.hidden = YES;
         self.priceLabel.hidden = YES;
         self.infoLabel.hidden = YES;
-        
-        
-
-    
-        
-        //set the ViewInformationController by storyboard ID.
-
+        self.displayImage.alpha = 0.45;
         
         //set values for the information screen.
         _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];

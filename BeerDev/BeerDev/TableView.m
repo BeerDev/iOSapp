@@ -68,6 +68,7 @@
     //ställ in texten i cellen
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
+    cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
   //  cell.imageView.image = image;
     
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);

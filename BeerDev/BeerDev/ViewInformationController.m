@@ -24,6 +24,9 @@
     
     self.view.backgroundColor = [UIColor clearColor];
     
+    //[[UIColor alloc] initWithHue:0 saturation:0 brightness:0 alpha:0.45];
+
+    
     
     //här tar vi emot alla värden som ska visar. Dessa ställs in i pagecontentcontroller klassen när man "swipar" uppåt.
     self.artikelnamn.text = _name;
