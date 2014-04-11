@@ -14,7 +14,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-   [jsonData SetJSON];
+    [jsonData SetJSON];
+
    /* if([jsonData GetJsonArray:@"JSON"] == 0){
         NSLog(@"not in memory");
      

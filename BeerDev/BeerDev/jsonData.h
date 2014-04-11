@@ -56,8 +56,8 @@
  */
 +(void)CacheThoseImages;
 
-+(void)SetBOOL:(BOOL)yesOrNo;
++(void)SetIndex:(NSInteger)index;
 
-+(BOOL)GetBOOL;
++(NSInteger)GetIndex;
 
 @end

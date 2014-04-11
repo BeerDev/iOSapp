@@ -39,6 +39,8 @@
     self.view.backgroundColor = [UIColor clearColor];
     //get the json array for setting the information in this class
     JsonDataArray = [jsonData GetArray];
+    _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
+    [self addChildViewController:_InformationController];
     
     // Do any additional setup after loading the view.
     self.artikelnamnLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
@@ -121,7 +123,6 @@
     if(_informationIsShowing == YES){
         _informationIsShowing = NO;
         
-        
         [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;}
                          completion:^(BOOL finished){
                              [_InformationController.view removeFromSuperview];
@@ -149,7 +150,7 @@
     
         
         //set the ViewInformationController by storyboard ID.
-        _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
+
         
         //set values for the information screen.
         _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
@@ -160,7 +161,7 @@
         
         //denna behövs egentligen inte just nu, men eventuellt i framtiden.
         _InformationController.pageIndex = _pageIndex;
-        [self addChildViewController:_InformationController];
+       
         _InformationController.view.alpha = 0;
         [self.view addSubview:_InformationController.view];
         

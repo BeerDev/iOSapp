@@ -28,7 +28,7 @@
     self.pageViewController.dataSource = self;
     
     //Start the page view controller with this first page at index 0;
-    PageContentViewController *startingViewController = [self viewControllerAtIndex:0];
+    PageContentViewController *startingViewController = [self viewControllerAtIndex:[jsonData GetIndex]];
     NSArray *viewControllers = @[startingViewController];
     
     //set the PageViewController by storyboard ID. 
@@ -57,6 +57,7 @@
     if (([[jsonData GetArray] count] == 0) ||( index >= [[jsonData GetArray] count]-1)) {
         return nil;
     }
+   // NSLog(@"%d",[[jsonData GetArray] count]);
     // Create a new view controller and pass suitable data.
     PageContentViewController *pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
     pageContentViewController.pageIndex = index;
@@ -95,7 +96,6 @@
 - (BOOL)prefersStatusBarHidden {
     return NO;
 }
-
 
 /*
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController

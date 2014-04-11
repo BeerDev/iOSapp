@@ -11,8 +11,6 @@
 @implementation jsonData
 
 static NSMutableArray* JSONARRAY = nil;
-static bool InfoBOOL;
-
 //@synthesize jsonObjects = _jsonObjects;
 
 -(id)init {
@@ -59,14 +57,21 @@ static bool InfoBOOL;
     
 }
 
-+(void)SetBOOL:(BOOL)yesOrNo{
-    InfoBOOL = yesOrNo;
-    NSLog(@"%d",InfoBOOL);
++(void)SetIndex:(NSInteger)index{
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+	if (standardUserDefaults)
+    {
+		[standardUserDefaults setInteger:index forKey:@"index"];
+		[standardUserDefaults synchronize];
+	}
 }
 
-+(BOOL)GetBOOL{
-    NSLog(@"this booL is %d",InfoBOOL);
-    return InfoBOOL;
++(NSInteger)GetIndex{
+    NSInteger myIndex = 0;
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"index"]){
+        myIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"index"];
+    }
+    return myIndex;
 }
 
 @end
