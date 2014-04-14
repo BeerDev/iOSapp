@@ -39,6 +39,8 @@
     self.view.backgroundColor = [UIColor clearColor];
     //get the json array for setting the information in this class
     JsonDataArray = [jsonData GetArray];
+    _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
+    [self addChildViewController:_InformationController];
     
     // Do any additional setup after loading the view.
     self.artikelnamnLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
@@ -46,7 +48,16 @@
     
     self.infoLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
 
-    [self startDownload:(int)_pageIndex];
+   
+    if( [jsonData GetCachedImage:[JsonDataArray[_pageIndex] objectForKey:@"URL"]] == nil){
+        NSLog(@"there was no image ");
+        [self startDownload:(int)_pageIndex];
+    }else{
+        NSLog(@"cache hit");
+        self.displayImage.image = [jsonData GetCachedImage:[JsonDataArray[_pageIndex] objectForKey:@"URL"]];
+        }
+    
+    
 }
 
 
@@ -94,7 +105,9 @@
 {
     // Set appIcon and clear temporary data/image
     UIImage *image = [[UIImage alloc] initWithData:self.activeDownload];
-    NSLog(@"finsihed");
+    NSLog(@"finsihed loading this url %@",[JsonDataArray[_pageIndex] objectForKey:@"URL"]);
+
+    [jsonData SetCacheItemForKey:image forKey:(NSString*)[JsonDataArray[_pageIndex] objectForKey:@"URL"]];
     
     self.displayImage.image = image;
     self.activeDownload = nil;
@@ -121,13 +134,15 @@
     if(_informationIsShowing == YES){
         _informationIsShowing = NO;
         
-        
-        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;}
+        [UIView animateWithDuration:0.5 animations:^{
+        _InformationController.view.alpha = 0.0;
+        self.displayImage.alpha = 1;}
                          completion:^(BOOL finished){
                              [_InformationController.view removeFromSuperview];
                              self.artikelnamnLabel.hidden = NO;
                              self.priceLabel.hidden = NO;
                              self.infoLabel.hidden = NO;
+                             
                          }];
     }
 
@@ -143,13 +158,7 @@
         self.artikelnamnLabel.hidden = YES;
         self.priceLabel.hidden = YES;
         self.infoLabel.hidden = YES;
-        
-        
-
-    
-        
-        //set the ViewInformationController by storyboard ID.
-        _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
+        self.displayImage.alpha = 0.45;
         
         //set values for the information screen.
         _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
@@ -160,7 +169,7 @@
         
         //denna behövs egentligen inte just nu, men eventuellt i framtiden.
         _InformationController.pageIndex = _pageIndex;
-        [self addChildViewController:_InformationController];
+       
         _InformationController.view.alpha = 0;
         [self.view addSubview:_InformationController.view];
         

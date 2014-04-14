@@ -49,15 +49,48 @@
 +(void)SetArrayWithoutInternet:(NSMutableArray*)array;
 
 
-//THIS METHODS IS NOT FINISHED
+//THIS METHODS IS NOT FINISHED //Write descriptions!!
+
+
 /**
- * Call this method when you want to cache all the images from the web.
+ * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
  * @author Maxim Frisk
+ * @param NSMutableArray
+ * @return nothing
  */
-+(void)CacheThoseImages;
++(void)SetIndex:(NSInteger)index;
 
-+(void)SetBOOL:(BOOL)yesOrNo;
+/**
+ * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
+ * @author Maxim Frisk
+ * @param NSMutableArray
+ * @return index
+ */
++(NSInteger)GetIndex;
 
-+(BOOL)GetBOOL;
+/**
+ * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
+ * @author Maxim Frisk
+ * @param NSMutableArray
+ * @return index
+ */
++(void)SetCache;
+
+/**
+ * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
+ * @author Maxim Frisk
+ * @param NSMutableArray
+ * @return index
+ */
++(void)SetCacheItemForKey:(UIImage*)image forKey:(NSString*)key;
+
+
+/**
+ * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
+ * @author Maxim Frisk
+ * @param NSMutableArray
+ * @return index
+ */
++(UIImage*)GetCachedImage:(NSString*)forKey;
 
 @end

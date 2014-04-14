@@ -42,22 +42,23 @@
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="UM5-n0-30Y" id="RFu-Ys-1M4"/>
-                                    <outlet property="delegate" destination="UM5-n0-30Y" id="2PL-wE-vVC"/>
+                                    <outlet property="delegate" destination="UM5-n0-30Y" id="uz4-Xf-shU"/>
                                 </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tS4-nw-MSN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-654" y="-362"/>
+            <point key="canvasLocation" x="-870" y="-488"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mainViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -69,20 +70,25 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Background" translatesAutoresizingMaskIntoConstraints="NO" id="aKy-Xn-7xE">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <gestureRecognizers/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="wTK-Hn-bxv" appends="YES" id="BXt-Qo-sSp"/>
+                            <outletCollection property="gestureRecognizers" destination="ejc-EG-3N6" appends="YES" id="mml-6d-Ygc"/>
                         </connections>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="wTK-Hn-bxv"/>
+                <tapGestureRecognizer id="ejc-EG-3N6">
+                    <connections>
+                        <segue destination="UM5-n0-30Y" kind="modal" customClass="UIStoryboardPopoverSegue" id="062-mR-Kk0"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-193" y="8"/>
+            <point key="canvasLocation" x="-253" y="112"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Mb7-UV-M8b">
@@ -135,7 +141,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ORW-73-w1l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-654" y="549"/>
+            <point key="canvasLocation" x="-870" y="697"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="zy0-3m-lsW">
@@ -145,12 +151,12 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Co8-Ya-HhQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="291" y="-372"/>
+            <point key="canvasLocation" x="453" y="-128"/>
         </scene>
         <!--Page Content View Controller-->
         <scene sceneID="yaF-r4-KFZ">
             <objects>
-                <viewController storyboardIdentifier="PageContentViewController" id="FCD-GJ-ULf" customClass="PageContentViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PageContentViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FCD-GJ-ULf" customClass="PageContentViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YiB-Tj-CVA"/>
                         <viewControllerLayoutGuide type="bottom" id="Bfw-q6-QjC"/>
@@ -160,7 +166,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oZo-Pn-nqz">
-                                <rect key="frame" x="116" y="49" width="88" height="375"/>
+                                <rect key="frame" x="95" y="49" width="130" height="375"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" lineBreakMode="headTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="200" translatesAutoresizingMaskIntoConstraints="NO" id="8Ws-4o-mT4">
@@ -291,7 +297,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qUg-lR-W2f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="759" y="555"/>
+            <point key="canvasLocation" x="647" y="549"/>
         </scene>
     </scenes>
     <resources>

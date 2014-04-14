@@ -11,8 +11,7 @@
 @implementation jsonData
 
 static NSMutableArray* JSONARRAY = nil;
-static bool InfoBOOL;
-
+static NSCache * myImageCache;
 //@synthesize jsonObjects = _jsonObjects;
 
 -(id)init {
@@ -55,18 +54,41 @@ static bool InfoBOOL;
     JSONARRAY = array;
 }
 
-+(void)CacheThoseImages{
+
++(void)SetIndex:(NSInteger)index{
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+	if (standardUserDefaults)
+    {
+		[standardUserDefaults setInteger:index forKey:@"index"];
+		[standardUserDefaults synchronize];
+	}
+}
+
++(NSInteger)GetIndex{
+    NSInteger myIndex = 0;
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"index"]){
+        myIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"index"];
+    }
+    return myIndex;
+}
+
++(void)SetCache{
+    myImageCache = [[NSCache alloc] init];
+    [myImageCache setCountLimit:10];
+    NSLog(@"%d",(int)[myImageCache countLimit]);
+
+
+}
+
++(void)SetCacheItemForKey:(UIImage*)image forKey:(NSString*)key{
+    [myImageCache setObject:image forKey:key];
+
+}
+
++(UIImage*)GetCachedImage:(NSString*)forKey{
+    UIImage * cachedImage = [myImageCache objectForKey:forKey];
     
-}
-
-+(void)SetBOOL:(BOOL)yesOrNo{
-    InfoBOOL = yesOrNo;
-    NSLog(@"%d",InfoBOOL);
-}
-
-+(BOOL)GetBOOL{
-    NSLog(@"this booL is %d",InfoBOOL);
-    return InfoBOOL;
+    return cachedImage;
 }
 
 @end
