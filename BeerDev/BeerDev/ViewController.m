@@ -26,12 +26,12 @@
     // Create PageViewController
     self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageViewController"];
     self.pageViewController.dataSource = self;
-    
+    //[jsonData SetIndex:0];
     //Start the page view controller with this first page at index 0;
     PageContentViewController *startingViewController = [self viewControllerAtIndex:[jsonData GetIndex]];
     NSArray *viewControllers = @[startingViewController];
     
-    //set the PageViewController by storyboard ID. 
+    //set the PageViewController by storyboard ID.
     [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
     // Change the size of page view controller if needed.
@@ -54,7 +54,7 @@
 #pragma mark PageViewController 
 - (PageContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
-    if (([[jsonData GetArray] count] == 0) ||( index >= [[jsonData GetArray] count]-1)) {
+    if (([[jsonData GetArray] count] == 0) ||( index >= [[jsonData GetArray] count])) {
         return nil;
     }
    // NSLog(@"%d",[[jsonData GetArray] count]);
@@ -92,7 +92,7 @@
     return [self viewControllerAtIndex:index];
 }
 
-//visa eller göm statusBar
+
 - (BOOL)prefersStatusBarHidden {
     return NO;
 }

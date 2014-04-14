@@ -56,6 +56,7 @@ static NSCache * myImageCache;
 
 
 +(void)SetIndex:(NSInteger)index{
+
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
 	if (standardUserDefaults)
     {
@@ -74,10 +75,8 @@ static NSCache * myImageCache;
 
 +(void)SetCache{
     myImageCache = [[NSCache alloc] init];
-    [myImageCache setCountLimit:10];
+    //[myImageCache setCountLimit:2];
     NSLog(@"%d",(int)[myImageCache countLimit]);
-
-
 }
 
 +(void)SetCacheItemForKey:(UIImage*)image forKey:(NSString*)key{
@@ -90,5 +89,68 @@ static NSCache * myImageCache;
     
     return cachedImage;
 }
+
+
+
+
++(NSString*)writeToDisc:(UIImage*)img index:(int)index{
+   
+    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/img%d.png",index]];
+    
+    NSData * myImage =UIImagePNGRepresentation(img);
+    [myImage writeToFile:path atomically:YES];
+    NSLog(@"path %@",path);
+
+    return path;
+
+}
+
++(UIImage*)LoadFromDisk:(NSString*)path{
+ //   NSLog(@"file to get %@",path);
+    NSData* imageData = [NSData dataWithContentsOfFile:path];
+    UIImage *image = [UIImage imageWithData:imageData];
+    return image;
+}
+
+
++(void)SetFilePath:(NSString*)path key:(NSString*)key{
+    
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+	if (standardUserDefaults)
+    {
+		[standardUserDefaults setObject:path forKey:key];
+		[standardUserDefaults synchronize];
+	}
+}
+
++(NSString*)GetFilePath:(NSString*)key{
+    NSString* path = nil;
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:key]){
+        path = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    }
+    return path;
+}
+
+
+
++ (void)removeImage:(NSString *)fileName
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:fileName];
+    NSError *error;
+    BOOL success = [fileManager removeItemAtPath:filePath error:&error];
+    if (success) {
+        UIAlertView *removeSuccessFulAlert=[[UIAlertView alloc]initWithTitle:@"Congratulation:" message:@"Successfully removed" delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil];
+        [removeSuccessFulAlert show];
+    }
+    else
+    {
+        NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
+    }
+}
+
+
 
 @end

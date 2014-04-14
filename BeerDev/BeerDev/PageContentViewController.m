@@ -47,15 +47,25 @@
     self.priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr *", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"]];
     
     self.infoLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
+    
+    /*---------------------------------------------------------------------------------*/
+    //old cache
+    /*
+     if( [jsonData GetCachedImage:[JsonDataArray[_pageIndex] objectForKey:@"URL"]] == nil){
+     }*/
+    
+    //new
+    
+    NSLog(@"%@",[JsonDataArray[0] objectForKey:(NSString*)@"URL"]);
+    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"img%d",_pageIndex]]] != nil){
+           NSLog(@"there was a file on disk");
+        self.displayImage.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"img%d",_pageIndex]]];
+    }
 
-   
-    if( [jsonData GetCachedImage:[JsonDataArray[_pageIndex] objectForKey:@"URL"]] == nil){
-        NSLog(@"there was no image ");
-        [self startDownload:(int)_pageIndex];
-    }else{
-        NSLog(@"cache hit");
-        self.displayImage.image = [jsonData GetCachedImage:[JsonDataArray[_pageIndex] objectForKey:@"URL"]];
-        }
+    else
+    {
+         [self startDownload:(int)_pageIndex];
+    }
     
     
 }
@@ -105,10 +115,14 @@
 {
     // Set appIcon and clear temporary data/image
     UIImage *image = [[UIImage alloc] initWithData:self.activeDownload];
-    NSLog(@"finsihed loading this url %@",[JsonDataArray[_pageIndex] objectForKey:@"URL"]);
+    //NSLog(@"finsihed loading this url %@",[JsonDataArray[_pageIndex] objectForKey:@"URL"]);
 
-    [jsonData SetCacheItemForKey:image forKey:(NSString*)[JsonDataArray[_pageIndex] objectForKey:@"URL"]];
-    
+    //save the image to disk and save a path in userdefaults with index.
+    [jsonData SetFilePath:[jsonData writeToDisc:image index:_pageIndex] key:[[NSString alloc] initWithFormat:@"img%d",_pageIndex]];
+    [jsonData writeToDisc:image index:_pageIndex];
+    // old cache
+    //[jsonData SetCacheItemForKey:image forKey:(NSString*)[JsonDataArray[_pageIndex] objectForKey:@"URL"]];
+
     self.displayImage.image = image;
     self.activeDownload = nil;
     
@@ -130,7 +144,6 @@
 }
 
 - (IBAction)downSwipe:(id)sender {
-    NSLog(@"swipe");
     if(_informationIsShowing == YES){
         _informationIsShowing = NO;
         

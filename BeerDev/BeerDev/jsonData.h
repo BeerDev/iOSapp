@@ -53,44 +53,51 @@
 
 
 /**
- * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
+ * This method sets the index on which bottle the user should be presented with.
  * @author Maxim Frisk
- * @param NSMutableArray
- * @return nothing
+ * @param Integer The index integer.
+ * @return Nothing
  */
 +(void)SetIndex:(NSInteger)index;
 
 /**
- * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
+ * This method gets the index on the current integer saved for which bottle you should go to.
  * @author Maxim Frisk
- * @param NSMutableArray
- * @return index
+ * @return Integer The index integer
  */
 +(NSInteger)GetIndex;
 
 /**
- * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
+ * Calling this method sets a temporare cache and initialises it.
  * @author Maxim Frisk
- * @param NSMutableArray
- * @return index
  */
 +(void)SetCache;
 
 /**
- * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
+ * Call this method to save an image to the temporare cache for a key. The key is usually the URL link to the image.
  * @author Maxim Frisk
- * @param NSMutableArray
+ * @param Image The image you want to save
+ * @param Key The key for the image
  * @return index
  */
 +(void)SetCacheItemForKey:(UIImage*)image forKey:(NSString*)key;
 
 
 /**
- * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.
+ * Calling this method with a key, checks if there is an image for the corresponding key.
  * @author Maxim Frisk
  * @param NSMutableArray
  * @return index
  */
 +(UIImage*)GetCachedImage:(NSString*)forKey;
+
+
+//write to file and get from file
++(NSString*)writeToDisc:(UIImage*)img index:(int)index;
++(UIImage*)LoadFromDisk:(NSString*)url;
++(void)SetFilePath:(NSString*)path key:(NSString*)key;
++(NSString*)GetFilePath:(NSString*)key;
+
+
 
 @end
