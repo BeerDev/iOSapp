@@ -69,15 +69,19 @@
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
-  //  cell.imageView.image = image;
-    if( [jsonData GetCachedImage:[array[indexPath.row] objectForKey:@"URL"]] == nil){
-        
-        NSLog(@"miss in table ");
+    
+    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"img%d",indexPath.row]]] == nil){
+    
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         
         dispatch_async(queue, ^{
             NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[imageArray objectAtIndex:indexPath.row]]];
+            
             UIImage* image = [[UIImage alloc] initWithData:imageData];
+            
+            [jsonData SetFilePath:[jsonData writeToDisc:image index:indexPath.row] key:[[NSString alloc] initWithFormat:@"img%d",indexPath.row]];
+            [jsonData writeToDisc:image index:indexPath.row];
+           // [jsonData SetCacheItemForKey:image forKey:[array[indexPath.row] objectForKey:@"URL"]];
             //  UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
             
             dispatch_sync(dispatch_get_main_queue(), ^{
@@ -87,8 +91,7 @@
         });
         
     }else{
-        NSLog(@"cache hit in table");
-        cell.imageView.image = [jsonData GetCachedImage:[array[indexPath.row] objectForKey:@"URL"]];
+        cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"img%d",indexPath.row]]];
     }
 
     
@@ -99,11 +102,11 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSUInteger row = [indexPath row];
   
-    NSLog(@"you pressed %@",[tableViewArray objectAtIndex:indexPath.row]);
+    NSLog(@"you pressed %@ %d",[tableViewArray objectAtIndex:indexPath.row],indexPath.row);
     
-    
-    UIViewController * mainController = [self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
     [jsonData SetIndex:indexPath.row];
+    UIViewController * mainController = [self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
+    
     
         [self presentViewController:mainController animated:YES completion:^{
             self.view = nil;
