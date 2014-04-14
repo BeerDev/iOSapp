@@ -70,19 +70,27 @@
     cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
   //  cell.imageView.image = image;
-    
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-    
-    dispatch_async(queue, ^{
-        NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[imageArray objectAtIndex:indexPath.row]]];
-        UIImage* image = [[UIImage alloc] initWithData:imageData];
-      //  UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
+    if( [jsonData GetCachedImage:[array[indexPath.row] objectForKey:@"URL"]] == nil){
         
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [[cell imageView] setImage:image];
-            [cell setNeedsLayout];
+        NSLog(@"miss in table ");
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+        
+        dispatch_async(queue, ^{
+            NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[imageArray objectAtIndex:indexPath.row]]];
+            UIImage* image = [[UIImage alloc] initWithData:imageData];
+            //  UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
+            
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                [[cell imageView] setImage:image];
+                [cell setNeedsLayout];
+            });
         });
-    });
+        
+    }else{
+        NSLog(@"cache hit in table");
+        cell.imageView.image = [jsonData GetCachedImage:[array[indexPath.row] objectForKey:@"URL"]];
+    }
+
     
     
     return cell;

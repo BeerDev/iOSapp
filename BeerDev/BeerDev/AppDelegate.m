@@ -15,6 +15,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [jsonData SetJSON];
+    [jsonData SetCache];
 
    /* if([jsonData GetJsonArray:@"JSON"] == 0){
         NSLog(@"not in memory");
@@ -25,6 +26,9 @@
     }
 */
     // Override point for customization after application launch.
+    
+    
+    
     return YES;
 }
 							

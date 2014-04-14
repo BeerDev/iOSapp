@@ -48,7 +48,16 @@
     
     self.infoLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
 
-    [self startDownload:(int)_pageIndex];
+   
+    if( [jsonData GetCachedImage:[JsonDataArray[_pageIndex] objectForKey:@"URL"]] == nil){
+        NSLog(@"there was no image ");
+        [self startDownload:(int)_pageIndex];
+    }else{
+        NSLog(@"cache hit");
+        self.displayImage.image = [jsonData GetCachedImage:[JsonDataArray[_pageIndex] objectForKey:@"URL"]];
+        }
+    
+    
 }
 
 
@@ -96,7 +105,9 @@
 {
     // Set appIcon and clear temporary data/image
     UIImage *image = [[UIImage alloc] initWithData:self.activeDownload];
-    NSLog(@"finsihed");
+    NSLog(@"finsihed loading this url %@",[JsonDataArray[_pageIndex] objectForKey:@"URL"]);
+
+    [jsonData SetCacheItemForKey:image forKey:(NSString*)[JsonDataArray[_pageIndex] objectForKey:@"URL"]];
     
     self.displayImage.image = image;
     self.activeDownload = nil;

@@ -11,6 +11,7 @@
 @implementation jsonData
 
 static NSMutableArray* JSONARRAY = nil;
+static NSCache * myImageCache;
 //@synthesize jsonObjects = _jsonObjects;
 
 -(id)init {
@@ -53,9 +54,6 @@ static NSMutableArray* JSONARRAY = nil;
     JSONARRAY = array;
 }
 
-+(void)CacheThoseImages{
-    
-}
 
 +(void)SetIndex:(NSInteger)index{
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
@@ -72,6 +70,25 @@ static NSMutableArray* JSONARRAY = nil;
         myIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"index"];
     }
     return myIndex;
+}
+
++(void)SetCache{
+    myImageCache = [[NSCache alloc] init];
+    [myImageCache setCountLimit:10];
+    NSLog(@"%d",(int)[myImageCache countLimit]);
+
+
+}
+
++(void)SetCacheItemForKey:(UIImage*)image forKey:(NSString*)key{
+    [myImageCache setObject:image forKey:key];
+
+}
+
++(UIImage*)GetCachedImage:(NSString*)forKey{
+    UIImage * cachedImage = [myImageCache objectForKey:forKey];
+    
+    return cachedImage;
 }
 
 @end
