@@ -10,10 +10,8 @@
 #import "constans.h"
 
 @interface PageContentViewController (){
-
-    NSMutableArray * JsonDataArray; 
-    
-    
+    //this is used to hold the JSON data.
+    NSMutableArray * JsonDataArray;
 }
 @end
 @class ViewInformationController;
@@ -25,6 +23,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        // we are currently not using this method
     }
     return self;
 }
@@ -36,41 +35,35 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
+    
     //get the json array for setting the information in this class
     JsonDataArray = [jsonData GetArray];
+    //create a information view from our storyboard
     _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
     [self addChildViewController:_InformationController];
-    
-    // Do any additional setup after loading the view.
+    NSLog(@"%@",[JsonDataArray[_pageIndex] objectForKey:@"URL"]);
+    //set the name,price and info from the JSON data according to the pageIndex
     self.artikelnamnLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
     self.priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr *", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"]];
-    
     self.infoLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
     
     /*---------------------------------------------------------------------------------*/
-    //old cache
-    /*
-     if( [jsonData GetCachedImage:[JsonDataArray[_pageIndex] objectForKey:@"URL"]] == nil){
-     }*/
-    
-    //new
-    
-    //NSLog(@"%@",[JsonDataArray[0] objectForKey:(NSString*)@"URL"]);
+    //check if there is a image on disk with a pathname according the the name of the product.
     if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]]] != nil){
            NSLog(@"there was a file on disk");
+        //set the image to display from cache according to the page index and the products name.
         self.displayImage.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]]];
     }
     else
     {
-         [self startDownload:(int)_pageIndex];
+        //if there was no image on disk/cache start downloading the image.
+        [self startDownload:(int)_pageIndex];
     }
     
     
 }
-
-
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -82,7 +75,7 @@
 #pragma mark - download connection
 - (void)startDownload:(int)index{
     self.activeDownload = [NSMutableData data];
-   // NSLog(@"%@",[_jsonObjects[index] objectForKey:(NSString*)@"URL"]);
+    //starting the request from  URL
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[JsonDataArray[index] objectForKey:(NSString*)@"URL"]]];
     
     // alloc+init and start an NSURLConnection; release on completion/failure
@@ -114,15 +107,11 @@
 {
     // Set appIcon and clear temporary data/image
     UIImage *image = [[UIImage alloc] initWithData:self.activeDownload];
-    //NSLog(@"finsihed loading this url %@",[JsonDataArray[_pageIndex] objectForKey:@"URL"]);
-
-    //save the image to disk and save a path in userdefaults with index.
+   
+    //save the image to disk and save a path in userdefaults with name.
     [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)_pageIndex] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
     [jsonData writeToDisc:image index:(int)_pageIndex];
-    // old cache
-    //[jsonData SetCacheItemForKey:image forKey:(NSString*)[JsonDataArray[_pageIndex] objectForKey:@"URL"]];
-
-    self.displayImage.image = image;
+        self.displayImage.image = image;
     self.activeDownload = nil;
     
     // Release the connection now that it's finished
@@ -136,34 +125,8 @@
 
 #pragma mark - Gesture Recognizer functions
 - (IBAction)SetInformationView:(id)sender {
+    //if the information is not showing set the information view.
     //calls information method which sets the information.
-    //the reason why this is in a seperet method is that we want to call this in other situations
-    [self information];
-
-}
-
-- (IBAction)downSwipe:(id)sender {
-    if(_informationIsShowing == YES){
-        _informationIsShowing = NO;
-        
-        [UIView animateWithDuration:0.5 animations:^{
-        _InformationController.view.alpha = 0.0;
-        self.displayImage.alpha = 1;}
-                         completion:^(BOOL finished){
-                             [_InformationController.view removeFromSuperview];
-                             self.artikelnamnLabel.hidden = NO;
-                             self.priceLabel.hidden = NO;
-                             self.infoLabel.hidden = NO;
-                             
-                         }];
-    }
-
-}
-
-#pragma mark important functions
-
--(void)information{
-
     if(_informationIsShowing == NO){
         NSLog(@"adding informationView");
         _informationIsShowing = YES;
@@ -177,14 +140,14 @@
         _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
         _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"];
         _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
-         _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
-         _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
+        _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
+        _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
         _InformationController.brygg = [JsonDataArray[_pageIndex] objectForKey:@"Bryggeri"];
         _InformationController.kategori = [JsonDataArray[_pageIndex] objectForKey:@"Kategori"];
         
         //denna behövs egentligen inte just nu, men eventuellt i framtiden.
         _InformationController.pageIndex = _pageIndex;
-       
+        
         _InformationController.view.alpha = 0;
         [self.view addSubview:_InformationController.view];
         
@@ -192,25 +155,24 @@
                          completion:^(BOOL finished){
                              NSLog(@"klar");
                          }];
-
-        
-        // Change the size of page view controller if needed.
-        // self.ViewInformationController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-
-        
-      /*
-        //this method is setting an animation for transaction between page and information
-        [UIView transitionWithView:self.view duration:0.8 options:UIViewAnimationOptionTransitionCrossDissolve
-                        animations:^ {
-                           
-                        }
-                        completion:^(BOOL finished){
-                            NSLog(@"finished animation to information view");
-                        }];*/
-        }
-
+    }
 
 }
 
+- (IBAction)downSwipe:(id)sender {
+    //if the information is showing remove it with animation.
+    if(_informationIsShowing == YES){
+        _informationIsShowing = NO;
+        
+        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;self.displayImage.alpha = 1;}
+                         completion:^(BOOL finished){
+                             [_InformationController.view removeFromSuperview];
+                             self.artikelnamnLabel.hidden = NO;
+                             self.priceLabel.hidden = NO;
+                             self.infoLabel.hidden = NO;
+                             }];
+    }
+
+}
 
 @end

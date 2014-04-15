@@ -102,9 +102,9 @@
         [menu DropDownMenu];
         [dropButton setTitle:@"▲" forState:UIControlStateNormal];
         
-        [[menu omOss] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
-        [[menu productView] addTarget:self action:@selector(GoToProductInfo) forControlEvents:UIControlEventTouchUpInside];
-        [[menu listView] addTarget:self action:@selector(GoToList) forControlEvents:UIControlEventTouchUpInside];
+        [[menu omOssButton] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
+        [[menu productViewButton] addTarget:self action:@selector(GoToProductInfo) forControlEvents:UIControlEventTouchUpInside];
+        [[menu listViewButton] addTarget:self action:@selector(GoToList) forControlEvents:UIControlEventTouchUpInside];
 
         button = YES;
     }
@@ -121,15 +121,18 @@
         about = NO;
         product = YES;
         [self switchTo:self.omOssController to:self.pageViewController];
+        [self menuBarToFront];
     }
     else if (list == YES){
         list = NO;
         product = YES;
         [self switchTo:self.ListController to:self.pageViewController];
+        [self menuBarToFront];
+    }else{
+        [menu HideDownMenu];
+        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        button = NO;
     }
-    
-    [self menuBarToFront];
-    
 }
 
 -(void)GoToList{
@@ -137,14 +140,21 @@
         about = NO;
         list = YES;
         [self switchTo:self.omOssController to:self.ListController];
+        [self menuBarToFront];
     }
     else if (product == YES){
         product = NO;
         list = YES;
         [self switchTo:self.pageViewController to:self.ListController];
+        [self menuBarToFront];
     }
-
-    [self menuBarToFront];
+    else
+    {
+    [menu HideDownMenu];
+    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+    button = NO;
+    }
+   
     
 }
 
@@ -154,29 +164,28 @@
         list = NO;
         about = YES;
         [self switchTo:self.ListController to:self.omOssController];
+        [self menuBarToFront];
     }
     else if (product == YES){
         product = NO;
         about= YES;
         [self switchTo:self.pageViewController to:self.omOssController];
+        [self menuBarToFront];
+    }else
+    {
+    [menu HideDownMenu];
+    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+    button = NO;
     }
-    [self menuBarToFront];
-
-    /*
-    [self.view addSubview:_omOssController.view];
-    */
-    
-    
-    
 }
 
 
 -(void)menuBarToFront{
-    
     [dropButton setTitle:@"▼" forState:UIControlStateNormal];
     button = NO;
     [self.view bringSubviewToFront:menu];
     [self.view bringSubviewToFront:dropButton];
+    
 }
 
 - (void)didReceiveMemoryWarning

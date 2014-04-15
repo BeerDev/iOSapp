@@ -12,14 +12,19 @@
 
 @interface PageContentViewController : UIViewController
 
+//image for the product
 @property (strong, nonatomic) IBOutlet UIImageView *displayImage;
+//label for the name of the product
 @property (weak, nonatomic) IBOutlet UILabel *artikelnamnLabel;
-@property (strong, nonatomic) ViewInformationController* InformationController;
+//label for price
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
+//label for information
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 
-
+@property (strong, nonatomic) ViewInformationController* InformationController;
+//this is used in pageViewController to track on what index you are at.
 @property NSUInteger pageIndex;
+//a bool to se if the information is showing or not.
 @property BOOL informationIsShowing;
 
 

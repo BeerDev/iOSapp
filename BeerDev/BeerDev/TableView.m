@@ -12,7 +12,7 @@
     
     //global variables
     NSMutableArray * tableViewArray;
-    NSMutableArray * array;
+    NSMutableArray * JsonDataArray;
     NSMutableArray * imageArray;
     int imageCount;
 }
@@ -23,15 +23,15 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    array = [jsonData GetArray];
+    JsonDataArray = [jsonData GetArray];
     tableViewArray = [[NSMutableArray alloc] init];
     imageArray = [[NSMutableArray alloc] init];
     imageCount = 0;
 
     
-    for (int i = 0; i < [array count]; i++){
-        [tableViewArray addObject:[array[i] objectForKey:@"Artikelnamn"]];
-        [imageArray addObject:[array[i] objectForKey:@"URL"]];
+    for (int i = 0; i < [JsonDataArray count]; i++){
+        [tableViewArray addObject:[JsonDataArray[i] objectForKey:@"Artikelnamn"]];
+        [imageArray addObject:[JsonDataArray[i] objectForKey:@"URL"]];
     }
     
 
@@ -70,7 +70,7 @@
     cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
     
-    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[array[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil){
+    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil){
     
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         
@@ -79,7 +79,7 @@
             
             UIImage* image = [[UIImage alloc] initWithData:imageData];
             
-            [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row] key:[[NSString alloc] initWithFormat:@"%@",[array[indexPath.row] objectForKey:@"Artikelnamn"]]];
+            [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]];
             [jsonData writeToDisc:image index:(int)indexPath.row];
            // [jsonData SetCacheItemForKey:image forKey:[array[indexPath.row] objectForKey:@"URL"]];
             //  UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
@@ -91,7 +91,7 @@
         });
         
     }else{
-        cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[array[indexPath.row] objectForKey:@"Artikelnamn"]]]];
+        cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]];
     }
 
     

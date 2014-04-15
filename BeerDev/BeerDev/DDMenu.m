@@ -19,52 +19,35 @@
         
        // self.backgroundColor = [UIColor blackColor];
         //self.alpha = 0.6;
-        [self setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.35]];
+        [self setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.45]];
         
+        _productViewButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         
-        _productView = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [_productViewButton setTitle:@"Visa Öl" forState:UIControlStateNormal];
+        _productViewButton.titleLabel.font = [UIFont systemFontOfSize:24];
+        _productViewButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        [_productViewButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.productViewButton.frame = CGRectMake(0, 70, self.frame.size.width-10, 50);
         
-        [_productView setTitle:@"Produkt info" forState:UIControlStateNormal];
-        _productView.titleLabel.font = [UIFont systemFontOfSize:24];
-        _productView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-        [_productView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self addSubview:_productViewButton];
         
-        self.productView.frame = CGRectMake(0, 70, self.frame.size.width-10, 50);
-        NSLog(@"did we get here?");
-        [self addSubview:_productView];
+        _listViewButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [_listViewButton setTitle:@"Lista All Öl" forState:UIControlStateNormal];
+        _listViewButton.titleLabel.font = [UIFont systemFontOfSize:24];
+        _listViewButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        [_listViewButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.listViewButton.frame = CGRectMake(0, 120, self.frame.size.width-10, 50);
         
-        _listView = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        
-        [_listView setTitle:@"Lista på öl" forState:UIControlStateNormal];
-        _listView.titleLabel.font = [UIFont systemFontOfSize:24];
-        _listView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-        [_listView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        
-        self.listView.frame = CGRectMake(0, 120, self.frame.size.width-10, 50);
-        
-        [self addSubview:_listView];
-        
-        
-        _omOss = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        
-        [_omOss setTitle:@"Om oss" forState:UIControlStateNormal];
-        _omOss.titleLabel.font = [UIFont systemFontOfSize:24];
-        _omOss.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-        [_omOss setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        
-        self.omOss.frame = CGRectMake(0, 170, self.frame.size.width-10, 50);
-        
-        [self addSubview:_omOss];
-        
+        [self addSubview:_listViewButton];
 
+        _omOssButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [_omOssButton setTitle:@"Om Oss" forState:UIControlStateNormal];
+        _omOssButton.titleLabel.font = [UIFont systemFontOfSize:24];
+        _omOssButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        [_omOssButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         
-//[self SetButtons];
-        
-        
-/*
-
- 
- */
+        self.omOssButton.frame = CGRectMake(0, 170, self.frame.size.width-10, 50);
+        [self addSubview:_omOssButton];
     }
     return self;
 }
@@ -84,19 +67,5 @@
         
     }];
 }
-
--(void)SetButtons{
-    
-    
-}
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end

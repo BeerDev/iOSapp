@@ -15,8 +15,8 @@
 -(void)DropDownMenu;
 -(void)HideDownMenu;
 
-@property (strong, nonatomic) IBOutlet UIButton *omOss;
-@property (strong, nonatomic) IBOutlet UIButton *listView;
-@property (strong, nonatomic) IBOutlet UIButton *productView;
+@property (strong, nonatomic) IBOutlet UIButton *omOssButton;
+@property (strong, nonatomic) IBOutlet UIButton *listViewButton;
+@property (strong, nonatomic) IBOutlet UIButton *productViewButton;
 
 @end

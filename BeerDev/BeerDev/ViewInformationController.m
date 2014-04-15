@@ -23,8 +23,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor clearColor];
-    
-    
+
     //här tar vi emot alla värden som ska visar. Dessa ställs in i pagecontentcontroller klassen när man "swipar" uppåt.
     self.artikelnamn.text = _name;
     self.pris.text = [[NSString alloc]initWithFormat:@"%@ kr*", _SEK];
