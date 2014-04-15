@@ -34,7 +34,11 @@
         [imageArray addObject:[JsonDataArray[i] objectForKey:@"URL"]];
     }
     
-
+    
+    
+    UITableView *myTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70) ];
+    [self.view addSubview:myTable];
+    myTable.backgroundColor = [UIColor clearColor];
     //[tableViewArray addObject:nil];
    //  NSLog(@"%@",tableViewArray);
  
@@ -79,14 +83,17 @@
             
             UIImage* image = [[UIImage alloc] initWithData:imageData];
             
+            if(image !=nil){
+            
             [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]];
             [jsonData writeToDisc:image index:(int)indexPath.row];
-           // [jsonData SetCacheItemForKey:image forKey:[array[indexPath.row] objectForKey:@"URL"]];
-            //  UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
-            
+            }
+        
             dispatch_sync(dispatch_get_main_queue(), ^{
+                if(image !=nil){
                 [[cell imageView] setImage:image];
                 [cell setNeedsLayout];
+                }
             });
         });
         
