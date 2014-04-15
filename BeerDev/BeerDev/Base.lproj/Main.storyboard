@@ -8,7 +8,7 @@
         <!--Table View-->
         <scene sceneID="13q-Hb-hTt">
             <objects>
-                <viewController storyboardIdentifier="TableViewID" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UM5-n0-30Y" customClass="TableView" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UM5-n0-30Y" customClass="TableView" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wvH-lK-6jQ"/>
                         <viewControllerLayoutGuide type="bottom" id="lM3-of-X0G"/>
@@ -85,7 +85,7 @@
         <!--View Controller-->
         <scene sceneID="Mb7-UV-M8b">
             <objects>
-                <viewController storyboardIdentifier="OmossViewID" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ivm-IU-S0x" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OmossViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ivm-IU-S0x" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="M26-BK-ETs"/>
                         <viewControllerLayoutGuide type="bottom" id="wBN-AJ-LxV"/>
