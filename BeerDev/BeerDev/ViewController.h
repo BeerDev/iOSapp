@@ -13,8 +13,8 @@
 
 @interface ViewController : UIViewController <UIPageViewControllerDataSource>
 
-@property (strong, nonatomic) UIPageViewController *pageViewController;
 
+@property (strong, nonatomic) UIPageViewController *pageViewController;
 
 
 @end

@@ -13,7 +13,6 @@
     BOOL setInfoOrNot;
 }
 @end
-
 @implementation ViewController
 
 
@@ -54,7 +53,7 @@
 #pragma mark PageViewController 
 - (PageContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
-    if (([[jsonData GetArray] count] == 0) ||( index >= [[jsonData GetArray] count]-1)) {
+    if (([[jsonData GetArray] count] == 0) ||( index >= [[jsonData GetArray] count])) {
         return nil;
     }
    // NSLog(@"%d",[[jsonData GetArray] count]);
@@ -96,6 +95,8 @@
 - (BOOL)prefersStatusBarHidden {
     return NO;
 }
+
+
 
 /*
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController

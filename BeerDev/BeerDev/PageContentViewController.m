@@ -166,6 +166,8 @@
         _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
          _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
          _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
+        _InformationController.brygg = [JsonDataArray[_pageIndex] objectForKey:@"Bryggeri"];
+        _InformationController.kategori = [JsonDataArray[_pageIndex] objectForKey:@"Kategori"];
         
         //denna behövs egentligen inte just nu, men eventuellt i framtiden.
         _InformationController.pageIndex = _pageIndex;

@@ -25,8 +25,6 @@
     self.view.backgroundColor = [UIColor clearColor];
     
     //[[UIColor alloc] initWithHue:0 saturation:0 brightness:0 alpha:0.45];
-
-    
     
     //här tar vi emot alla värden som ska visar. Dessa ställs in i pagecontentcontroller klassen när man "swipar" uppåt.
     self.artikelnamn.text = _name;
@@ -34,6 +32,8 @@
     self.info.text = _information;
     self.proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", _pro];
     self.sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ ml", _size];
+    self.bryggLabel.text = [[NSString alloc]initWithFormat:@"%@", _brygg];
+    self.kategoriLabel.text = [[NSString alloc]initWithFormat:@"%@", _kategori];
     
     // Do any additional setup after loading the view.
 }
