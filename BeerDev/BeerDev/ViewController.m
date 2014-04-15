@@ -56,7 +56,7 @@
     
     // Set page that is showing
     product = YES;
-    [self goToPageIndex:[jsonData GetIndex]];
+    [self goToPageIndex:(int)[jsonData GetIndex]];
     
     // menu and buttons
     [self setButton];
