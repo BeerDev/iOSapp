@@ -16,5 +16,7 @@
 -(void)HideDownMenu;
 
 @property (weak, nonatomic) IBOutlet UIButton *omOss;
-@property (weak, nonatomic) IBOutlet UIButton *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *listView;
+@property (weak, nonatomic) IBOutlet UIButton *productView;
+
 @end

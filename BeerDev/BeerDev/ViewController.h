@@ -16,7 +16,7 @@
 
 @property (strong, nonatomic) UIPageViewController *pageViewController;
 @property (strong, nonatomic) UIViewController *omOssController;
-@property (strong, nonatomic) UIView * myfuckingview;
+@property (strong, nonatomic) UIViewController * ListController;
 
 
 @end
