@@ -34,14 +34,14 @@
         [imageArray addObject:[JsonDataArray[i] objectForKey:@"URL"]];
     }
     
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70) ];
+    [self.view addSubview:tableView];
+    tableView.backgroundColor = [UIColor clearColor];
+    tableView.showsVerticalScrollIndicator = YES;
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    tableView.showsVerticalScrollIndicator = UIScrollViewIndicatorStyleWhite;
     
-    
-    UITableView *myTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70) ];
-    [self.view addSubview:myTable];
-    myTable.backgroundColor = [UIColor clearColor];
-    //[tableViewArray addObject:nil];
-   //  NSLog(@"%@",tableViewArray);
- 
 }
 //anger hur många rader det är i min tableView
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -70,6 +70,7 @@
     }
     
     //ställ in texten i cellen
+    cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
@@ -116,14 +117,7 @@
         [self presentViewController:mainController animated:YES completion:^{
             self.view = nil;
         }];
- //
-    //UIAlertView * ourmessage = [[UIAlertView alloc] initWithTitle:@"BEER" message:@"this is beer" delegate:nil cancelButtonTitle:@"dont press here" otherButtonTitles:@"this is another button", nil ];
-   // [ourmessage show];
-    
-    // In viewDidLoad you would have set up an array of controllers, then:
-  //  UIViewController *childController = [tableViewArray objectAtIndex:row];
-  //  [self.navigationController pushViewController:childController];
-   
+
 }
 
 -(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{

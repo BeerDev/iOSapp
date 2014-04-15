@@ -43,7 +43,7 @@
     //create a information view from our storyboard
     _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
     [self addChildViewController:_InformationController];
-    NSLog(@"%@",[JsonDataArray[_pageIndex] objectForKey:@"URL"]);
+
     //set the name,price and info from the JSON data according to the pageIndex
     self.artikelnamnLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
     self.priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr *", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"]];
