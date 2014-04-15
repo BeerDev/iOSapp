@@ -31,6 +31,8 @@
     self.info.text = _information;
     self.proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", _pro];
     self.sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ ml", _size];
+    self.bryggLabel.text = [[NSString alloc]initWithFormat:@"%@", _brygg];
+    self.kategoriLabel.text = [[NSString alloc]initWithFormat:@"%@", _kategori];
     
     // Do any additional setup after loading the view.
 }

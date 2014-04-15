@@ -8,7 +8,7 @@
         <!--Table View-->
         <scene sceneID="13q-Hb-hTt">
             <objects>
-                <viewController id="UM5-n0-30Y" customClass="TableView" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TableViewID" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UM5-n0-30Y" customClass="TableView" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wvH-lK-6jQ"/>
                         <viewControllerLayoutGuide type="bottom" id="lM3-of-X0G"/>
@@ -80,12 +80,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-253" y="112"/>
+            <point key="canvasLocation" x="-147" y="99"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Mb7-UV-M8b">
             <objects>
-                <viewController storyboardIdentifier="OmossViewController" id="Ivm-IU-S0x" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OmossViewID" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ivm-IU-S0x" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="M26-BK-ETs"/>
                         <viewControllerLayoutGuide type="bottom" id="wBN-AJ-LxV"/>
@@ -133,7 +133,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ORW-73-w1l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-870" y="697"/>
+            <point key="canvasLocation" x="-902" y="616"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="zy0-3m-lsW">
@@ -261,7 +261,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tillverkare" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qRb-82-Lvz">
-                                <rect key="frame" x="20" y="103" width="174" height="21"/>
+                                <rect key="frame" x="20" y="103" width="206" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -281,7 +281,9 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="artikelnamn" destination="k93-GI-UDy" id="Faa-ts-6N6"/>
+                        <outlet property="bryggLabel" destination="qRb-82-Lvz" id="ygj-Eh-xFt"/>
                         <outlet property="info" destination="j4m-6Q-Asi" id="FNt-fr-bZC"/>
+                        <outlet property="kategoriLabel" destination="p6T-ey-8WF" id="EQ7-29-OFn"/>
                         <outlet property="pris" destination="D0p-cu-Q8n" id="wWI-hF-C93"/>
                         <outlet property="proLabel" destination="l62-is-8ZE" id="KMT-tO-Zzd"/>
                         <outlet property="sizeLabel" destination="SSt-d3-eLF" id="SEZ-Ir-Lpt"/>

@@ -15,6 +15,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *info;
 @property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *proLabel;
+@property (weak, nonatomic) IBOutlet UILabel *kategoriLabel;
+@property (weak, nonatomic) IBOutlet UILabel *bryggLabel;
 
 @property NSUInteger pageIndex;
 @property NSString* name;
@@ -22,7 +24,8 @@
 @property NSString* SEK;
 @property NSString * size;
 @property NSString * pro;
-
+@property NSString * brygg;
+@property NSString * kategori;
 
 
 @end
