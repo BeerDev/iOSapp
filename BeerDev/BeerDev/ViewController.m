@@ -9,13 +9,13 @@
 #import "ViewController.h"
 
 @interface ViewController (){
-    //declare variables here to be global thru this class
-    PageContentViewController *pageContentViewController;
-    PageContentViewController *startingViewController;
+    //declare variables here to be global through this class
     BOOL button;
     UIButton* dropButton;
-    UIButton* omOss;
     DDMenu*menu;
+    BOOL about;
+    BOOL list;
+    BOOL product;
 }
 @end
 @implementation ViewController
@@ -27,19 +27,24 @@
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
     
-    //create om oss
-    
+    //create omOssController
     self.omOssController = [self.storyboard instantiateViewControllerWithIdentifier:@"OmossViewController"];
     self.omOssController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    [self addChildViewController:_omOssController];
-
+    [self.omOssController willMoveToParentViewController:self];
+    [self addChildViewController:self.omOssController];
     
+    // Create listcontroller
+    self.ListController = [self.storyboard instantiateViewControllerWithIdentifier:@"TableViewController"];
+    self.ListController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.ListController willMoveToParentViewController:self];
+    [self addChildViewController:self.ListController];
+
     // Create PageViewController
     self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageViewController"];
     self.pageViewController.dataSource = self;
     //[jsonData SetIndex:0];
     //Start the page view controller with this first page at index 0;
-    startingViewController = [self viewControllerAtIndex:[jsonData GetIndex]];
+    PageContentViewController *startingViewController = [self viewControllerAtIndex:[jsonData GetIndex]];
     NSArray *viewControllers = @[startingViewController];
     
     //set the PageViewController by storyboard ID.
@@ -51,17 +56,31 @@
     [self.view addSubview:_pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
     
+    // Set page that is showing
+    product = YES;
     
+    // menu and buttons
     [self setButton];
-
-    
-    menu = [[DDMenu alloc ]initWithFrame:CGRectMake(0, -170, self.view.frame.size.width, 170)];
+    menu = [[DDMenu alloc ]initWithFrame:CGRectMake(0, -220, self.view.frame.size.width, 220)];
     [self.view addSubview:menu];
-    
-
     [self.view bringSubviewToFront:dropButton];
 
     
+}
+
+- (void)switchTo:(UIViewController*)from to:(UIViewController *)controller
+{
+    
+    [self transitionFromViewController:from
+                      toViewController: controller
+                              duration:0.4
+                               options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+                          // no animation necessary, but docs say this can't be NULL
+                            }
+                            completion:^(BOOL finished){
+                                [menu HideDownMenu];
+                                NSLog(@"you switched");
+            }];
 }
 
 -(void)setButton{
@@ -83,7 +102,9 @@
         [dropButton setTitle:@"▲" forState:UIControlStateNormal];
         
         [[menu omOss] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:omOss];
+        [[menu productView] addTarget:self action:@selector(GoToProductInfo) forControlEvents:UIControlEventTouchUpInside];
+        [[menu listView] addTarget:self action:@selector(GoToList) forControlEvents:UIControlEventTouchUpInside];
+
         button = YES;
     }
     else if (button == YES){
@@ -92,37 +113,69 @@
          button = NO;
     }
 }
--(void)HideMenu{
 
+
+-(void)GoToProductInfo{
+    if (about == YES) {
+        about = NO;
+        product = YES;
+        [self switchTo:self.omOssController to:self.pageViewController];
+    }
+    else if (list == YES){
+        list = NO;
+        product = YES;
+        [self switchTo:self.ListController to:self.pageViewController];
+    }
+    
+    [self menuBarToFront];
+    
 }
+
+-(void)GoToList{
+    if (about == YES) {
+        about = NO;
+        list = YES;
+        [self switchTo:self.omOssController to:self.ListController];
+    }
+    else if (product == YES){
+        product = NO;
+        list = YES;
+        [self switchTo:self.pageViewController to:self.ListController];
+    }
+
+    [self menuBarToFront];
+    
+}
+
 
 -(void)GoToOmOss{
-    [self.pageViewController willMoveToParentViewController:nil];
-    [self.pageViewController removeFromParentViewController];
-    self.pageViewController = nil;
+    if (list == YES) {
+        list = NO;
+        about = YES;
+        [self switchTo:self.ListController to:self.omOssController];
+    }
+    else if (product == YES){
+        product = NO;
+        about= YES;
+        [self switchTo:self.pageViewController to:self.omOssController];
+    }
+    [self menuBarToFront];
 
-    [self.pageViewController willMoveToParentViewController:nil];
-    [startingViewController removeFromParentViewController];
-    startingViewController = nil;
-
-    [self.pageViewController willMoveToParentViewController:nil];
-    [pageContentViewController removeFromParentViewController];
-    pageContentViewController = nil;
-
-    
+    /*
     [self.view addSubview:_omOssController.view];
-    [self.omOssController didMoveToParentViewController:self];
-    [self menuBarChange];
+    */
+    
+    
     
 }
 
 
--(void)menuBarChange{
-    [self.view addSubview:menu];
-    [self.view bringSubviewToFront:dropButton];
-    [menu HideDownMenu];
+-(void)menuBarToFront{
+    
     [dropButton setTitle:@"▼" forState:UIControlStateNormal];
     button = NO;
+    [self.view bringSubviewToFront:menu];
+    [self.view bringSubviewToFront:dropButton];
 }
 
 - (void)didReceiveMemoryWarning
@@ -143,7 +196,7 @@
     }
    // NSLog(@"%d",[[jsonData GetArray] count]);
     // Create a new view controller and pass suitable data.
-    pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
+    PageContentViewController *pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
     pageContentViewController.pageIndex = index;
     return pageContentViewController;
 }

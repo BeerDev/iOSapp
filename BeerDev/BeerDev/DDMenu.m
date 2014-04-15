@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        menuSize = 170;
+        menuSize = 220;
         
        // self.backgroundColor = [UIColor blackColor];
         //self.alpha = 0.6;
@@ -42,23 +42,35 @@
 
 -(void)HideDownMenu{
     NSLog(@"Hide");
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.4 animations:^{
         self.frame = CGRectMake(0, -menuSize,  self.frame.size.width, menuSize);
         
     }];
 }
 
 -(void)SetButtons{
-    _tableView = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
-    [_tableView setTitle:@"Lista all öl" forState:UIControlStateNormal];
-    _tableView.titleLabel.font = [UIFont systemFontOfSize:24];
-    _tableView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-    [_tableView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _productView = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    [_productView setTitle:@"Produkt info" forState:UIControlStateNormal];
+    _productView.titleLabel.font = [UIFont systemFontOfSize:24];
+    _productView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    [_productView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    self.productView.frame = CGRectMake(0, 70, self.frame.size.width-10, 50);
+    
+    [self addSubview:_productView];
+    
+    _listView = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    [_listView setTitle:@"Lista på öl" forState:UIControlStateNormal];
+    _listView.titleLabel.font = [UIFont systemFontOfSize:24];
+    _listView.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    [_listView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 
-    self.tableView.frame = CGRectMake(0, 70, self.frame.size.width-10, 50);
+    self.listView.frame = CGRectMake(0, 120, self.frame.size.width-10, 50);
     
-    [self addSubview:_tableView];
+    [self addSubview:_listView];
     
     
     _omOss = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -68,9 +80,11 @@
     _omOss.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
     [_omOss setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
-    self.omOss.frame = CGRectMake(0, 120, self.frame.size.width-10, 50);
+    self.omOss.frame = CGRectMake(0, 170, self.frame.size.width-10, 50);
     
     [self addSubview:_omOss];
+    
+  
 }
 
 /*
