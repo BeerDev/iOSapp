@@ -57,11 +57,10 @@
     //new
     
     NSLog(@"%@",[JsonDataArray[0] objectForKey:(NSString*)@"URL"]);
-    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"img%d",_pageIndex]]] != nil){
+    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]]] != nil){
            NSLog(@"there was a file on disk");
-        self.displayImage.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"img%d",_pageIndex]]];
+        self.displayImage.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]]];
     }
-
     else
     {
          [self startDownload:(int)_pageIndex];
@@ -118,7 +117,7 @@
     //NSLog(@"finsihed loading this url %@",[JsonDataArray[_pageIndex] objectForKey:@"URL"]);
 
     //save the image to disk and save a path in userdefaults with index.
-    [jsonData SetFilePath:[jsonData writeToDisc:image index:_pageIndex] key:[[NSString alloc] initWithFormat:@"img%d",_pageIndex]];
+    [jsonData SetFilePath:[jsonData writeToDisc:image index:_pageIndex] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
     [jsonData writeToDisc:image index:_pageIndex];
     // old cache
     //[jsonData SetCacheItemForKey:image forKey:(NSString*)[JsonDataArray[_pageIndex] objectForKey:@"URL"]];
