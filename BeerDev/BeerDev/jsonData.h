@@ -92,6 +92,8 @@
  */
 +(UIImage*)GetCachedImage:(NSString*)forKey;
 
+//
+
 
 //write to file and get from file
 +(NSString*)writeToDisc:(UIImage*)img index:(int)index;

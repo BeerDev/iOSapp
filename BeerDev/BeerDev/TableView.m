@@ -109,7 +109,6 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSUInteger row = [indexPath row];
-    
     [jsonData SetIndex:indexPath.row];
     UIViewController * mainController = [self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
     

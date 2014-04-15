@@ -9,6 +9,7 @@
 #import "ViewController.h"
 
 @interface ViewController (){
+    
     //declare variables here to be global through this class
     BOOL button;
     UIButton* dropButton;
@@ -16,6 +17,8 @@
     BOOL about;
     BOOL list;
     BOOL product;
+    PageContentViewController *startingViewController;
+    NSArray *viewControllers;
 }
 @end
 @implementation ViewController
@@ -43,12 +46,7 @@
     self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageViewController"];
     self.pageViewController.dataSource = self;
     //[jsonData SetIndex:0];
-    //Start the page view controller with this first page at index 0;
-    PageContentViewController *startingViewController = [self viewControllerAtIndex:[jsonData GetIndex]];
-    NSArray *viewControllers = @[startingViewController];
-    
-    //set the PageViewController by storyboard ID.
-    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+
     
     // Change the size of page view controller if needed.
     self.pageViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -58,6 +56,7 @@
     
     // Set page that is showing
     product = YES;
+    [self goToPageIndex:[jsonData GetIndex]];
     
     // menu and buttons
     [self setButton];
@@ -71,7 +70,6 @@
 
 - (void)switchTo:(UIViewController*)from to:(UIViewController *)controller
 {
-    
     [self transitionFromViewController:from
                       toViewController: controller
                               duration:0.4
@@ -239,23 +237,18 @@
     return [self viewControllerAtIndex:index];
 }
 
+-(void)goToPageIndex:(int)number{
+    //Start the page view controller with this first page at index 0;
+    startingViewController = [self viewControllerAtIndex:number];
+    viewControllers = @[startingViewController];
+    
+    //set the PageViewController by storyboard ID.
+    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+}
 
 - (BOOL)prefersStatusBarHidden {
     return NO;
 }
 
-
-
-/*
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController
-{
-    return [[jsonData GetArray] count]-1;
-}
-
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController
-{
-    return 0;
-}
-*/
 
 @end

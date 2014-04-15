@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 //label for information
 //@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 
 @property (strong, nonatomic) ViewInformationController* InformationController;
 //this is used in pageViewController to track on what index you are at.

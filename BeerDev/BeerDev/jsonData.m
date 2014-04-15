@@ -149,6 +149,7 @@ static NSCache * myImageCache;
     {
         NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
     }
+
 }
 
 
