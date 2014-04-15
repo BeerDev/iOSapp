@@ -47,7 +47,7 @@
     //set the name,price and info from the JSON data according to the pageIndex
     self.artikelnamnLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
     self.priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr *", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"]];
-    self.infoLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
+    //self.infoLabel.text = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
     
     /*---------------------------------------------------------------------------------*/
     //check if there is a image on disk with a pathname according the the name of the product.
@@ -133,7 +133,7 @@
         
         self.artikelnamnLabel.hidden = YES;
         self.priceLabel.hidden = YES;
-        self.infoLabel.hidden = YES;
+        //self.infoLabel.hidden = YES;
         self.displayImage.alpha = 0.45;
         
         //set values for the information screen.
@@ -169,7 +169,7 @@
                              [_InformationController.view removeFromSuperview];
                              self.artikelnamnLabel.hidden = NO;
                              self.priceLabel.hidden = NO;
-                             self.infoLabel.hidden = NO;
+                            // self.infoLabel.hidden = NO;
                              }];
     }
 
