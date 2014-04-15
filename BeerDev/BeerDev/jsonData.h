@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface jsonData : NSObject
+
 /**
  * Calling this method will connect to the server and get the JSON file. Doing this sets the NSMutableArray but you have to get it with the GetArray Method.
  * @author Maxim Frisk

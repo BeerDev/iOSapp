@@ -10,7 +10,12 @@
 
 @interface ViewController (){
     //declare variables here to be global thru this class
-    BOOL setInfoOrNot;
+    PageContentViewController *pageContentViewController;
+    PageContentViewController *startingViewController;
+    BOOL button;
+    UIButton* dropButton;
+    UIButton* omOss;
+    DDMenu*menu;
 }
 @end
 
@@ -23,12 +28,19 @@
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
     
+    //create om oss
+    
+    self.omOssController = [self.storyboard instantiateViewControllerWithIdentifier:@"OmossViewController"];
+    self.omOssController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self addChildViewController:_omOssController];
+
+    
     // Create PageViewController
     self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageViewController"];
     self.pageViewController.dataSource = self;
     //[jsonData SetIndex:0];
     //Start the page view controller with this first page at index 0;
-    PageContentViewController *startingViewController = [self viewControllerAtIndex:[jsonData GetIndex]];
+    startingViewController = [self viewControllerAtIndex:[jsonData GetIndex]];
     NSArray *viewControllers = @[startingViewController];
     
     //set the PageViewController by storyboard ID.
@@ -39,6 +51,79 @@
     [self addChildViewController:_pageViewController];
     [self.view addSubview:_pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
+    
+    
+    [self setButton];
+
+    
+    menu = [[DDMenu alloc ]initWithFrame:CGRectMake(0, -170, self.view.frame.size.width, 170)];
+    [self.view addSubview:menu];
+    
+
+    [self.view bringSubviewToFront:dropButton];
+
+    
+}
+
+-(void)setButton{
+    button = NO;
+    dropButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+    dropButton.titleLabel.font = [UIFont systemFontOfSize:24];
+    [dropButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 50, 50);
+    [dropButton addTarget:self action:@selector(DropMenu) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:dropButton];
+
+}
+
+-(void)DropMenu{
+    if(button == NO){
+        [menu DropDownMenu];
+        [dropButton setTitle:@"▲" forState:UIControlStateNormal];
+        
+        [[menu omOss] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:omOss];
+        button = YES;
+    }
+    else if (button == YES){
+        [menu HideDownMenu];
+        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+         button = NO;
+    }
+}
+-(void)HideMenu{
+
+}
+
+-(void)GoToOmOss{
+    [self.pageViewController willMoveToParentViewController:nil];
+    [self.pageViewController removeFromParentViewController];
+    self.pageViewController = nil;
+
+    [self.pageViewController willMoveToParentViewController:nil];
+    [startingViewController removeFromParentViewController];
+    startingViewController = nil;
+
+    [self.pageViewController willMoveToParentViewController:nil];
+    [pageContentViewController removeFromParentViewController];
+    pageContentViewController = nil;
+
+    
+    [self.view addSubview:_omOssController.view];
+    [self.omOssController didMoveToParentViewController:self];
+    [self menuBarChange];
+    
+}
+
+
+-(void)menuBarChange{
+    [self.view addSubview:menu];
+    [self.view bringSubviewToFront:dropButton];
+    [menu HideDownMenu];
+    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+    button = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,7 +144,7 @@
     }
    // NSLog(@"%d",[[jsonData GetArray] count]);
     // Create a new view controller and pass suitable data.
-    PageContentViewController *pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
+    pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
     pageContentViewController.pageIndex = index;
     return pageContentViewController;
 }

@@ -75,18 +75,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="ejc-EG-3N6" appends="YES" id="mml-6d-Ygc"/>
-                        </connections>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="ejc-EG-3N6">
-                    <connections>
-                        <segue destination="UM5-n0-30Y" kind="modal" customClass="UIStoryboardPopoverSegue" id="062-mR-Kk0"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-253" y="112"/>
         </scene>
@@ -141,7 +133,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ORW-73-w1l" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-766" y="681"/>
+            <point key="canvasLocation" x="-870" y="697"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="zy0-3m-lsW">

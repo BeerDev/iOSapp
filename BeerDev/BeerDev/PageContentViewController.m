@@ -164,8 +164,9 @@
 #pragma mark important functions
 
 -(void)information{
-        NSLog(@"adding informationView");
+
     if(_informationIsShowing == NO){
+        NSLog(@"adding informationView");
         _informationIsShowing = YES;
         
         self.artikelnamnLabel.hidden = YES;
