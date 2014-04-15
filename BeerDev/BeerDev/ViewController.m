@@ -63,6 +63,7 @@
     [self setButton];
     menu = [[DDMenu alloc ]initWithFrame:CGRectMake(0, -220, self.view.frame.size.width, 220)];
     [self.view addSubview:menu];
+    [self.view bringSubviewToFront:menu];
     [self.view bringSubviewToFront:dropButton];
 
     

@@ -76,7 +76,7 @@ static NSCache * myImageCache;
 +(void)SetCache{
     myImageCache = [[NSCache alloc] init];
     //[myImageCache setCountLimit:2];
-    NSLog(@"%d",(int)[myImageCache countLimit]);
+  //  NSLog(@"%d",(int)[myImageCache countLimit]);
 }
 
 +(void)SetCacheItemForKey:(UIImage*)image forKey:(NSString*)key{
@@ -99,7 +99,7 @@ static NSCache * myImageCache;
     
     NSData * myImage =UIImagePNGRepresentation(img);
     [myImage writeToFile:path atomically:YES];
-    NSLog(@"path %@",path);
+  //  NSLog(@"path %@",path);
 
     return path;
 

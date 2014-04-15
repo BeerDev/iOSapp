@@ -70,7 +70,7 @@
     cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
     
-    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"img%d",indexPath.row]]] == nil){
+    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[array[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil){
     
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         
@@ -79,8 +79,8 @@
             
             UIImage* image = [[UIImage alloc] initWithData:imageData];
             
-            [jsonData SetFilePath:[jsonData writeToDisc:image index:indexPath.row] key:[[NSString alloc] initWithFormat:@"img%d",indexPath.row]];
-            [jsonData writeToDisc:image index:indexPath.row];
+            [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row] key:[[NSString alloc] initWithFormat:@"%@",[array[indexPath.row] objectForKey:@"Artikelnamn"]]];
+            [jsonData writeToDisc:image index:(int)indexPath.row];
            // [jsonData SetCacheItemForKey:image forKey:[array[indexPath.row] objectForKey:@"URL"]];
             //  UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
             
@@ -91,7 +91,7 @@
         });
         
     }else{
-        cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"img%d",indexPath.row]]];
+        cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[array[indexPath.row] objectForKey:@"Artikelnamn"]]]];
     }
 
     
@@ -101,8 +101,6 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSUInteger row = [indexPath row];
-  
-    NSLog(@"you pressed %@ %d",[tableViewArray objectAtIndex:indexPath.row],indexPath.row);
     
     [jsonData SetIndex:indexPath.row];
     UIViewController * mainController = [self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
