@@ -93,6 +93,7 @@
     ourTableView.dataSource = self;
     ourTableView.separatorColor=[UIColor clearColor];
     ourTableView.showsVerticalScrollIndicator = UIScrollViewIndicatorStyleWhite;
+    ourTableView.rowHeight = 50;
 
     
 }
@@ -300,10 +301,6 @@
     //skapa en cell med identifieraren ovan
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
     
-    
-    
-    
-    
     //om den inte är nil så allocera en ny cell, skapa med en stil och använd identifieraren ovan
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
@@ -380,5 +377,11 @@
     [ourTableView deselectRowAtIndexPath:[ourTableView indexPathForSelectedRow] animated:animated];
     [super viewWillDisappear:animated];
 }
-
+/*
+- (void)tableView:(UITableView *)tableView sortDescriptorsDidChange:(NSArray *)oldDescriptors
+{
+    [tableViewArray sortUsingDescriptors: [tableView sortDescriptors]];
+    [tableView reloadData];
+}
+*/
 @end
