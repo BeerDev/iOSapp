@@ -34,7 +34,7 @@ static NSCache * myImageCache;
     NSString* size = @"Storlek";
     NSString* category = @"Kategori";
     //specialt thing
-    NSString* toApp = @"Till App";
+   // NSString* toApp = @"Till App";
     
     // Create array to hold dictionaries
     NSMutableArray *myObject = [[NSMutableArray alloc] init];

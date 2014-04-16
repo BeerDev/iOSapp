@@ -11,7 +11,7 @@
 
 @interface PageContentViewController (){
     //this is used to hold the JSON data.
-    NSMutableArray * JsonDataArray;
+    NSArray * JsonDataArray;
 }
 @end
 @class ViewInformationController;
@@ -38,8 +38,13 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
     
+    //sort the jsondata before presenting the pageview.
     //get the json array for setting the information in this class
-    JsonDataArray = [jsonData GetArray];
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:@"Artikelnamn" ascending:YES selector:@selector(localizedStandardCompare:)];
+        NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
+
+    JsonDataArray = [[jsonData GetArray] sortedArrayUsingDescriptors:sortDescriptors];
+
     //create a information view from our storyboard
     _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
     [self addChildViewController:_InformationController];

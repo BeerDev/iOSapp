@@ -111,8 +111,7 @@
     //NSUInteger row = [indexPath row];
     [jsonData SetIndex:indexPath.row];
     UIViewController * mainController = [self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
-    
-    
+
         [self presentViewController:mainController animated:YES completion:^{
             self.view = nil;
         }];

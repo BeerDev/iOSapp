@@ -38,7 +38,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
 
     JsonDataArray = [jsonData GetArray];
-  //  JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
+    JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
     
     //create omOssController
     self.omOssController = [self.storyboard instantiateViewControllerWithIdentifier:@"OmossViewController"];
@@ -90,8 +90,6 @@
     ourTableView.rowHeight = 70;
     
     //sort
-
-    
 }
 
 - (void)switchTo:(UIViewController*)from to:(UIViewController *)controller
@@ -381,8 +379,6 @@
 }
 */
 -(NSArray*)ourSortingFunction:(NSString*)sort{
-   // NSLog(@"%@",JsonDataArray);
-
 NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:YES selector:@selector(localizedStandardCompare:)];
     /*
      NSSortDescriptor *priceSort = [NSSortDescriptor sortDescriptorWithKey:@"Utpris exkl moms" ascending:YES comparator:^(id obj1, id obj2){ return [(NSString*)obj1 compare:(NSString*)obj2 options:NSNumericSearch]; }];
@@ -393,8 +389,21 @@ NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascendi
     NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
     NSArray *sortedArray;
     sortedArray = [JsonDataArray sortedArrayUsingDescriptors:sortDescriptors];
-   //  NSLog(@"%@",sortedArray);
+
     return sortedArray;
+}
+
+-(void)changeSort:(NSString*)sort {
+    
+    
+}
+
+-(int)getNumberForBeer{
+    int temp;
+    
+    
+    //return the number
+    return temp;
 }
 
 @end
