@@ -10,7 +10,7 @@
 
 @implementation jsonData
 
-static NSMutableArray* JSONARRAY = nil;
+static NSArray* JSONARRAY = nil;
 static NSCache * myImageCache;
 //@synthesize jsonObjects = _jsonObjects;
 
@@ -23,10 +23,51 @@ static NSCache * myImageCache;
 
 +(void)SetJSON{
     NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://beerdev.tk/json.php"]];
-    JSONARRAY = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+    id jsonObjects = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+    // Define keys
+    NSString* info = @"Info";
+    NSString* url = @"URL";
+    NSString* price = @"Utpris exkl moms";
+    NSString* brewery = @"Bryggeri";
+    NSString* name = @"Artikelnamn";
+    NSString* alc = @"Alkoholhalt";
+    NSString* size = @"Storlek";
+    NSString* category = @"Kategori";
+    //specialt thing
+    NSString* toApp = @"Till App";
+    
+    // Create array to hold dictionaries
+    NSMutableArray *myObject = [[NSMutableArray alloc] init];
+    
+
+    
+    // values in foreach loop
+    for (NSDictionary *dataDict in jsonObjects) {
+        NSString *artikelnamn = [dataDict objectForKey:name];
+        NSString *bild = [dataDict objectForKey:url];
+        NSNumber* pris =  [dataDict objectForKey:price];
+        NSString *bryggeri = [dataDict objectForKey:brewery];
+        NSString *information = [dataDict objectForKey:info];
+        NSString *alkohol = [dataDict objectForKey:alc];
+        NSString *kategori =[dataDict objectForKey:category];
+        NSString *storlek =[dataDict objectForKey:size];
+        
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+                              artikelnamn, name,
+                              bild, url,
+                              pris, price,
+                              bryggeri, brewery,
+                              information, info,
+                              alkohol, alc,
+                              kategori, category,
+                              storlek, size,
+                              nil];
+        [myObject addObject:dict];
+    }
+    JSONARRAY = myObject;
 }
 
-+(NSMutableArray*)GetArray{
++(NSArray*)GetArray{
     return JSONARRAY;
 }
 
@@ -41,9 +82,9 @@ static NSCache * myImageCache;
 
 }
 
-+(NSMutableArray*)GetJsonArray:(NSString*)key
++(NSArray*)GetJsonArray:(NSString*)key
 {
-    NSMutableArray* jsonData = nil;
+    NSArray* jsonData = nil;
     if ([[NSUserDefaults standardUserDefaults] objectForKey:key]){
         jsonData = [[NSUserDefaults standardUserDefaults] mutableArrayValueForKey:key];
     }
@@ -114,7 +155,7 @@ static NSCache * myImageCache;
 
 
 +(void)SetFilePath:(NSString*)path key:(NSString*)key{
-    
+    NSLog(@"Skriver PATH: %@  KEY: %@",path,key);
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
 	if (standardUserDefaults)
     {
@@ -128,6 +169,7 @@ static NSCache * myImageCache;
     if ([[NSUserDefaults standardUserDefaults] objectForKey:key]){
         path = [[NSUserDefaults standardUserDefaults] objectForKey:key];
     }
+        NSLog(@"Hämtar PATH: %@  KEY: %@",path,key);
     return path;
 }
 

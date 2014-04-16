@@ -24,9 +24,8 @@
     //table
     UITableView *ourTableView;
     //global variables table
-    NSMutableArray * tableViewArray;
-    NSMutableArray * JsonDataArray;
-    NSMutableArray * imageArray;
+    NSArray * JsonDataArray;
+
 }
 @end
 @implementation ViewController
@@ -37,7 +36,9 @@
     [super viewDidLoad];
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
-    
+
+    JsonDataArray = [jsonData GetArray];
+  //  JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
     
     //create omOssController
     self.omOssController = [self.storyboard instantiateViewControllerWithIdentifier:@"OmossViewController"];
@@ -74,17 +75,10 @@
     [self.view bringSubviewToFront:dropButton];
     
 
-    //table
-    JsonDataArray = [jsonData GetArray];
-    tableViewArray = [[NSMutableArray alloc] init];
-    imageArray = [[NSMutableArray alloc] init];
-    
-    
-    for (int i = 0; i < [JsonDataArray count]; i++){
-        [tableViewArray addObject:[JsonDataArray[i] objectForKey:@"Artikelnamn"]];
-        [imageArray addObject:[JsonDataArray[i] objectForKey:@"URL"]];
-    }
-    
+    //
+
+
+    //Create a table
     ourTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70) ];
     [self.ListController.view addSubview:ourTableView];
     ourTableView.backgroundColor = [UIColor clearColor];
@@ -93,7 +87,9 @@
     ourTableView.dataSource = self;
     ourTableView.separatorColor=[UIColor clearColor];
     ourTableView.showsVerticalScrollIndicator = UIScrollViewIndicatorStyleWhite;
-    ourTableView.rowHeight = 50;
+    ourTableView.rowHeight = 70;
+    
+    //sort
 
     
 }
@@ -287,7 +283,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    return [tableViewArray count];
+    return [JsonDataArray count];
     
 }
 
@@ -310,7 +306,7 @@
     cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    cell.textLabel.text = [tableViewArray objectAtIndex:indexPath.row];
+    cell.textLabel.text = [JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"];
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
     
     if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil){
@@ -318,7 +314,7 @@
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         
         dispatch_async(queue, ^{
-            NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[imageArray objectAtIndex:indexPath.row]]];
+            NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[indexPath.row]objectForKey:@"URL"]]];
             
             UIImage* image = [[UIImage alloc] initWithData:imageData];
             
@@ -384,4 +380,21 @@
     [tableView reloadData];
 }
 */
+-(NSArray*)ourSortingFunction:(NSString*)sort{
+   // NSLog(@"%@",JsonDataArray);
+
+NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:YES selector:@selector(localizedStandardCompare:)];
+    /*
+     NSSortDescriptor *priceSort = [NSSortDescriptor sortDescriptorWithKey:@"Utpris exkl moms" ascending:YES comparator:^(id obj1, id obj2){ return [(NSString*)obj1 compare:(NSString*)obj2 options:NSNumericSearch]; }];
+     
+     NSSortDescriptor *nameSort = [[NSSortDescriptor alloc] initWithKey:@"Utpris exkl moms"
+     ascending:YES ];
+     */
+    NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
+    NSArray *sortedArray;
+    sortedArray = [JsonDataArray sortedArrayUsingDescriptors:sortDescriptors];
+   //  NSLog(@"%@",sortedArray);
+    return sortedArray;
+}
+
 @end
