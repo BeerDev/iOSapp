@@ -134,6 +134,9 @@
 - (IBAction)SetInformationView:(id)sender {
     //if the information is not showing set the information view.
     //calls information method which sets the information.
+    
+}
+- (IBAction)tap:(id)sender {
     if(_informationIsShowing == NO){
         NSLog(@"adding informationView");
         _informationIsShowing = YES;
@@ -163,12 +166,8 @@
                              NSLog(@"klar");
                          }];
     }
-
-}
-
-- (IBAction)downSwipe:(id)sender {
-    //if the information is showing remove it with animation.
-    if(_informationIsShowing == YES){
+    
+    else if(_informationIsShowing == YES){
         _informationIsShowing = NO;
         
         [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;self.displayImage.alpha = 1;}
@@ -177,8 +176,15 @@
                              self.artikelnamnLabel.hidden = NO;
                              self.priceLabel.hidden = NO;
                              self.infoLabel.hidden = NO;
-                             }];
+                         }];
     }
+
+    
+}
+
+- (IBAction)downSwipe:(id)sender {
+    //if the information is showing remove it with animation.
+
 
 }
 

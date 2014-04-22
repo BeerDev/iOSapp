@@ -177,6 +177,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="TdF-SW-SJ2" appends="YES" id="kJU-Kk-ljx"/>
                             <outletCollection property="gestureRecognizers" destination="qJJ-F4-r2Z" appends="YES" id="xt5-WV-Kx0"/>
+                            <outletCollection property="gestureRecognizers" destination="L22-Ja-K5e" appends="YES" id="o6p-eI-hqA"/>
                         </connections>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
@@ -188,6 +189,11 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Np-aP-mgc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="L22-Ja-K5e">
+                    <connections>
+                        <action selector="tap:" destination="FCD-GJ-ULf" id="rIk-Xk-A59"/>
+                    </connections>
+                </tapGestureRecognizer>
                 <swipeGestureRecognizer direction="up" id="TdF-SW-SJ2">
                     <connections>
                         <action selector="SetInformationView:" destination="FCD-GJ-ULf" id="dbh-cx-s0g"/>

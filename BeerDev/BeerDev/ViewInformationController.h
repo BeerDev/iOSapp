@@ -19,13 +19,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *bryggLabel;
 
 @property NSUInteger pageIndex;
-@property NSString* name;
-@property NSString* information;
-@property NSString* SEK;
-@property NSString * size;
-@property NSString * pro;
-@property NSString * brygg;
-@property NSString * kategori;
+@property NSString *name;
+@property NSString *information;
+@property NSString *SEK;
+@property NSString *size;
+@property NSString *pro;
+@property NSString *brygg;
+@property NSString *kategori;
 
 
 @end
