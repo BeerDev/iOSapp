@@ -15,6 +15,7 @@
     UIButton* dropButton;
     UIButton* priceSort;
     UIButton* alphabeticSort;
+    UIButton* searchButton;
     DDMenu*menu;
     BOOL about;
     BOOL list;
@@ -151,7 +152,7 @@
     
     
     alphabeticSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    alphabeticSort.frame = CGRectMake(74, 20, 50, 50);
+    alphabeticSort.frame = CGRectMake(64, 20, 50, 50);
     alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
     
     [alphabeticSort setTitle:@"A - Ö" forState:UIControlStateNormal];
@@ -159,11 +160,20 @@
     [alphabeticSort addTarget:self action:@selector(sortAlphabetically) forControlEvents:UIControlEventTouchUpInside];
     [self.ListController.view addSubview:alphabeticSort];
     
+    UIImage *magnifier = [UIImage imageNamed:@"magnifier"];
+    searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    searchButton.frame = CGRectMake(124, 20, 50, 50);
     
+    [searchButton setImage:magnifier forState:UIControlStateNormal];
+    [searchButton addTarget:self action:@selector(searchInList)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    float size = 35;
+    [searchButton setImageEdgeInsets:UIEdgeInsetsMake(size, size, size, size)];
+    [self.ListController.view addSubview:searchButton];
 
 }
 -(void)sortAlphabetically{
-    NSLog(@"nu ska vi sortera efter namn");
     JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
     [ourTableView reloadData];
     self.pageViewController.dataSource = nil;
@@ -172,14 +182,19 @@
 }
 
 -(void)sortPrice{
-    NSLog(@"nu ska vi sortera efter pris!");
     JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms"];
     [ourTableView reloadData];
+    
     self.pageViewController.dataSource = nil;
     self.pageViewController.dataSource = self;
-    
-    
 }
+
+-(void)searchInList{
+
+    NSLog(@"searching... please wait");
+}
+
+
 -(void)GoToProductInfo{
     if (about == YES) {
         about = NO;
@@ -299,7 +314,7 @@
     }
     
     index++;
-    if (index == [JsonDataArray count]-1) {
+    if (index == [JsonDataArray count]) {
         return nil;
     }
 
@@ -364,8 +379,10 @@
             
             if(image !=nil){
                 
-                [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]];
-                [jsonData writeToDisc:image index:(int)indexPath.row];
+                [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]];
+                
+               // [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]];
+              //  [jsonData writeToDisc:image index:(int)indexPath.row];
             }
             
             dispatch_sync(dispatch_get_main_queue(), ^{
@@ -425,7 +442,7 @@
 }
 */
 -(NSArray*)ourSortingFunction:(NSString*)sort{
-NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:YES selector:@selector(localizedStandardCompare:)];
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:YES selector:@selector(localizedStandardCompare:)];
     /*
      NSSortDescriptor *priceSort = [NSSortDescriptor sortDescriptorWithKey:@"Utpris exkl moms" ascending:YES comparator:^(id obj1, id obj2){ return [(NSString*)obj1 compare:(NSString*)obj2 options:NSNumericSearch]; }];
      

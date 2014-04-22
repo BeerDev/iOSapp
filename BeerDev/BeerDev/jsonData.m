@@ -134,7 +134,7 @@ static NSCache * myImageCache;
 
 
 
-+(NSString*)writeToDisc:(UIImage*)img index:(int)index{
++(NSString*)writeToDisc:(UIImage*)img index:(int)index name:(NSString*)name{
     
     
     NSString *path = nil;
@@ -143,7 +143,7 @@ static NSCache * myImageCache;
     if (img != nil) {
         
 
-    path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/%@.png",[JSONARRAY[index] objectForKey:@"Artikelnamn"]]];
+    path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/%@.png",name]];
     
     NSData * myImage =UIImagePNGRepresentation(img);
     [myImage writeToFile:path atomically:YES];

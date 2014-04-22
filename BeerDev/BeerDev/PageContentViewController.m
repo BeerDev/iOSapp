@@ -35,6 +35,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    JsonDataArray =  _arrayFromViewController;
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
 
@@ -43,7 +44,7 @@
   /*  NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:@"Artikelnamn" ascending:YES selector:@selector(localizedStandardCompare:)];
         NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
 */
-    JsonDataArray =  _arrayFromViewController;
+   
     //[[jsonData GetArray] sortedArrayUsingDescriptors:sortDescriptors];
  
     //create a information view from our storyboard
@@ -117,8 +118,19 @@
     UIImage *image = [[UIImage alloc] initWithData:self.activeDownload];
    
     //save the image to disk and save a path in userdefaults with name.
+    
+
+    
+    [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)_pageIndex name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
+    
+  //  [jsonData writeToDisc:<#(UIImage *)#> index:<#(int)#> name:<#(NSString *)#>];
+
+    
+    /*
     [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)_pageIndex] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
-    [jsonData writeToDisc:image index:(int)_pageIndex];
+    */
+    
+ //   [jsonData writeToDisc:image index:(int)_pageIndex];
         self.displayImage.image = image;
     self.activeDownload = nil;
     
