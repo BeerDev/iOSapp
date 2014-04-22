@@ -119,19 +119,26 @@
    
     //save the image to disk and save a path in userdefaults with name.
     
-
+    if(image == NULL){
+        self.displayImage.image = [UIImage imageNamed:@"placeholderbild"];
+        
+        self.activeDownload = nil;
+        // Release the connection now that it's finished
+        self.imageConnection = nil;
+        
+        // call our delegate and tell it that our icon is ready for display
+        if (self.completionHandler)
+            self.completionHandler();
+    }else{
     
     [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)_pageIndex name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
-    
-  //  [jsonData writeToDisc:<#(UIImage *)#> index:<#(int)#> name:<#(NSString *)#>];
-
     
     /*
     [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)_pageIndex] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
     */
     
  //   [jsonData writeToDisc:image index:(int)_pageIndex];
-        self.displayImage.image = image;
+    self.displayImage.image = image;
     self.activeDownload = nil;
     
     // Release the connection now that it's finished
@@ -140,7 +147,7 @@
     // call our delegate and tell it that our icon is ready for display
     if (self.completionHandler)
         self.completionHandler();
-
+    }
 }
 
 #pragma mark - Gesture Recognizer functions

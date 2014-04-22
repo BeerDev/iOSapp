@@ -22,7 +22,7 @@
     BOOL product;
     PageContentViewController *startingViewController;
     NSArray *viewControllers;
-    
+    NSArray *indexTitle;
     
     //table
     UITableView *ourTableView;
@@ -50,6 +50,7 @@
     [self addChildViewController:self.omOssController];
     
     // Create listcontroller
+    indexTitle = [NSArray arrayWithArray: [@"A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|Å|Ä|Ö" componentsSeparatedByString:@"|"]];
     self.ListController = [self.storyboard instantiateViewControllerWithIdentifier:@"TableViewController"];
     self.ListController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     [self.ListController willMoveToParentViewController:self];
@@ -89,6 +90,11 @@
     ourTableView.separatorColor=[UIColor clearColor];
     ourTableView.showsVerticalScrollIndicator = UIScrollViewIndicatorStyleWhite;
     ourTableView.rowHeight = 70;
+    
+    [[UITableView appearance] setSectionIndexBackgroundColor:[UIColor clearColor]];
+    [[UITableView appearance] setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
+   // [[UITableView appearance] setSectionIndexTrackingBackgroundColor:[UIColor whiteColor]];
+    [[UITableView appearance] setSectionIndexColor:[UIColor whiteColor]];
     
     [self createListButtons];
     //sort
@@ -365,10 +371,17 @@
     cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    cell.textLabel.text = [JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"];
+    cell.textLabel.numberOfLines = 2;
+    cell.textLabel.font = [UIFont systemFontOfSize:16];
+    cell.imageView.frame = CGRectMake(0,0,40 ,40);
+    cell.contentMode = UIViewContentModeScaleAspectFit;
+    cell.textLabel.text = [NSString stringWithFormat:@"%@\n%@ kr*",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"],[JsonDataArray[indexPath.row] objectForKey:@"Utpris exkl moms"]];
+    
+    //[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"];
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
     
     if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil){
+        
         
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         
@@ -380,9 +393,6 @@
             if(image !=nil){
                 
                 [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]];
-                
-               // [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]];
-              //  [jsonData writeToDisc:image index:(int)indexPath.row];
             }
             
             dispatch_sync(dispatch_get_main_queue(), ^{
@@ -393,12 +403,11 @@
             });
         });
         
+        
+        
     }else{
         cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]];
     }
-    
-    
-    
     return cell;
 }
 
@@ -423,7 +432,6 @@
                                 
                                 NSLog(@"you switched");
                             }];
-    
 }
 
 -(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
@@ -434,21 +442,10 @@
     [ourTableView deselectRowAtIndexPath:[ourTableView indexPathForSelectedRow] animated:animated];
     [super viewWillDisappear:animated];
 }
-/*
-- (void)tableView:(UITableView *)tableView sortDescriptorsDidChange:(NSArray *)oldDescriptors
-{
-    [tableViewArray sortUsingDescriptors: [tableView sortDescriptors]];
-    [tableView reloadData];
-}
-*/
+
 -(NSArray*)ourSortingFunction:(NSString*)sort{
     NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:YES selector:@selector(localizedStandardCompare:)];
-    /*
-     NSSortDescriptor *priceSort = [NSSortDescriptor sortDescriptorWithKey:@"Utpris exkl moms" ascending:YES comparator:^(id obj1, id obj2){ return [(NSString*)obj1 compare:(NSString*)obj2 options:NSNumericSearch]; }];
-     
-     NSSortDescriptor *nameSort = [[NSSortDescriptor alloc] initWithKey:@"Utpris exkl moms"
-     ascending:YES ];
-     */
+
     NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
     NSArray *sortedArray;
     sortedArray = [JsonDataArray sortedArrayUsingDescriptors:sortDescriptors];
@@ -456,17 +453,38 @@
     return sortedArray;
 }
 
--(void)changeSort:(NSString*)sort {
-    
-    
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+  
+    return indexTitle;
 }
 
--(int)getNumberForBeer{
-    int temp;
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    int count = 0;
+        // Match the section titls with the sections
+    NSLog(@"index %ld char %@",(long)index,indexTitle[index]);
+
     
+
+    NSString* first= [[JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
+    for (int i = 0; i< [JsonDataArray count]; i++) {
+        first= [[JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
+        if([first isEqualToString:indexTitle[index]]){
+            NSLog(@"found %@",first);
+            break;
+        }
+        count++;
+    }
+    if(count== 134){
+        count = 0;
+    }
+    NSLog(@"count %d",count);
     
-    //return the number
-    return temp;
+    [ourTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:count inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    
+    return count;
 }
+
+
+
 
 @end

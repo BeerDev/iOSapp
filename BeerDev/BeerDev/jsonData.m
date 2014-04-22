@@ -165,7 +165,7 @@ static NSCache * myImageCache;
 
 
 +(void)SetFilePath:(NSString*)path key:(NSString*)key{
-    NSLog(@"Skriver PATH: %@  KEY: %@",path,key);
+   // NSLog(@"Skriver PATH: %@  KEY: %@",path,key);
     if(path !=nil){
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
 	if (standardUserDefaults)
@@ -181,7 +181,7 @@ static NSCache * myImageCache;
     if ([[NSUserDefaults standardUserDefaults] objectForKey:key]){
         path = [[NSUserDefaults standardUserDefaults] objectForKey:key];
     }
-        NSLog(@"Hämtar PATH: %@  KEY: %@",path,key);
+        //NSLog(@"Hämtar PATH: %@  KEY: %@",path,key);
     return path;
 }
 
