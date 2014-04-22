@@ -135,33 +135,45 @@ static NSCache * myImageCache;
 
 
 +(NSString*)writeToDisc:(UIImage*)img index:(int)index{
-   
-    NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/%@.png",[JSONARRAY[index] objectForKey:@"Artikelnamn"]]];
+    
+    
+    NSString *path = nil;
+    
+    //write a path only if there is an image
+    if (img != nil) {
+        
+
+    path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/%@.png",[JSONARRAY[index] objectForKey:@"Artikelnamn"]]];
     
     NSData * myImage =UIImagePNGRepresentation(img);
     [myImage writeToFile:path atomically:YES];
   //  NSLog(@"path %@",path);
-
+    }
     return path;
 
 }
 
 +(UIImage*)LoadFromDisk:(NSString*)path{
  //   NSLog(@"file to get %@",path);
+    UIImage *image = nil;
+    if(path !=nil){
     NSData* imageData = [NSData dataWithContentsOfFile:path];
-    UIImage *image = [UIImage imageWithData:imageData];
+    image = [UIImage imageWithData:imageData];
+    }
     return image;
 }
 
 
 +(void)SetFilePath:(NSString*)path key:(NSString*)key{
     NSLog(@"Skriver PATH: %@  KEY: %@",path,key);
+    if(path !=nil){
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
 	if (standardUserDefaults)
     {
 		[standardUserDefaults setObject:path forKey:key];
 		[standardUserDefaults synchronize];
 	}
+    }
 }
 
 +(NSString*)GetFilePath:(NSString*)key{

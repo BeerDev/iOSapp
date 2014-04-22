@@ -37,7 +37,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    
+
     //sort the jsondata before presenting the pageview.
     //get the json array for setting the information in this class
     NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:@"Artikelnamn" ascending:YES selector:@selector(localizedStandardCompare:)];
@@ -106,6 +106,8 @@
     self.activeDownload = nil;
     // Release the connection now that it's finished
     self.imageConnection = nil;
+    self.displayImage.image = [UIImage imageNamed:@"placeholderbild"];
+    
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection

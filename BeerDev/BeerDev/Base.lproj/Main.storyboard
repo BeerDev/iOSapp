@@ -298,7 +298,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
         </scene>
     </scenes>
     <resources>
-        <image name="Background" width="320" height="460"/>
+        <image name="Background" width="197" height="333"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
