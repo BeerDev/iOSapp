@@ -13,6 +13,8 @@
     //declare variables here to be global through this class
     BOOL button;
     UIButton* dropButton;
+    UIButton* priceSort;
+    UIButton* alphabeticSort;
     DDMenu*menu;
     BOOL about;
     BOOL list;
@@ -39,7 +41,7 @@
 
     JsonDataArray = [jsonData GetArray];
     JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
-    
+  
     //create omOssController
     self.omOssController = [self.storyboard instantiateViewControllerWithIdentifier:@"OmossViewController"];
     self.omOssController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -76,9 +78,6 @@
     [self.view bringSubviewToFront:dropButton];
     
 
-    //
-
-
     //Create a table
     ourTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70) ];
     [self.ListController.view addSubview:ourTableView];
@@ -90,6 +89,7 @@
     ourTableView.showsVerticalScrollIndicator = UIScrollViewIndicatorStyleWhite;
     ourTableView.rowHeight = 70;
     
+    [self createListButtons];
     //sort
 }
 
@@ -137,8 +137,49 @@
          button = NO;
     }
 }
+//$
 
+-(void)createListButtons{
+    priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    priceSort.frame = CGRectMake(4, 20, 50, 50);
+    priceSort.titleLabel.font = [UIFont systemFontOfSize:20];
+    
+    [priceSort setTitle:@"$" forState:UIControlStateNormal];
+    [priceSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [priceSort addTarget:self action:@selector(sortPrice) forControlEvents:UIControlEventTouchUpInside];
+    [self.ListController.view addSubview:priceSort];
+    
+    
+    alphabeticSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    alphabeticSort.frame = CGRectMake(74, 20, 50, 50);
+    alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
+    
+    [alphabeticSort setTitle:@"A - Ö" forState:UIControlStateNormal];
+    [alphabeticSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [alphabeticSort addTarget:self action:@selector(sortAlphabetically) forControlEvents:UIControlEventTouchUpInside];
+    [self.ListController.view addSubview:alphabeticSort];
+    
+    
 
+}
+-(void)sortAlphabetically{
+    NSLog(@"nu ska vi sortera efter namn");
+    JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
+    [ourTableView reloadData];
+    self.pageViewController.dataSource = nil;
+    self.pageViewController.dataSource = self;
+
+}
+
+-(void)sortPrice{
+    NSLog(@"nu ska vi sortera efter pris!");
+    JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms"];
+    [ourTableView reloadData];
+    self.pageViewController.dataSource = nil;
+    self.pageViewController.dataSource = self;
+    
+    
+}
 -(void)GoToProductInfo{
     if (about == YES) {
         about = NO;
@@ -224,13 +265,16 @@
 #pragma mark PageViewController 
 - (PageContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
-    if (([[jsonData GetArray] count] == 0) ||( index >= [[jsonData GetArray] count])) {
+    if (([JsonDataArray count] == 0) ||( index >= [JsonDataArray count])) {
         return nil;
     }
    // NSLog(@"%d",[[jsonData GetArray] count]);
     // Create a new view controller and pass suitable data.
     PageContentViewController *pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
     pageContentViewController.pageIndex = index;
+    pageContentViewController.arrayFromViewController = (NSMutableArray*)JsonDataArray;
+    
+
     return pageContentViewController;
 }
 
@@ -255,9 +299,10 @@
     }
     
     index++;
-    if (index == [[jsonData GetArray] count]-1) {
+    if (index == [JsonDataArray count]-1) {
         return nil;
     }
+
   
     return [self viewControllerAtIndex:index];
 }

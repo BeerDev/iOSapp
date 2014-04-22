@@ -40,11 +40,12 @@
 
     //sort the jsondata before presenting the pageview.
     //get the json array for setting the information in this class
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:@"Artikelnamn" ascending:YES selector:@selector(localizedStandardCompare:)];
+  /*  NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:@"Artikelnamn" ascending:YES selector:@selector(localizedStandardCompare:)];
         NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
-
-    JsonDataArray = [[jsonData GetArray] sortedArrayUsingDescriptors:sortDescriptors];
-
+*/
+    JsonDataArray =  _arrayFromViewController;
+    //[[jsonData GetArray] sortedArrayUsingDescriptors:sortDescriptors];
+ 
     //create a information view from our storyboard
     _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
     [self addChildViewController:_InformationController];

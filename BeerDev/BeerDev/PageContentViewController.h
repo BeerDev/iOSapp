@@ -25,6 +25,7 @@
 @property (strong, nonatomic) ViewInformationController* InformationController;
 //this is used in pageViewController to track on what index you are at.
 @property NSUInteger pageIndex;
+@property NSMutableArray *arrayFromViewController;
 //a bool to se if the information is showing or not.
 @property BOOL informationIsShowing;
 
