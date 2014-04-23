@@ -25,8 +25,7 @@
     PageContentViewController *startingViewController;
     NSArray *viewControllers;
     NSArray *indexTitle;
-    int maxDownloads;
-    int maxDownload;
+
     //table
     UITableView *ourTableView;
     
@@ -41,9 +40,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self cacheEverything];
+    
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
-    maxDownload =0;
+
     JsonDataArray = [jsonData GetArray];
     JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
     ShowAlphabet = YES;
@@ -105,6 +107,59 @@
     [self createListButtons];
     //sort
 }
+
+-(void)cacheEverything{
+        NSDate *startDate = [NSDate date];
+    
+//jämna nummer
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        // Load the shared assets in the background.
+        //[self loadSceneAssets];
+        NSLog(@"laddning sker på tråd jämna");
+        
+        for (int i = 0; i < [JsonDataArray count]; i+=2) {
+            UIImage* image;
+            if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
+                
+                NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[i]objectForKey:@"URL"]]];
+                image = [[UIImage alloc] initWithData:imageData];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(image !=nil){
+                        NSLog(@"cached image nr %d",i);
+                        [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
+                    }
+                });
+            }
+        }
+        NSLog(@"Loaded all jämna images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
+    });
+
+//udda nummer
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            // Load the shared assets in the background.
+            //[self loadSceneAssets];
+            NSLog(@"laddning sker på tråd udda");
+            
+            for (int i = 1; i < [JsonDataArray count]; i+=2) {
+                UIImage* image;
+                if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
+                   
+                    NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[i]objectForKey:@"URL"]]];
+                    image = [[UIImage alloc] initWithData:imageData];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if(image !=nil){
+                            NSLog(@"cached image nr %d",i);
+                            [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
+                        }
+                    });
+                }
+            }
+             NSLog(@"Loaded all udda images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
+        });
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -413,10 +468,8 @@
 
 
     
-    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil && maxDownload < 25){
-        maxDownload ++;
-        NSLog(@"max downloads before main queue %d", maxDownload);
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
+    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil){
+            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         
         dispatch_async(queue, ^{
             NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[indexPath.row]objectForKey:@"URL"]]];
@@ -424,7 +477,7 @@
             UIImage* image = [[UIImage alloc] initWithData:imageData];
             
             if(image !=nil){
-                maxDownload --;
+                
                 [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]];
             }
         
@@ -433,8 +486,6 @@
                 UITableViewCell *updateCell = [tableView cellForRowAtIndexPath:indexPath];
                 if (updateCell &&image != nil){
                     cell.imageView.image = [UIImage imageWithData:imageData];
-       
-                        NSLog(@"max downloads after %d", maxDownload);
                 }
 
             });
