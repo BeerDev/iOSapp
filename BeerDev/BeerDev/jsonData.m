@@ -122,7 +122,8 @@ static NSCache * myImageCache;
 
 +(void)SetCacheItemForKey:(UIImage*)image forKey:(NSString*)key{
     [myImageCache setObject:image forKey:key];
-
+    
+  //  [self writeToDisc:image index:0 name:key];
 }
 
 +(UIImage*)GetCachedImage:(NSString*)forKey{
@@ -131,11 +132,12 @@ static NSCache * myImageCache;
     return cachedImage;
 }
 
++(void)cacheEverythingAtStart{
 
+}
 
 
 +(NSString*)writeToDisc:(UIImage*)img index:(int)index name:(NSString*)name{
-    
     
     NSString *path = nil;
     

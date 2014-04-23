@@ -25,8 +25,8 @@
     PageContentViewController *startingViewController;
     NSArray *viewControllers;
     NSArray *indexTitle;
-
-    
+    int maxDownloads;
+    int maxDownload;
     //table
     UITableView *ourTableView;
     
@@ -43,10 +43,11 @@
     [super viewDidLoad];
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
-
+    maxDownload =0;
     JsonDataArray = [jsonData GetArray];
     JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
     ShowAlphabet = YES;
+    
     //create omOssController
     self.omOssController = [self.storyboard instantiateViewControllerWithIdentifier:@"OmossViewController"];
     self.omOssController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -94,7 +95,7 @@
     ourTableView.dataSource = self;
     ourTableView.separatorColor=[UIColor clearColor];
     ourTableView.showsVerticalScrollIndicator = UIScrollViewIndicatorStyleWhite;
-    ourTableView.rowHeight = 70;
+    ourTableView.rowHeight = 102;
     
     [[UITableView appearance] setSectionIndexBackgroundColor:[UIColor clearColor]];
     [[UITableView appearance] setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
@@ -199,6 +200,10 @@
 
 
 #pragma mark - Buttons and menu
+-(void)createTabBarButtons{
+   // UITabBarController *tabBarController = [[UITabBarController alloc] init];
+
+}
 
 -(void)createListButtons{
     priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -406,10 +411,11 @@
     
     //[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"];
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
+
     
-    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil){
-        
-        
+    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil && maxDownload < 10){
+        maxDownload ++;
+        NSLog(@"max downloads before main queue %d", maxDownload);
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
         
         dispatch_async(queue, ^{
@@ -421,17 +427,20 @@
                 
                 [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]];
             }
+        
             
             dispatch_sync(dispatch_get_main_queue(), ^{
-                if(image !=nil){
-                    [[cell imageView] setImage:image];
-                    [cell setNeedsLayout];
-                }
+                UITableViewCell *updateCell = [tableView cellForRowAtIndexPath:indexPath];
+                if (updateCell)
+                    cell.imageView.image = [UIImage imageWithData:imageData];
+                maxDownload --;
+                        NSLog(@"max downloads after %d", maxDownload);
+                
+
             });
+            
         });
-        
-        
-        
+    
     }else{
         cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]];
     }
