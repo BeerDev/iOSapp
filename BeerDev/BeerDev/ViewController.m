@@ -109,15 +109,18 @@
 }
 
 -(void)cacheEverything{
-        NSDate *startDate = [NSDate date];
+    int threadNumber = 1;
+    int MaxThreads = 3;
+    while(threadNumber <MaxThreads+1){
+    NSDate *startDate = [NSDate date];
     
-//jämna nummer
+    //jämna nummer
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         // Load the shared assets in the background.
         //[self loadSceneAssets];
-        NSLog(@"laddning sker på tråd jämna");
-        
-        for (int i = 0; i < [JsonDataArray count]; i+=2) {
+        NSLog(@"laddning sker på tråd nr %d",threadNumber);
+        for (int i = threadNumber; i < (int)[JsonDataArray count] ; i+=threadNumber) {
+            NSLog(@"getting %d",i);
             UIImage* image;
             if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
                 
@@ -132,34 +135,11 @@
                 });
             }
         }
-        NSLog(@"Loaded all jämna images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
+        NSLog(@"Loaded all create images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
     });
-
-//udda nummer
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            // Load the shared assets in the background.
-            //[self loadSceneAssets];
-            NSLog(@"laddning sker på tråd udda");
-            
-            for (int i = 1; i < [JsonDataArray count]; i+=2) {
-                UIImage* image;
-                if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
-                   
-                    NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[i]objectForKey:@"URL"]]];
-                    image = [[UIImage alloc] initWithData:imageData];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if(image !=nil){
-                            NSLog(@"cached image nr %d",i);
-                            [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
-                        }
-                    });
-                }
-            }
-             NSLog(@"Loaded all udda images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
-        });
+        threadNumber++;
+    }
 }
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -466,10 +446,10 @@
     
     //[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"];
 
-
+    UIImage * imgFromMem =[jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]];
     
-    if ([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] != nil){
-        cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]];
+    if (imgFromMem != nil){
+        cell.imageView.image = imgFromMem;
     }
     return cell;
 }

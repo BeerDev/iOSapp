@@ -59,7 +59,7 @@
     
     /*---------------------------------------------------------------------------------*/
     //check if there is a image on disk with a pathname according the the name of the product.
-    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]]] != nil){
+    if([jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]] != nil){
            NSLog(@"there was a file on disk");
         //set the image to display from cache according to the page index and the products name.
         self.displayImage.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]]];
@@ -121,8 +121,6 @@
     //save the image to disk and save a path in userdefaults with name.
     
     if(image == NULL){
-        self.displayImage.image = [UIImage imageNamed:@"placeholderbild"];
-        
         self.activeDownload = nil;
         // Release the connection now that it's finished
         self.imageConnection = nil;
@@ -131,7 +129,8 @@
         if (self.completionHandler)
             self.completionHandler();
     }else{
-    
+    self.displayImage.image = image;
+        NSLog(@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]);
     [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)_pageIndex name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
     
     /*
@@ -139,7 +138,7 @@
     */
     
  //   [jsonData writeToDisc:image index:(int)_pageIndex];
-    self.displayImage.image = image;
+
     self.activeDownload = nil;
     
     // Release the connection now that it's finished

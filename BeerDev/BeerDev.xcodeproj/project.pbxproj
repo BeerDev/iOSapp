@@ -126,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				C9ED1A4218F43A4F00842719 /* Views */,
+				C9ED1A4418F43CE500842719 /* jsonData.m */,
 				C9ED1A4118F43A4500842719 /* Classes */,
 				C941123D18F2BA6B00091BA9 /* constans.h */,
 				C93AED9618E5A88F003F5A5A /* AppDelegate.h */,
@@ -172,7 +173,6 @@
 			isa = PBXGroup;
 			children = (
 				C9ED1A4318F43CE500842719 /* jsonData.h */,
-				C9ED1A4418F43CE500842719 /* jsonData.m */,
 				C9D8CF7118FC10F700ECF8AB /* DDMenu.h */,
 				C9D8CF7218FC10F700ECF8AB /* DDMenu.m */,
 			);
