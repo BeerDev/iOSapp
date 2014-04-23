@@ -395,7 +395,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
     }
-    
+    cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
     //ställ in texten i cellen
     cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = [UIColor whiteColor];
@@ -410,10 +410,10 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%@\n%@ kr*",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"],[JsonDataArray[indexPath.row] objectForKey:@"Utpris exkl moms"]];
     
     //[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"];
-    cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
+
 
     
-    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil && maxDownload < 10){
+    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil && maxDownload < 25){
         maxDownload ++;
         NSLog(@"max downloads before main queue %d", maxDownload);
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
@@ -424,24 +424,24 @@
             UIImage* image = [[UIImage alloc] initWithData:imageData];
             
             if(image !=nil){
-                
+                maxDownload --;
                 [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]];
             }
         
             
             dispatch_sync(dispatch_get_main_queue(), ^{
                 UITableViewCell *updateCell = [tableView cellForRowAtIndexPath:indexPath];
-                if (updateCell)
+                if (updateCell &&image != nil){
                     cell.imageView.image = [UIImage imageWithData:imageData];
-                maxDownload --;
+       
                         NSLog(@"max downloads after %d", maxDownload);
-                
+                }
 
             });
             
         });
     
-    }else{
+    }else if ([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] != nil){
         cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]];
     }
     return cell;
