@@ -20,12 +20,16 @@
     BOOL about;
     BOOL list;
     BOOL product;
+    BOOL ShowAlphabet;
+    
     PageContentViewController *startingViewController;
     NSArray *viewControllers;
     NSArray *indexTitle;
+
     
     //table
     UITableView *ourTableView;
+    
     //global variables table
     NSArray * JsonDataArray;
 
@@ -42,7 +46,7 @@
 
     JsonDataArray = [jsonData GetArray];
     JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
-  
+    ShowAlphabet = YES;
     //create omOssController
     self.omOssController = [self.storyboard instantiateViewControllerWithIdentifier:@"OmossViewController"];
     self.omOssController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -51,6 +55,7 @@
     
     // Create listcontroller
     indexTitle = [NSArray arrayWithArray: [@"A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|Å|Ä|Ö" componentsSeparatedByString:@"|"]];
+    
     self.ListController = [self.storyboard instantiateViewControllerWithIdentifier:@"TableViewController"];
     self.ListController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     [self.ListController willMoveToParentViewController:self];
@@ -100,6 +105,22 @@
     //sort
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
+}
+
+-(void)searchInList{
+    NSLog(@"searching... ");
+}
+
+#pragma mark - Switching between views.
+
 - (void)switchTo:(UIViewController*)from to:(UIViewController *)controller
 {
     [self transitionFromViewController:from
@@ -112,92 +133,6 @@
                                 [menu HideDownMenu];
                                 NSLog(@"you switched");
             }];
-}
-
--(void)setButton{
-    button = NO;
-    dropButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
-    dropButton.titleLabel.font = [UIFont systemFontOfSize:24];
-    [dropButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 50, 50);
-    [dropButton addTarget:self action:@selector(DropMenu) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.view addSubview:dropButton];
-
-}
-
--(void)DropMenu{
-    if(button == NO){
-        [menu DropDownMenu];
-        [dropButton setTitle:@"▲" forState:UIControlStateNormal];
-        
-        [[menu omOssButton] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
-        [[menu productViewButton] addTarget:self action:@selector(GoToProductInfo) forControlEvents:UIControlEventTouchUpInside];
-        [[menu listViewButton] addTarget:self action:@selector(GoToList) forControlEvents:UIControlEventTouchUpInside];
-
-        button = YES;
-    }
-    else if (button == YES){
-        [menu HideDownMenu];
-        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
-         button = NO;
-    }
-}
-//$
-
--(void)createListButtons{
-    priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    priceSort.frame = CGRectMake(4, 20, 50, 50);
-    priceSort.titleLabel.font = [UIFont systemFontOfSize:20];
-    
-    [priceSort setTitle:@"$" forState:UIControlStateNormal];
-    [priceSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [priceSort addTarget:self action:@selector(sortPrice) forControlEvents:UIControlEventTouchUpInside];
-    [self.ListController.view addSubview:priceSort];
-    
-    
-    alphabeticSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    alphabeticSort.frame = CGRectMake(64, 20, 50, 50);
-    alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
-    
-    [alphabeticSort setTitle:@"A - Ö" forState:UIControlStateNormal];
-    [alphabeticSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [alphabeticSort addTarget:self action:@selector(sortAlphabetically) forControlEvents:UIControlEventTouchUpInside];
-    [self.ListController.view addSubview:alphabeticSort];
-    
-    UIImage *magnifier = [UIImage imageNamed:@"magnifier"];
-    searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    searchButton.frame = CGRectMake(124, 20, 50, 50);
-    
-    [searchButton setImage:magnifier forState:UIControlStateNormal];
-    [searchButton addTarget:self action:@selector(searchInList)
-         forControlEvents:UIControlEventTouchUpInside];
-    
-    float size = 35;
-    [searchButton setImageEdgeInsets:UIEdgeInsetsMake(size, size, size, size)];
-    [self.ListController.view addSubview:searchButton];
-
-}
--(void)sortAlphabetically{
-    JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
-    [ourTableView reloadData];
-    self.pageViewController.dataSource = nil;
-    self.pageViewController.dataSource = self;
-
-}
-
--(void)sortPrice{
-    JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms"];
-    [ourTableView reloadData];
-    
-    self.pageViewController.dataSource = nil;
-    self.pageViewController.dataSource = self;
-}
-
--(void)searchInList{
-
-    NSLog(@"searching... please wait");
 }
 
 
@@ -235,14 +170,11 @@
     }
     else
     {
-    [menu HideDownMenu];
-    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
-    button = NO;
+        [menu HideDownMenu];
+        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        button = NO;
     }
-   
-    
 }
-
 
 -(void)GoToOmOss{
     if (list == YES) {
@@ -258,12 +190,80 @@
         [self menuBarToFront];
     }else
     {
-    [menu HideDownMenu];
-    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
-    button = NO;
+        [menu HideDownMenu];
+        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        button = NO;
     }
 }
 
+
+
+#pragma mark - Buttons and menu
+
+-(void)createListButtons{
+    priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    priceSort.frame = CGRectMake(4, 20, 50, 50);
+    priceSort.titleLabel.font = [UIFont systemFontOfSize:20];
+    
+    [priceSort setTitle:@"$" forState:UIControlStateNormal];
+    [priceSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [priceSort addTarget:self action:@selector(sortPrice) forControlEvents:UIControlEventTouchUpInside];
+    [self.ListController.view addSubview:priceSort];
+    
+    
+    alphabeticSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    alphabeticSort.frame = CGRectMake(64, 20, 50, 50);
+    alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
+    
+    [alphabeticSort setTitle:@"A - Ö" forState:UIControlStateNormal];
+    [alphabeticSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [alphabeticSort addTarget:self action:@selector(sortAlphabetically) forControlEvents:UIControlEventTouchUpInside];
+    [self.ListController.view addSubview:alphabeticSort];
+    
+    UIImage *magnifier = [UIImage imageNamed:@"magnifier"];
+    searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    searchButton.frame = CGRectMake(124, 20, 50, 50);
+    
+    [searchButton setImage:magnifier forState:UIControlStateNormal];
+    [searchButton addTarget:self action:@selector(searchInList)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    float size = 35;
+    [searchButton setImageEdgeInsets:UIEdgeInsetsMake(size, size, size, size)];
+    [self.ListController.view addSubview:searchButton];
+    
+}
+
+-(void)setButton{
+    button = NO;
+    dropButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+    dropButton.titleLabel.font = [UIFont systemFontOfSize:24];
+    [dropButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 50, 50);
+    [dropButton addTarget:self action:@selector(DropMenu) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:dropButton];
+
+}
+
+-(void)DropMenu{
+    if(button == NO){
+        [menu DropDownMenu];
+        [dropButton setTitle:@"▲" forState:UIControlStateNormal];
+        
+        [[menu omOssButton] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
+        [[menu productViewButton] addTarget:self action:@selector(GoToProductInfo) forControlEvents:UIControlEventTouchUpInside];
+        [[menu listViewButton] addTarget:self action:@selector(GoToList) forControlEvents:UIControlEventTouchUpInside];
+
+        button = YES;
+    }
+    else if (button == YES){
+        [menu HideDownMenu];
+        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+         button = NO;
+    }
+}
 
 -(void)menuBarToFront{
     [dropButton setTitle:@"▼" forState:UIControlStateNormal];
@@ -273,14 +273,27 @@
     
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - Sorting indexs in tableView
+
+-(void)sortAlphabetically{
+    JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
+    ShowAlphabet = YES;
+    [ourTableView reloadData];
+    
+   
+    self.pageViewController.dataSource = nil;
+    self.pageViewController.dataSource = self;
+
 }
 
--(UIStatusBarStyle)preferredStatusBarStyle{
-    return UIStatusBarStyleLightContent;
+-(void)sortPrice{
+    JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms"];
+    ShowAlphabet = NO;
+    [ourTableView reloadData];
+    
+ 
+    self.pageViewController.dataSource = nil;
+    self.pageViewController.dataSource = self;
 }
 
 #pragma mark PageViewController 
@@ -374,7 +387,7 @@
     cell.textLabel.numberOfLines = 2;
     cell.textLabel.font = [UIFont systemFontOfSize:16];
     cell.imageView.frame = CGRectMake(0,0,40 ,40);
-    cell.contentMode = UIViewContentModeScaleAspectFit;
+    cell.contentMode = UIViewContentModeScaleAspectFill;
     cell.textLabel.text = [NSString stringWithFormat:@"%@\n%@ kr*",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"],[JsonDataArray[indexPath.row] objectForKey:@"Utpris exkl moms"]];
     
     //[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"];
@@ -443,47 +456,60 @@
     [super viewWillDisappear:animated];
 }
 
--(NSArray*)ourSortingFunction:(NSString*)sort{
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:YES selector:@selector(localizedStandardCompare:)];
-
-    NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
-    NSArray *sortedArray;
-    sortedArray = [JsonDataArray sortedArrayUsingDescriptors:sortDescriptors];
-
-    return sortedArray;
-}
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-  
-    return indexTitle;
+    if(ShowAlphabet ==YES){
+        return indexTitle;
+    }
+    else if (ShowAlphabet ==NO){
+        NSArray *priceTitle = nil;
+        return priceTitle;
+    }
+    else {
+        return indexTitle;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
     int count = 0;
+    int j = 0;
         // Match the section titls with the sections
-    NSLog(@"index %ld char %@",(long)index,indexTitle[index]);
-
-    
-
     NSString* first= [[JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
+    
     for (int i = 0; i< [JsonDataArray count]; i++) {
         first= [[JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
-        if([first isEqualToString:indexTitle[index]]){
+        if([first isEqualToString:indexTitle[index-j]]){
             NSLog(@"found %@",first);
             break;
         }
+        if(count==[JsonDataArray count]-1){
+            //nollställ i, count och addera ett till j.
+            j+=1;
+            i=0;
+            count=0;
+        }
         count++;
     }
-    if(count== 134){
-        count = 0;
-    }
+
+    
     NSLog(@"count %d",count);
     
-    [ourTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:count inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [ourTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:count inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
     return count;
 }
 
+#pragma mark - Sorting function
+
+-(NSArray*)ourSortingFunction:(NSString*)sort{
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:YES selector:@selector(localizedStandardCompare:)];
+    
+    NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
+    NSArray *sortedArray;
+    sortedArray = [JsonDataArray sortedArrayUsingDescriptors:sortDescriptors];
+    
+    return sortedArray;
+}
 
 
 

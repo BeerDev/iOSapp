@@ -38,6 +38,7 @@
     JsonDataArray =  _arrayFromViewController;
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
+    self.displayImage.image = [UIImage imageNamed:@"placeholderbild"];
 
     //sort the jsondata before presenting the pageview.
     //get the json array for setting the information in this class

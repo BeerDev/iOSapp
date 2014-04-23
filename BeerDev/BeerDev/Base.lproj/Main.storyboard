@@ -144,7 +144,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" lineBreakMode="headTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="182" translatesAutoresizingMaskIntoConstraints="NO" id="8Ws-4o-mT4">
-                                <rect key="frame" x="20" y="436" width="182" height="67"/>
+                                <rect key="frame" x="20" y="419" width="182" height="67"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -153,7 +153,7 @@ Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, 
                                 <size key="shadowOffset" width="1" height="1"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Price" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HP1-Fr-nVH">
-                                <rect key="frame" x="216" y="452" width="84" height="34"/>
+                                <rect key="frame" x="216" y="436" width="84" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
