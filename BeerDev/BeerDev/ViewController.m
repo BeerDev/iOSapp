@@ -468,31 +468,7 @@
 
 
     
-    if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] == nil){
-            dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
-        
-        dispatch_async(queue, ^{
-            NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[indexPath.row]objectForKey:@"URL"]]];
-            
-            UIImage* image = [[UIImage alloc] initWithData:imageData];
-            
-            if(image !=nil){
-                
-                [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)indexPath.row name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[(int)indexPath.row] objectForKey:@"Artikelnamn"]]];
-            }
-        
-            
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                UITableViewCell *updateCell = [tableView cellForRowAtIndexPath:indexPath];
-                if (updateCell &&image != nil){
-                    cell.imageView.image = [UIImage imageWithData:imageData];
-                }
-
-            });
-            
-        });
-    
-    }else if ([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] != nil){
+    if ([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]] != nil){
         cell.imageView.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]];
     }
     return cell;
