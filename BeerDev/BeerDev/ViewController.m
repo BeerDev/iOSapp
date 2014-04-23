@@ -204,6 +204,11 @@
     priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     priceSort.frame = CGRectMake(4, 20, 50, 50);
     priceSort.titleLabel.font = [UIFont systemFontOfSize:20];
+
+
+
+    [priceSort setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+    priceSort.titleLabel.shadowOffset = CGSizeMake(1, 1);
     
     [priceSort setTitle:@"$" forState:UIControlStateNormal];
     [priceSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -215,12 +220,16 @@
     alphabeticSort.frame = CGRectMake(64, 20, 50, 50);
     alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
     
+    [alphabeticSort setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+    alphabeticSort.titleLabel.shadowOffset = CGSizeMake(1, 1);
+    
     [alphabeticSort setTitle:@"A - Ö" forState:UIControlStateNormal];
     [alphabeticSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [alphabeticSort addTarget:self action:@selector(sortAlphabetically) forControlEvents:UIControlEventTouchUpInside];
     [self.ListController.view addSubview:alphabeticSort];
     
     UIImage *magnifier = [UIImage imageNamed:@"magnifier"];
+    
     searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
     searchButton.frame = CGRectMake(124, 20, 50, 50);
     
@@ -238,6 +247,8 @@
     button = NO;
     dropButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+    [dropButton setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+    dropButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
     dropButton.titleLabel.font = [UIFont systemFontOfSize:24];
     [dropButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 50, 50);
@@ -383,6 +394,9 @@
     //ställ in texten i cellen
     cell.backgroundColor = [UIColor clearColor];
     cell.textLabel.textColor = [UIColor whiteColor];
+    cell.textLabel.shadowColor =[UIColor blackColor];
+    cell.textLabel.shadowOffset = CGSizeMake(1, 1);
+    
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     cell.textLabel.numberOfLines = 2;
     cell.textLabel.font = [UIFont systemFontOfSize:16];
