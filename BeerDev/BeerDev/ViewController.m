@@ -108,25 +108,32 @@
     
     [self createListButtons];
     
-  
+    //Create searchbar and stuff.
     
     OursearchBar= [[UISearchBar alloc] initWithFrame:CGRectMake(0,-70, self.view.frame.size.width, 70)];
     OursearchBar.showsCancelButton = YES;
-   // searchBar.barTintColor;
     OursearchBar.backgroundImage= [UIImage alloc];
     [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTintColor:[UIColor whiteColor]];
     [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitle:@"Avbryt"];
-
-
-    [self.ListController.view addSubview:OursearchBar];
     OursearchBar.delegate = self;
+    
+    [self.ListController.view addSubview:OursearchBar];
+  
+   UISearchDisplayController* searchController = [[UISearchDisplayController alloc]
+                        initWithSearchBar:OursearchBar contentsController:self];
+    searchController.delegate = self;
+    searchController.searchResultsDataSource = self;
+    searchController.searchResultsDelegate = self;
+    
+
+
     //sort
 }
 #pragma mark - searchBar
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
     [searchBar resignFirstResponder];
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:0.3 animations:^{
             OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
         } completion:^(BOOL finished) {
             NSLog(@"Drop search bar");
@@ -144,7 +151,7 @@
 
 -(void)searchInList{
         [OursearchBar becomeFirstResponder];
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:0.3 animations:^{
             OursearchBar.frame = CGRectMake(0, 10,  self.view.frame.size.width-30, 70);
             
         } completion:^(BOOL finished) {
