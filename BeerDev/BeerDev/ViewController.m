@@ -12,6 +12,7 @@
     
     //declare variables here to be global through this class
     BOOL button;
+    
     UIButton* dropButton;
     UIButton* priceSort;
     UIButton* alphabeticSort;
@@ -32,6 +33,7 @@
     
     //global variables table
     NSArray * JsonDataArray;
+    UISearchBar *OursearchBar;
 
 }
 @end
@@ -40,9 +42,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self cacheEverything];
-    
+    [UIResponder cacheKeyboard:YES];
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
 
@@ -106,9 +107,51 @@
     [[UITableView appearance] setSectionIndexColor:[UIColor whiteColor]];
     
     [self createListButtons];
+    
+  
+    
+    OursearchBar= [[UISearchBar alloc] initWithFrame:CGRectMake(0,-70, self.view.frame.size.width, 70)];
+    OursearchBar.showsCancelButton = YES;
+   // searchBar.barTintColor;
+    OursearchBar.backgroundImage= [UIImage alloc];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTintColor:[UIColor whiteColor]];
+    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitle:@"Avbryt"];
+
+
+    [self.ListController.view addSubview:OursearchBar];
+    OursearchBar.delegate = self;
     //sort
 }
+#pragma mark - searchBar
+- (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+        [UIView animateWithDuration:0.2 animations:^{
+            OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
+        } completion:^(BOOL finished) {
+            NSLog(@"Drop search bar");
+        }];
+    NSLog(@"cancel!!! :D");
+}
 
+-(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+
+}
+-(void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
+
+
+}
+
+-(void)searchInList{
+        [OursearchBar becomeFirstResponder];
+        [UIView animateWithDuration:0.2 animations:^{
+            OursearchBar.frame = CGRectMake(0, 10,  self.view.frame.size.width-30, 70);
+            
+        } completion:^(BOOL finished) {
+        }];
+
+    
+}
 
 #pragma mark - background caching
 -(void)cacheEverything{
@@ -174,9 +217,7 @@
     return UIStatusBarStyleLightContent;
 }
 
--(void)searchInList{
-    NSLog(@"searching... ");
-}
+
 
 #pragma mark - Switching between views.
 

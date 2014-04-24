@@ -10,9 +10,11 @@
 #import "jsonData.h"
 #import "PageContentViewController.h"
 #import "DDMenu.h"
+#import "UIResponderKeyboardCache.h"
 
 
-@interface ViewController : UIViewController <UIPageViewControllerDataSource,UITableViewDelegate, UITableViewDataSource>
+
+@interface ViewController : UIViewController <UIPageViewControllerDataSource,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate>
 
 @property (strong, nonatomic) UIPageViewController *pageViewController;
 @property (strong, nonatomic) UIViewController *omOssController;

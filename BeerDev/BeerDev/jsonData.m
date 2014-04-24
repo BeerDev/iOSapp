@@ -10,7 +10,6 @@
 
 
 @implementation jsonData
-
 static NSArray* JSONARRAY = nil;
 static NSCache * myImageCache;
 //@synthesize jsonObjects = _jsonObjects;
@@ -21,6 +20,11 @@ static NSCache * myImageCache;
     }
     return self;
 }
+
+
+
+
+
 
 +(NSData*)GetDataOnline{
     
@@ -230,8 +234,6 @@ static NSCache * myImageCache;
     NetworkStatus networkStatus = [reachability currentReachabilityStatus];
     return networkStatus != NotReachable;
 }
-
-
 
 
 

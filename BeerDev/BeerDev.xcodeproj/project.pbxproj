@@ -23,6 +23,7 @@
 		C93AEDB318E5A890003F5A5A /* BeerDevTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C93AEDB218E5A890003F5A5A /* BeerDevTests.m */; };
 		C968218F18F5292600C0ADFD /* PageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C968218E18F5292600C0ADFD /* PageContentViewController.m */; };
 		C968219218F53AB200C0ADFD /* ViewInformationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C968219118F53AB200C0ADFD /* ViewInformationController.m */; };
+		C976213319093917002FE71F /* UIResponderKeyboardCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C976213219093917002FE71F /* UIResponderKeyboardCache.m */; };
 		C982E9421908F07800CD7C7B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C982E9411908F07800CD7C7B /* SystemConfiguration.framework */; };
 		C982E9451908F17E00CD7C7B /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C982E9441908F17E00CD7C7B /* Reachability.m */; };
 		C982E9471908FD1200CD7C7B /* json.json in Resources */ = {isa = PBXBuildFile; fileRef = C982E9461908FD1200CD7C7B /* json.json */; };
@@ -65,6 +66,8 @@
 		C968218E18F5292600C0ADFD /* PageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageContentViewController.m; sourceTree = "<group>"; };
 		C968219018F53AB200C0ADFD /* ViewInformationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewInformationController.h; sourceTree = "<group>"; };
 		C968219118F53AB200C0ADFD /* ViewInformationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewInformationController.m; sourceTree = "<group>"; };
+		C976213119093917002FE71F /* UIResponderKeyboardCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIResponderKeyboardCache.h; sourceTree = "<group>"; };
+		C976213219093917002FE71F /* UIResponderKeyboardCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIResponderKeyboardCache.m; sourceTree = "<group>"; };
 		C982E9411908F07800CD7C7B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C982E9431908F17E00CD7C7B /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		C982E9441908F17E00CD7C7B /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
@@ -181,6 +184,8 @@
 		C9ED1A4118F43A4500842719 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C976213119093917002FE71F /* UIResponderKeyboardCache.h */,
+				C976213219093917002FE71F /* UIResponderKeyboardCache.m */,
 				C982E9431908F17E00CD7C7B /* Reachability.h */,
 				C982E9441908F17E00CD7C7B /* Reachability.m */,
 				C9ED1A4318F43CE500842719 /* jsonData.h */,
@@ -306,6 +311,7 @@
 				C968219218F53AB200C0ADFD /* ViewInformationController.m in Sources */,
 				C9ED1A4518F43CE500842719 /* jsonData.m in Sources */,
 				C968218F18F5292600C0ADFD /* PageContentViewController.m in Sources */,
+				C976213319093917002FE71F /* UIResponderKeyboardCache.m in Sources */,
 				C93AED9818E5A88F003F5A5A /* AppDelegate.m in Sources */,
 				C93AED9418E5A88F003F5A5A /* main.m in Sources */,
 			);
