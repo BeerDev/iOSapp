@@ -20,11 +20,20 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSLog(@"reachability in delegate %d",[jsonData connected]);
-    if([jsonData connected]==YES){
+    if([jsonData connected]==YES && [jsonData GetDataOnline] !=nil){
         NSLog(@"connection");
         [jsonData SetJSON:[jsonData GetDataOnline]];
         [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
         [jsonData GetDataOffline];
+    }
+    else if([jsonData connected]==YES && [jsonData GetDataOnline] ==nil){
+        if ([jsonData GetJsonArray:@"JSON"] == nil) {
+            //för offline vid uppstart
+            [jsonData SetJSON:[jsonData GetDataOffline]];
+            
+        }else{
+            [jsonData SetArrayWithoutInternet:[jsonData GetJsonArray:@"JSON"]];
+        }
     }
     else if([jsonData connected]==NO){
         NSLog(@"no connection");

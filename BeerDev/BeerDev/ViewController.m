@@ -41,7 +41,7 @@
 {
     [super viewDidLoad];
     
-   // [self cacheEverything];
+    [self cacheEverything];
     
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
@@ -113,7 +113,7 @@
 #pragma mark - background caching
 -(void)cacheEverything{
     int threadNumber = 1;
-    int MaxThreads = 2;
+    int MaxThreads = 3;
     NSDate *startDate = [NSDate date];
     while(threadNumber <MaxThreads+1){
    
@@ -122,7 +122,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         // Load the shared assets in the background.
         //[self loadSceneAssets];
-      //  NSLog(@"laddning sker på tråd nr %d",threadNumber);
+        NSLog(@"laddning sker på tråd nr %d",threadNumber);
         for (int i = threadNumber; i < (int)[JsonDataArray count] ; i+=2) {
         //    NSLog(@"getting %d",i);
             UIImage* image;
