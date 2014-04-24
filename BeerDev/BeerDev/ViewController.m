@@ -21,6 +21,7 @@
     BOOL list;
     BOOL product;
     BOOL ShowAlphabet;
+    BOOL ascendingPrice;
     
     PageContentViewController *startingViewController;
     NSArray *viewControllers;
@@ -47,7 +48,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
 
     JsonDataArray = [jsonData GetArray];
-    JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
+    JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
     ShowAlphabet = YES;
     
     //create omOssController
@@ -78,6 +79,7 @@
     // Set page that is showing
     product = YES;
     //[jsonData SetIndex:1];
+    
     [self goToPageIndex:0];
     
     // menu and buttons
@@ -121,9 +123,9 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         // Load the shared assets in the background.
         //[self loadSceneAssets];
-        NSLog(@"laddning sker på tråd nr %d",threadNumber);
+      //  NSLog(@"laddning sker på tråd nr %d",threadNumber);
         for (int i = threadNumber; i < (int)[JsonDataArray count] ; i+=2) {
-            NSLog(@"getting %d",i);
+        //    NSLog(@"getting %d",i);
             UIImage* image;
             if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
                 
@@ -131,7 +133,7 @@
                 image = [[UIImage alloc] initWithData:imageData];
                 
                 if(image !=nil){
-                    NSLog(@"cached image nr %d",i);
+                   // NSLog(@ "cached image nr %d",i);
                     [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
                 }
             }
@@ -143,9 +145,9 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         // Load the shared assets in the background.
         //[self loadSceneAssets];
-        NSLog(@"laddning sker på tråd nr %d",threadNumber);
+     //   NSLog(@"laddning sker på tråd nr %d",threadNumber);
         for (int i = (int)[JsonDataArray count]-1; i > 0 ; i--) {
-            NSLog(@"getting %d",i);
+          //  NSLog(@"getting %d",i);
             UIImage* image;
             if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
                 
@@ -153,12 +155,12 @@
                 image = [[UIImage alloc] initWithData:imageData];
                 
                 if(image !=nil){
-                    NSLog(@"cached image nr %d",i);
+                   // NSLog(@"cached image nr %d",i);
                     [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
                 }
             }
         }
-        NSLog(@"Loaded all create images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
+      NSLog(@"Loaded all create images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
     });
 }
 
@@ -350,7 +352,7 @@
 #pragma mark - Sorting indexs in tableView
 
 -(void)sortAlphabetically{
-    JsonDataArray = [self ourSortingFunction:@"Artikelnamn"];
+    JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
     ShowAlphabet = YES;
     [ourTableView reloadData];
     
@@ -361,16 +363,30 @@
 }
 
 -(void)sortPrice{
-    JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms"];
+    
+    if(ascendingPrice == YES){
+        ascendingPrice = NO;
+    JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms" ascending:ascendingPrice];
     ShowAlphabet = NO;
     [ourTableView reloadData];
     
  
     self.pageViewController.dataSource = nil;
     self.pageViewController.dataSource = self;
+        
+    }else if (ascendingPrice == NO){
+        ascendingPrice = YES;
+        JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms" ascending:ascendingPrice];
+        ShowAlphabet = NO;
+        [ourTableView reloadData];
+        
+        self.pageViewController.dataSource = nil;
+        self.pageViewController.dataSource = self;
+    
+    }
 }
 
-#pragma mark PageViewController 
+#pragma mark PageViewController
 - (PageContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
     if (([JsonDataArray count] == 0) ||( index >= [JsonDataArray count])) {
@@ -554,8 +570,8 @@
 
 #pragma mark - Sorting function
 
--(NSArray*)ourSortingFunction:(NSString*)sort{
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:YES selector:@selector(localizedStandardCompare:)];
+-(NSArray*)ourSortingFunction:(NSString*)sort ascending:(BOOL)order{
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:order selector:@selector(localizedStandardCompare:)];
     
     NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
     NSArray *sortedArray;

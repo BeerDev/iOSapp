@@ -8,25 +8,28 @@
 
 #import "AppDelegate.h"
 
+
+
+
+
+
 @implementation AppDelegate
 
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [jsonData SetJSON];
-   // [jsonData SetCache];
-    
-    
-
-   /* if([jsonData GetJsonArray:@"JSON"] == 0){
-        NSLog(@"not in memory");
-     
-    }else{
-         NSLog(@"already in memory");
-        [jsonData SetArrayWithoutInternet:[jsonData GetJsonArray:@"JSON"]] ;
+    NSLog(@"reachability in delegate %d",[jsonData connected]);
+    if([jsonData connected]==YES){
+        NSLog(@"connection");
+        [jsonData SetJSON];
+        [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
+    }else if([jsonData connected]==NO){
+        NSLog(@"no connection");
+         [jsonData SetArrayWithoutInternet:[jsonData GetJsonArray:@"JSON"]] ;
     }
-*/
+ 
+
     // Override point for customization after application launch.
     
     
@@ -50,6 +53,11 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    if([jsonData connected]==YES){
+        NSLog(@"connection on enterForeground");
+        [jsonData SetJSON];
+        [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
+    }
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
@@ -63,5 +71,7 @@
    
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
+
 
 @end

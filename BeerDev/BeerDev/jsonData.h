@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <SystemConfiguration/SystemConfiguration.h>
+#import "Reachability.h"
+
 
 @interface jsonData : NSObject
 
@@ -101,6 +104,8 @@
 +(void)SetFilePath:(NSString*)path key:(NSString*)key;
 +(NSString*)GetFilePath:(NSString*)key;
 
+//connection
++(BOOL)connected;
 
 
 @end

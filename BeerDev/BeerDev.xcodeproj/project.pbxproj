@@ -23,6 +23,8 @@
 		C93AEDB318E5A890003F5A5A /* BeerDevTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C93AEDB218E5A890003F5A5A /* BeerDevTests.m */; };
 		C968218F18F5292600C0ADFD /* PageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C968218E18F5292600C0ADFD /* PageContentViewController.m */; };
 		C968219218F53AB200C0ADFD /* ViewInformationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C968219118F53AB200C0ADFD /* ViewInformationController.m */; };
+		C982E9421908F07800CD7C7B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C982E9411908F07800CD7C7B /* SystemConfiguration.framework */; };
+		C982E9451908F17E00CD7C7B /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C982E9441908F17E00CD7C7B /* Reachability.m */; };
 		C9D8CF7318FC10F700ECF8AB /* DDMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D8CF7218FC10F700ECF8AB /* DDMenu.m */; };
 		C9ED1A4518F43CE500842719 /* jsonData.m in Sources */ = {isa = PBXBuildFile; fileRef = C9ED1A4418F43CE500842719 /* jsonData.m */; };
 /* End PBXBuildFile section */
@@ -62,6 +64,9 @@
 		C968218E18F5292600C0ADFD /* PageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageContentViewController.m; sourceTree = "<group>"; };
 		C968219018F53AB200C0ADFD /* ViewInformationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewInformationController.h; sourceTree = "<group>"; };
 		C968219118F53AB200C0ADFD /* ViewInformationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewInformationController.m; sourceTree = "<group>"; };
+		C982E9411908F07800CD7C7B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C982E9431908F17E00CD7C7B /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		C982E9441908F17E00CD7C7B /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		C9D8CF7118FC10F700ECF8AB /* DDMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDMenu.h; sourceTree = "<group>"; };
 		C9D8CF7218FC10F700ECF8AB /* DDMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDMenu.m; sourceTree = "<group>"; };
 		C9ED1A4318F43CE500842719 /* jsonData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsonData.h; sourceTree = "<group>"; };
@@ -73,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C982E9421908F07800CD7C7B /* SystemConfiguration.framework in Frameworks */,
 				C93AED8A18E5A88F003F5A5A /* CoreGraphics.framework in Frameworks */,
 				C93AED8C18E5A88F003F5A5A /* UIKit.framework in Frameworks */,
 				C93AED8818E5A88F003F5A5A /* Foundation.framework in Frameworks */,
@@ -114,6 +120,7 @@
 		C93AED8618E5A88F003F5A5A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C982E9411908F07800CD7C7B /* SystemConfiguration.framework */,
 				C93AED8718E5A88F003F5A5A /* Foundation.framework */,
 				C93AED8918E5A88F003F5A5A /* CoreGraphics.framework */,
 				C93AED8B18E5A88F003F5A5A /* UIKit.framework */,
@@ -126,7 +133,6 @@
 			isa = PBXGroup;
 			children = (
 				C9ED1A4218F43A4F00842719 /* Views */,
-				C9ED1A4418F43CE500842719 /* jsonData.m */,
 				C9ED1A4118F43A4500842719 /* Classes */,
 				C941123D18F2BA6B00091BA9 /* constans.h */,
 				C93AED9618E5A88F003F5A5A /* AppDelegate.h */,
@@ -172,7 +178,10 @@
 		C9ED1A4118F43A4500842719 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C982E9431908F17E00CD7C7B /* Reachability.h */,
+				C982E9441908F17E00CD7C7B /* Reachability.m */,
 				C9ED1A4318F43CE500842719 /* jsonData.h */,
+				C9ED1A4418F43CE500842719 /* jsonData.m */,
 				C9D8CF7118FC10F700ECF8AB /* DDMenu.h */,
 				C9D8CF7218FC10F700ECF8AB /* DDMenu.m */,
 			);
@@ -289,6 +298,7 @@
 			files = (
 				C9D8CF7318FC10F700ECF8AB /* DDMenu.m in Sources */,
 				C93AED9E18E5A88F003F5A5A /* ViewController.m in Sources */,
+				C982E9451908F17E00CD7C7B /* Reachability.m in Sources */,
 				C968219218F53AB200C0ADFD /* ViewInformationController.m in Sources */,
 				C9ED1A4518F43CE500842719 /* jsonData.m in Sources */,
 				C968218F18F5292600C0ADFD /* PageContentViewController.m in Sources */,
