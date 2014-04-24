@@ -12,13 +12,14 @@
 
 
 @interface jsonData : NSObject
-
++(NSData*)GetDataOffline;
++(NSData*)GetDataOnline;
 /**
  * Calling this method will connect to the server and get the JSON file. Doing this sets the NSMutableArray but you have to get it with the GetArray Method.
  * @author Maxim Frisk
  *  * @return JSON NSMutableArray
  */
-+(void)SetJSON;
++(void)SetJSON:(NSData*)data;
 
 /**
  * Get the NSMutableArray that contains the JSON file data. After recieving it you can use "getObjectForKey" to access the variables in the given index.

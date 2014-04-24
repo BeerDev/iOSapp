@@ -8,6 +8,7 @@
 
 #import "jsonData.h"
 
+
 @implementation jsonData
 
 static NSArray* JSONARRAY = nil;
@@ -21,9 +22,26 @@ static NSCache * myImageCache;
     return self;
 }
 
-+(void)SetJSON{
++(NSData*)GetDataOnline{
+    
     NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://beerdev.tk/json.php"]];
-    id jsonObjects = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:nil];
+  //  NSLog(@"%@",jsonData);
+    return jsonData;
+}
+
++(NSData*)GetDataOffline{
+    NSString*path = [[NSBundle mainBundle] bundlePath];
+    NSString*finalPatch = [path stringByAppendingPathComponent:@"json.json"];
+    NSData *jsonData = [NSData dataWithContentsOfFile:finalPatch];
+  //  NSLog(@"%@",jsonData);
+    return jsonData;
+
+}
+
++(void)SetJSON:(NSData*)data{
+    
+    id jsonObjects = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+
     // Define keys
     NSString* info = @"Info";
     NSString* url = @"URL";
@@ -213,6 +231,8 @@ static NSCache * myImageCache;
     NetworkStatus networkStatus = [reachability currentReachabilityStatus];
     return networkStatus != NotReachable;
 }
+
+
 
 
 

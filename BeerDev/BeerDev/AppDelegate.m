@@ -22,11 +22,20 @@
     NSLog(@"reachability in delegate %d",[jsonData connected]);
     if([jsonData connected]==YES){
         NSLog(@"connection");
-        [jsonData SetJSON];
+        [jsonData SetJSON:[jsonData GetDataOnline]];
         [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
-    }else if([jsonData connected]==NO){
+        [jsonData GetDataOffline];
+    }
+    else if([jsonData connected]==NO){
         NSLog(@"no connection");
-         [jsonData SetArrayWithoutInternet:[jsonData GetJsonArray:@"JSON"]] ;
+        
+        if ([jsonData GetJsonArray:@"JSON"] == nil) {
+            //för offline vid uppstart
+            [jsonData SetJSON:[jsonData GetDataOffline]];
+            
+        }else{
+            [jsonData SetArrayWithoutInternet:[jsonData GetJsonArray:@"JSON"]];
+        }
     }
  
 
@@ -55,7 +64,7 @@
 {
     if([jsonData connected]==YES){
         NSLog(@"connection on enterForeground");
-        [jsonData SetJSON];
+        [jsonData SetJSON:[jsonData GetDataOnline]];
         [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
     }
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.

@@ -25,6 +25,7 @@
 		C968219218F53AB200C0ADFD /* ViewInformationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C968219118F53AB200C0ADFD /* ViewInformationController.m */; };
 		C982E9421908F07800CD7C7B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C982E9411908F07800CD7C7B /* SystemConfiguration.framework */; };
 		C982E9451908F17E00CD7C7B /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C982E9441908F17E00CD7C7B /* Reachability.m */; };
+		C982E9471908FD1200CD7C7B /* json.json in Resources */ = {isa = PBXBuildFile; fileRef = C982E9461908FD1200CD7C7B /* json.json */; };
 		C9D8CF7318FC10F700ECF8AB /* DDMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D8CF7218FC10F700ECF8AB /* DDMenu.m */; };
 		C9ED1A4518F43CE500842719 /* jsonData.m in Sources */ = {isa = PBXBuildFile; fileRef = C9ED1A4418F43CE500842719 /* jsonData.m */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,7 @@
 		C982E9411908F07800CD7C7B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C982E9431908F17E00CD7C7B /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		C982E9441908F17E00CD7C7B /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		C982E9461908FD1200CD7C7B /* json.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = json.json; sourceTree = "<group>"; };
 		C9D8CF7118FC10F700ECF8AB /* DDMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDMenu.h; sourceTree = "<group>"; };
 		C9D8CF7218FC10F700ECF8AB /* DDMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDMenu.m; sourceTree = "<group>"; };
 		C9ED1A4318F43CE500842719 /* jsonData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsonData.h; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 		C93AED8D18E5A88F003F5A5A /* BeerDev */ = {
 			isa = PBXGroup;
 			children = (
+				C982E9461908FD1200CD7C7B /* json.json */,
 				C9ED1A4218F43A4F00842719 /* Views */,
 				C9ED1A4118F43A4500842719 /* Classes */,
 				C941123D18F2BA6B00091BA9 /* constans.h */,
@@ -278,6 +281,7 @@
 				C93AEDA018E5A88F003F5A5A /* Images.xcassets in Resources */,
 				C93AED9218E5A88F003F5A5A /* InfoPlist.strings in Resources */,
 				C93AED9B18E5A88F003F5A5A /* Main.storyboard in Resources */,
+				C982E9471908FD1200CD7C7B /* json.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

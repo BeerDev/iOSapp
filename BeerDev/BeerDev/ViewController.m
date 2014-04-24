@@ -37,12 +37,11 @@
 @end
 @implementation ViewController
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self cacheEverything];
+   // [self cacheEverything];
     
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];

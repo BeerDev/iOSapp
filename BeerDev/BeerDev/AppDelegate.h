@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "jsonData.h"
 #import "QuartzCore/QuartzCore.h"
+#import <Foundation/Foundation.h>
 
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
