@@ -108,18 +108,21 @@
     //sort
 }
 
+
+#pragma mark - background caching
 -(void)cacheEverything{
     int threadNumber = 1;
-    int MaxThreads = 3;
-    while(threadNumber <MaxThreads+1){
+    int MaxThreads = 2;
     NSDate *startDate = [NSDate date];
+    while(threadNumber <MaxThreads+1){
+   
     
     //jämna nummer
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         // Load the shared assets in the background.
         //[self loadSceneAssets];
         NSLog(@"laddning sker på tråd nr %d",threadNumber);
-        for (int i = threadNumber; i < (int)[JsonDataArray count] ; i+=threadNumber) {
+        for (int i = threadNumber; i < (int)[JsonDataArray count] ; i+=2) {
             NSLog(@"getting %d",i);
             UIImage* image;
             if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
@@ -127,20 +130,39 @@
                 NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[i]objectForKey:@"URL"]]];
                 image = [[UIImage alloc] initWithData:imageData];
                 
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if(image !=nil){
-                        NSLog(@"cached image nr %d",i);
-                        [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
-                    }
-                });
+                if(image !=nil){
+                    NSLog(@"cached image nr %d",i);
+                    [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
+                }
             }
         }
         NSLog(@"Loaded all create images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
     });
         threadNumber++;
     }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        // Load the shared assets in the background.
+        //[self loadSceneAssets];
+        NSLog(@"laddning sker på tråd nr %d",threadNumber);
+        for (int i = (int)[JsonDataArray count]-1; i > 0 ; i--) {
+            NSLog(@"getting %d",i);
+            UIImage* image;
+            if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
+                
+                NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[i]objectForKey:@"URL"]]];
+                image = [[UIImage alloc] initWithData:imageData];
+                
+                if(image !=nil){
+                    NSLog(@"cached image nr %d",i);
+                    [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
+                }
+            }
+        }
+        NSLog(@"Loaded all create images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
+    });
 }
 
+#pragma mark - Other
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -280,6 +302,7 @@
     float size = 35;
     [searchButton setImageEdgeInsets:UIEdgeInsetsMake(size, size, size, size)];
     [self.ListController.view addSubview:searchButton];
+
     
 }
 
