@@ -108,7 +108,6 @@
     
     [[UITableView appearance] setSectionIndexBackgroundColor:[UIColor clearColor]];
     [[UITableView appearance] setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
-   // [[UITableView appearance] setSectionIndexTrackingBackgroundColor:[UIColor whiteColor]];
     [[UITableView appearance] setSectionIndexColor:[UIColor whiteColor]];
     
     [self createListButtons];
@@ -118,8 +117,20 @@
     OursearchBar= [[UISearchBar alloc] initWithFrame:CGRectMake(0,-70, self.view.frame.size.width, 70)];
     OursearchBar.showsCancelButton = YES;
     OursearchBar.backgroundImage= [UIImage alloc];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTintColor:[UIColor whiteColor]];
-    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitle:@"Avbryt"];
+ //   [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class ], nil] setTintColor:[UIColor whiteColor]];
+  //  [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitle:@"Avbryt"];
+     
+     
+     UIView* view=OursearchBar.subviews[0];
+     for (UIView *subView in view.subviews) {
+         if ([subView isKindOfClass:[UIButton class]]) {
+             UIButton *cancelButton = (UIButton*)subView;
+             
+             [cancelButton setTitle:@"Avbryt" forState:UIControlStateNormal];
+             [cancelButton setTintColor:[UIColor whiteColor]];
+         }
+     }
+     
     OursearchBar.delegate = self;
     
     [self.ListController.view addSubview:OursearchBar];
