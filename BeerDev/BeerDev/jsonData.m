@@ -28,7 +28,7 @@ static NSCache * myImageCache;
 
 +(NSData*)GetDataOnline{
     
-    NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://beerdev.tk/json.php"]];
+    NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://beerdev.tk/sortiment.json"]];
     return jsonData;
 }
 

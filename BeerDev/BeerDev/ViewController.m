@@ -42,13 +42,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    JsonDataArray = [jsonData GetArray];
+    JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
+    
+    [UIResponder cacheKeyboard];
+    
     [self cacheEverything];
-    [UIResponder cacheKeyboard:YES];
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
 
-    JsonDataArray = [jsonData GetArray];
-    JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
+    
     ShowAlphabet = YES;
     
     //create omOssController
@@ -163,13 +168,13 @@
 #pragma mark - background caching
 -(void)cacheEverything{
     int threadNumber = 1;
-    int MaxThreads = 3;
+    int MaxThreads = 2;
     NSDate *startDate = [NSDate date];
     while(threadNumber <MaxThreads+1){
    
     
     //jämna nummer
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // Load the shared assets in the background.
         //[self loadSceneAssets];
         NSLog(@"laddning sker på tråd nr %d",threadNumber);
@@ -179,6 +184,7 @@
             if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
                 
                 NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[i]objectForKey:@"URL"]]];
+                NSLog(@"%@",[JsonDataArray[i]objectForKey:@"URL"]);
                 image = [[UIImage alloc] initWithData:imageData];
                 
                 if(image !=nil){
