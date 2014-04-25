@@ -141,30 +141,43 @@
     
 }
 
+
+#pragma mark - searchBar
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     ShowAlphabet = NO;
     [self filterContentForSearchText:searchText
-                                 scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
-                                        objectAtIndex:[self.searchDisplayController.searchBar
-                                                       selectedScopeButtonIndex]]];
-     
-     JsonDataArray = searchResults;
-     [ourTableView reloadData];
-
+                               scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
+                                      objectAtIndex:[self.searchDisplayController.searchBar
+                                                     selectedScopeButtonIndex]]];
+    
+    JsonDataArray = searchResults;
+    [ourTableView reloadData];
+    
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
-
+    
     [searchBar resignFirstResponder];
     [UIView animateWithDuration:0.3 animations:^{
         _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
     } completion:^(BOOL finished) {
         NSLog(@"Drop search bar");
     }];
-
+    
+    if(product == YES && [JsonDataArray count] != 0){
+     //   [self goToPageIndex:(int)[JsonDataArray count]-1];
+        
+        startingViewController = [self viewControllerAtIndex:0];
+        viewControllers = @[startingViewController];
+        
+        //set the PageViewController by storyboard ID.
+        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+    //    self.pageViewController.dataSource = nil;
+        self.pageViewController.dataSource = self;
+    }
+    
 }
 
-#pragma mark - searchBar
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
     ShowAlphabet = YES;
@@ -178,14 +191,6 @@
     [ourTableView reloadData];
 }
 
--(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-
-}
--(void)searchBarTextDidEndEditing:(UISearchBar *)searchBar{
-
-
-}
-
 -(void)searchInList{
         [_OursearchBar becomeFirstResponder];
         [UIView animateWithDuration:0.3 animations:^{
@@ -197,11 +202,8 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
-
     searchResults = [ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", searchText]];
 }
-
-
 
 
 #pragma mark - background caching
