@@ -33,8 +33,8 @@
     
     //global variables table
     NSArray * JsonDataArray;
-    UISearchBar *OursearchBar;
-
+    NSArray* ForSearchArray;
+    NSArray * searchResults;
 }
 @end
 @implementation ViewController
@@ -47,6 +47,9 @@
     JsonDataArray = [jsonData GetArray];
     JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
     
+    
+    ForSearchArray = [jsonData GetArray];
+    ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
     [UIResponder cacheKeyboard];
     
     [self cacheEverything];
@@ -93,6 +96,8 @@
     [self.view addSubview:menu];
     [self.view bringSubviewToFront:menu];
     [self.view bringSubviewToFront:dropButton];
+    [self.view bringSubviewToFront:_OursearchBar];
+    [self.view bringSubviewToFront:searchButton];
     
 
     //Create a table
@@ -114,14 +119,15 @@
     
     //Create searchbar and stuff.
     
-    OursearchBar= [[UISearchBar alloc] initWithFrame:CGRectMake(0,-70, self.view.frame.size.width, 70)];
-    OursearchBar.showsCancelButton = YES;
-    OursearchBar.backgroundImage= [UIImage alloc];
+    _OursearchBar= [[UISearchBar alloc] initWithFrame:CGRectMake(0,-70, self.view.frame.size.width, 70)];
+    _OursearchBar.showsCancelButton = YES;
+    _OursearchBar.delegate = self;
+    _OursearchBar.backgroundImage= [UIImage alloc];
  //   [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class ], nil] setTintColor:[UIColor whiteColor]];
   //  [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitle:@"Avbryt"];
      
      
-     UIView* view=OursearchBar.subviews[0];
+     UIView* view=_OursearchBar.subviews[0];
      for (UIView *subView in view.subviews) {
          if ([subView isKindOfClass:[UIButton class]]) {
              UIButton *cancelButton = (UIButton*)subView;
@@ -130,31 +136,46 @@
              [cancelButton setTintColor:[UIColor whiteColor]];
          }
      }
-     
-    OursearchBar.delegate = self;
-    
-    [self.ListController.view addSubview:OursearchBar];
-  
-   UISearchDisplayController* searchController = [[UISearchDisplayController alloc]
-                        initWithSearchBar:OursearchBar contentsController:self];
-    searchController.delegate = self;
-    searchController.searchResultsDataSource = self;
-    searchController.searchResultsDelegate = self;
-    
 
-
-    //sort
+    [self.view addSubview: _OursearchBar];
+    
 }
+
+-(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    ShowAlphabet = NO;
+    [self filterContentForSearchText:searchText
+                                 scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
+                                        objectAtIndex:[self.searchDisplayController.searchBar
+                                                       selectedScopeButtonIndex]]];
+     
+     JsonDataArray = searchResults;
+     [ourTableView reloadData];
+
+}
+
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+
+    [searchBar resignFirstResponder];
+    [UIView animateWithDuration:0.3 animations:^{
+        _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
+    } completion:^(BOOL finished) {
+        NSLog(@"Drop search bar");
+    }];
+
+}
+
 #pragma mark - searchBar
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
+    ShowAlphabet = YES;
     [searchBar resignFirstResponder];
         [UIView animateWithDuration:0.3 animations:^{
-            OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
+            _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
         } completion:^(BOOL finished) {
             NSLog(@"Drop search bar");
         }];
-    NSLog(@"cancel!!! :D");
+    JsonDataArray = ForSearchArray;
+    [ourTableView reloadData];
 }
 
 -(void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
@@ -166,15 +187,22 @@
 }
 
 -(void)searchInList{
-        [OursearchBar becomeFirstResponder];
+        [_OursearchBar becomeFirstResponder];
         [UIView animateWithDuration:0.3 animations:^{
-            OursearchBar.frame = CGRectMake(0, 10,  self.view.frame.size.width-30, 70);
+            _OursearchBar.frame = CGRectMake(0, 10,  self.view.frame.size.width-30, 70);
             
         } completion:^(BOOL finished) {
         }];
-
-    
 }
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+
+    searchResults = [ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", searchText]];
+}
+
+
+
 
 #pragma mark - background caching
 -(void)cacheEverything{
@@ -254,7 +282,9 @@
                           // no animation necessary, but docs say this can't be NULL
                             }
                             completion:^(BOOL finished){
+                                
                                 [menu HideDownMenu];
+                                [self.view bringSubviewToFront:_OursearchBar];
                                 NSLog(@"you switched");
             }];
 }
@@ -330,7 +360,7 @@
 
 -(void)createListButtons{
     priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    priceSort.frame = CGRectMake(4, 20, 50, 50);
+    priceSort.frame = CGRectMake(64, 20, 50, 50);
     priceSort.titleLabel.font = [UIFont systemFontOfSize:20];
 
 
@@ -345,7 +375,7 @@
     
     
     alphabeticSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    alphabeticSort.frame = CGRectMake(64, 20, 50, 50);
+    alphabeticSort.frame = CGRectMake(124, 20, 50, 50);
     alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
     
     [alphabeticSort setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -355,21 +385,6 @@
     [alphabeticSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [alphabeticSort addTarget:self action:@selector(sortAlphabetically) forControlEvents:UIControlEventTouchUpInside];
     [self.ListController.view addSubview:alphabeticSort];
-    
-    UIImage *magnifier = [UIImage imageNamed:@"magnifier"];
-    
-    searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    searchButton.frame = CGRectMake(124, 20, 50, 50);
-    
-    [searchButton setImage:magnifier forState:UIControlStateNormal];
-    [searchButton addTarget:self action:@selector(searchInList)
-           forControlEvents:UIControlEventTouchUpInside];
-    
-    float size = 35;
-    [searchButton setImageEdgeInsets:UIEdgeInsetsMake(size, size, size, size)];
-    [self.ListController.view addSubview:searchButton];
-
-    
 }
 
 -(void)setButton{
@@ -382,9 +397,22 @@
     [dropButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 50, 50);
     [dropButton addTarget:self action:@selector(DropMenu) forControlEvents:UIControlEventTouchUpInside];
-    
+
     [self.view addSubview:dropButton];
 
+    
+    UIImage *magnifier = [UIImage imageNamed:@"magnifier"];
+    
+    searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    searchButton.frame = CGRectMake(4, 20, 50, 50);
+    
+    [searchButton setImage:magnifier forState:UIControlStateNormal];
+    [searchButton addTarget:self action:@selector(searchInList)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    float size = 35;
+    [searchButton setImageEdgeInsets:UIEdgeInsetsMake(size, size, size, size)];
+    [self.view addSubview:searchButton];
 }
 
 -(void)DropMenu{
@@ -410,6 +438,9 @@
     button = NO;
     [self.view bringSubviewToFront:menu];
     [self.view bringSubviewToFront:dropButton];
+    [self.view bringSubviewToFront:searchButton];
+    [self.view bringSubviewToFront:_OursearchBar];
+    
     
 }
 
@@ -490,8 +521,6 @@
     if (index == [JsonDataArray count]) {
         return nil;
     }
-
-  
     return [self viewControllerAtIndex:index];
 }
 
@@ -515,6 +544,12 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
+   /*if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return [searchResults count];
+        
+    } else {
+        return [JsonDataArray count];
+    }*/
     return [JsonDataArray count];
     
 }
@@ -562,7 +597,8 @@
     [jsonData SetIndex:indexPath.row];
     
     [self goToPageIndex:(int)indexPath.row];
-    
+    self.pageViewController.dataSource = nil;
+    self.pageViewController.dataSource = self;
     [self transitionFromViewController:self.ListController
                       toViewController: self.pageViewController
                               duration:0.4
@@ -643,6 +679,7 @@
     
     return sortedArray;
 }
+
 
 
 

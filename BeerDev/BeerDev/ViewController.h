@@ -19,6 +19,9 @@
 @property (strong, nonatomic) UIPageViewController *pageViewController;
 @property (strong, nonatomic) UIViewController *omOssController;
 @property (strong, nonatomic) UIViewController * ListController;
+@property (strong, nonatomic) UISearchDisplayController* searchController;
+@property (strong, nonatomic) UISearchBar *OursearchBar;
+
 
 
 @end
