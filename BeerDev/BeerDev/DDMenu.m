@@ -23,30 +23,49 @@
         
         _productViewButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         
-        [_productViewButton setTitle:@"Visa Öl" forState:UIControlStateNormal];
-        _productViewButton.titleLabel.font = [UIFont systemFontOfSize:24];
+        [_productViewButton setTitle:@"Visa öl" forState:UIControlStateNormal];
+        _productViewButton.titleLabel.font = [UIFont systemFontOfSize:20];
         _productViewButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         [_productViewButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        self.productViewButton.frame = CGRectMake(0, 70, self.frame.size.width-10, 50);
+        self.productViewButton.frame = CGRectMake(0, 50, self.frame.size.width-10, 40);
         
         [self addSubview:_productViewButton];
         
         _listViewButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [_listViewButton setTitle:@"Lista All Öl" forState:UIControlStateNormal];
-        _listViewButton.titleLabel.font = [UIFont systemFontOfSize:24];
+        [_listViewButton setTitle:@"Lista öl" forState:UIControlStateNormal];
+        _listViewButton.titleLabel.font = [UIFont systemFontOfSize:20];
         _listViewButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         [_listViewButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        self.listViewButton.frame = CGRectMake(0, 120, self.frame.size.width-10, 50);
+        self.listViewButton.frame = CGRectMake(0, 80, self.frame.size.width-10, 40);
         
         [self addSubview:_listViewButton];
-
+        
+        _categoryButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [_categoryButton setTitle:@"Typ" forState:UIControlStateNormal];
+        _categoryButton.titleLabel.font = [UIFont systemFontOfSize:20];
+        _categoryButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        [_categoryButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        self.categoryButton.frame = CGRectMake(0, 110, self.frame.size.width-10, 40);
+        [self addSubview:_categoryButton];
+        
+        
+        _omKistanButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [_omKistanButton setTitle:@"Om Kistan" forState:UIControlStateNormal];
+        _omKistanButton.titleLabel.font = [UIFont systemFontOfSize:20];
+        _omKistanButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        [_omKistanButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        self.omKistanButton.frame = CGRectMake(0, 140, self.frame.size.width-10, 40);
+        [self addSubview:_omKistanButton];
+        
         _omOssButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [_omOssButton setTitle:@"Om Oss" forState:UIControlStateNormal];
-        _omOssButton.titleLabel.font = [UIFont systemFontOfSize:24];
+        [_omOssButton setTitle:@"Om BeerDev" forState:UIControlStateNormal];
+        _omOssButton.titleLabel.font = [UIFont systemFontOfSize:20];
         _omOssButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         [_omOssButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         
-        self.omOssButton.frame = CGRectMake(0, 170, self.frame.size.width-10, 50);
+        self.omOssButton.frame = CGRectMake(0, 170, self.frame.size.width-10, 40);
         [self addSubview:_omOssButton];
     }
     return self;

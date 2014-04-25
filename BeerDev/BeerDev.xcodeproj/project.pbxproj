@@ -29,6 +29,7 @@
 		C982E9471908FD1200CD7C7B /* json.json in Resources */ = {isa = PBXBuildFile; fileRef = C982E9461908FD1200CD7C7B /* json.json */; };
 		C9D8CF7318FC10F700ECF8AB /* DDMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D8CF7218FC10F700ECF8AB /* DDMenu.m */; };
 		C9ED1A4518F43CE500842719 /* jsonData.m in Sources */ = {isa = PBXBuildFile; fileRef = C9ED1A4418F43CE500842719 /* jsonData.m */; };
+		CBFA178B190AAA7A0081FC6D /* CategoryList.plist in Resources */ = {isa = PBXBuildFile; fileRef = CBFA178A190AAA7A0081FC6D /* CategoryList.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		C9D8CF7218FC10F700ECF8AB /* DDMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDMenu.m; sourceTree = "<group>"; };
 		C9ED1A4318F43CE500842719 /* jsonData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsonData.h; sourceTree = "<group>"; };
 		C9ED1A4418F43CE500842719 /* jsonData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = jsonData.m; sourceTree = "<group>"; };
+		CBFA178A190AAA7A0081FC6D /* CategoryList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CategoryList.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 				C93AED9918E5A88F003F5A5A /* Main.storyboard */,
 				C93AED9C18E5A88F003F5A5A /* ViewController.h */,
 				C93AED9D18E5A88F003F5A5A /* ViewController.m */,
+				CBFA178A190AAA7A0081FC6D /* CategoryList.plist */,
 				C93AED9F18E5A88F003F5A5A /* Images.xcassets */,
 				C93AED8E18E5A88F003F5A5A /* Supporting Files */,
 			);
@@ -285,6 +288,7 @@
 			files = (
 				C93AEDA018E5A88F003F5A5A /* Images.xcassets in Resources */,
 				C93AED9218E5A88F003F5A5A /* InfoPlist.strings in Resources */,
+				CBFA178B190AAA7A0081FC6D /* CategoryList.plist in Resources */,
 				C93AED9B18E5A88F003F5A5A /* Main.storyboard in Resources */,
 				C982E9471908FD1200CD7C7B /* json.json in Resources */,
 			);
