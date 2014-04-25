@@ -33,8 +33,10 @@
     
     //global variables table
     NSArray * JsonDataArray;
-    NSArray* ForSearchArray;
+    NSArray * ForSearchArray;
     NSArray * searchResults;
+    NSArray * crap;
+    
 }
 @end
 @implementation ViewController
@@ -51,6 +53,11 @@
     ForSearchArray = [jsonData GetArray];
     ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
     [UIResponder cacheKeyboard];
+    
+    
+    //minor thing! important!
+    crap =  [[NSArray alloc] initWithObjects:JsonDataArray[0], nil];
+    NSLog(@"crap size %d",[crap count]);
     
     [self cacheEverything];
     //set backgroundcolor
@@ -123,10 +130,7 @@
     _OursearchBar.showsCancelButton = YES;
     _OursearchBar.delegate = self;
     _OursearchBar.backgroundImage= [UIImage alloc];
- //   [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class ], nil] setTintColor:[UIColor whiteColor]];
-  //  [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil] setTitle:@"Avbryt"];
-     
-     
+
      UIView* view=_OursearchBar.subviews[0];
      for (UIView *subView in view.subviews) {
          if ([subView isKindOfClass:[UIButton class]]) {
@@ -167,6 +171,15 @@
     if(product == YES && [JsonDataArray count] != 0){
      //   [self goToPageIndex:(int)[JsonDataArray count]-1];
         
+        NSArray*temp =  JsonDataArray;
+        JsonDataArray = crap;
+        
+        startingViewController = [self viewControllerAtIndex:0];
+        viewControllers = @[startingViewController];
+        
+        //set the PageViewController by storyboard ID.
+        JsonDataArray = temp;
+        
         startingViewController = [self viewControllerAtIndex:0];
         viewControllers = @[startingViewController];
         
@@ -180,6 +193,7 @@
 
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
+    searchBar.text = nil;
     ShowAlphabet = YES;
     [searchBar resignFirstResponder];
         [UIView animateWithDuration:0.3 animations:^{
@@ -189,6 +203,32 @@
         }];
     JsonDataArray = ForSearchArray;
     [ourTableView reloadData];
+    
+    if(product == YES && [JsonDataArray count] != 0){
+        //   [self goToPageIndex:(int)[JsonDataArray count]-1];
+        
+        
+        NSArray*temp =  JsonDataArray;
+        JsonDataArray = crap;
+        
+        startingViewController = [self viewControllerAtIndex:0];
+        viewControllers = @[startingViewController];
+        
+        //set the PageViewController by storyboard ID.
+        JsonDataArray = temp;
+        
+        startingViewController = [self viewControllerAtIndex:0];
+        viewControllers = @[startingViewController];
+        
+        //set the PageViewController by storyboard ID.
+        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+        
+        //    self.pageViewController.dataSource = nil;
+        self.pageViewController.dataSource = self;
+    }
+    
+
+    
 }
 
 -(void)searchInList{
@@ -225,7 +265,7 @@
             if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
                 
                 NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[i]objectForKey:@"URL"]]];
-                NSLog(@"%@",[JsonDataArray[i]objectForKey:@"URL"]);
+              //  NSLog(@"%@",[JsonDataArray[i]objectForKey:@"URL"]);
                 image = [[UIImage alloc] initWithData:imageData];
                 
                 if(image !=nil){
@@ -239,9 +279,6 @@
         threadNumber++;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        // Load the shared assets in the background.
-        //[self loadSceneAssets];
-     //   NSLog(@"laddning sker på tråd nr %d",threadNumber);
         for (int i = (int)[JsonDataArray count]-1; i > 0 ; i--) {
           //  NSLog(@"getting %d",i);
             UIImage* image;
