@@ -22,6 +22,9 @@
 @property (strong, nonatomic) UISearchDisplayController* searchController;
 @property (strong, nonatomic) UISearchBar *OursearchBar;
 
+@property (strong, nonatomic) NSArray * JsonDataArray;
+@property (strong, nonatomic) NSArray * ForSearchArray;
+
 
 
 @end

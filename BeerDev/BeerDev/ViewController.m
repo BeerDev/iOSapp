@@ -30,12 +30,8 @@
 
     //table
     UITableView *ourTableView;
-    
-    //global variables table
-    NSArray * JsonDataArray;
-    NSArray * ForSearchArray;
+
     NSArray * searchResults;
-    NSArray * crap;
     
 }
 @end
@@ -44,25 +40,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
-    JsonDataArray = [jsonData GetArray];
-    JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
-    
-    
-    ForSearchArray = [jsonData GetArray];
-    ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
+
+    //cache the keyboard
     [UIResponder cacheKeyboard];
     
+    _ForSearchArray = [jsonData GetArray];
+    _ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_ForSearchArray];
+
     
-    //minor thing! important!
-    crap =  [[NSArray alloc] initWithObjects:JsonDataArray[0], nil];
-    NSLog(@"crap size %d",[crap count]);
+    _JsonDataArray = [jsonData GetArray];
+    _JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_JsonDataArray];
+
     
     [self cacheEverything];
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
 
+    NSLog(@"%@",_ForSearchArray);
     
     ShowAlphabet = YES;
     
@@ -154,7 +148,7 @@
                                       objectAtIndex:[self.searchDisplayController.searchBar
                                                      selectedScopeButtonIndex]]];
     
-    JsonDataArray = searchResults;
+    _JsonDataArray = searchResults;
     [ourTableView reloadData];
     
 }
@@ -162,30 +156,19 @@
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     
     [searchBar resignFirstResponder];
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:0.5 animations:^{
         _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
     } completion:^(BOOL finished) {
-        NSLog(@"Drop search bar");
+        self.pageViewController.dataSource = nil;
+        self.pageViewController.dataSource = self;
     }];
     
-    if(product == YES && [JsonDataArray count] != 0){
-     //   [self goToPageIndex:(int)[JsonDataArray count]-1];
-        
-        NSArray*temp =  JsonDataArray;
-        JsonDataArray = crap;
-        
+    if(product == YES && [_JsonDataArray count] != 0){
         startingViewController = [self viewControllerAtIndex:0];
         viewControllers = @[startingViewController];
         
-        //set the PageViewController by storyboard ID.
-        JsonDataArray = temp;
-        
-        startingViewController = [self viewControllerAtIndex:0];
-        viewControllers = @[startingViewController];
-        
-        //set the PageViewController by storyboard ID.
         [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
-    //    self.pageViewController.dataSource = nil;
+        
         self.pageViewController.dataSource = self;
     }
     
@@ -196,34 +179,23 @@
     searchBar.text = nil;
     ShowAlphabet = YES;
     [searchBar resignFirstResponder];
-        [UIView animateWithDuration:0.3 animations:^{
+        [UIView animateWithDuration:0.5 animations:^{
             _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
         } completion:^(BOOL finished) {
-            NSLog(@"Drop search bar");
+        self.pageViewController.dataSource = nil;
+        self.pageViewController.dataSource = self;
         }];
-    JsonDataArray = ForSearchArray;
-    [ourTableView reloadData];
+
     
-    if(product == YES && [JsonDataArray count] != 0){
-        //   [self goToPageIndex:(int)[JsonDataArray count]-1];
-        
-        
-        NSArray*temp =  JsonDataArray;
-        JsonDataArray = crap;
+    _JsonDataArray = _ForSearchArray;
+    [ourTableView reloadData];
+    if(product == YES && [_JsonDataArray count] != 0){
         
         startingViewController = [self viewControllerAtIndex:0];
         viewControllers = @[startingViewController];
         
-        //set the PageViewController by storyboard ID.
-        JsonDataArray = temp;
-        
-        startingViewController = [self viewControllerAtIndex:0];
-        viewControllers = @[startingViewController];
-        
-        //set the PageViewController by storyboard ID.
         [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
-        
-        //    self.pageViewController.dataSource = nil;
+
         self.pageViewController.dataSource = self;
     }
     
@@ -242,7 +214,7 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
-    searchResults = [ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", searchText]];
+    searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", searchText]];
 }
 
 
@@ -259,18 +231,18 @@
         // Load the shared assets in the background.
         //[self loadSceneAssets];
         NSLog(@"laddning sker på tråd nr %d",threadNumber);
-        for (int i = threadNumber; i < (int)[JsonDataArray count] ; i+=2) {
+        for (int i = threadNumber; i < (int)[_ForSearchArray count] ; i+=2) {
         //    NSLog(@"getting %d",i);
             UIImage* image;
-            if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
+            if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
                 
-                NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[i]objectForKey:@"URL"]]];
+                NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[_ForSearchArray[i]objectForKey:@"URL"]]];
               //  NSLog(@"%@",[JsonDataArray[i]objectForKey:@"URL"]);
                 image = [[UIImage alloc] initWithData:imageData];
                 
                 if(image !=nil){
                    // NSLog(@ "cached image nr %d",i);
-                    [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
+                    [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]];
                 }
             }
         }
@@ -279,17 +251,17 @@
         threadNumber++;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        for (int i = (int)[JsonDataArray count]-1; i > 0 ; i--) {
+        for (int i = (int)[_ForSearchArray count]-1; i > 0 ; i--) {
           //  NSLog(@"getting %d",i);
             UIImage* image;
-            if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
+            if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
                 
-                NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[JsonDataArray[i]objectForKey:@"URL"]]];
+                NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[_ForSearchArray[i]objectForKey:@"URL"]]];
                 image = [[UIImage alloc] initWithData:imageData];
                 
                 if(image !=nil){
                    // NSLog(@"cached image nr %d",i);
-                    [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[i] objectForKey:@"Artikelnamn"]]];
+                    [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]];
                 }
             }
         }
@@ -486,7 +458,7 @@
 #pragma mark - Sorting indexs in tableView
 
 -(void)sortAlphabetically{
-    JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES];
+    _JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_JsonDataArray];
     ShowAlphabet = YES;
     [ourTableView reloadData];
     
@@ -500,7 +472,7 @@
     
     if(ascendingPrice == YES){
         ascendingPrice = NO;
-    JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms" ascending:ascendingPrice];
+    _JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms" ascending:ascendingPrice withArray:_JsonDataArray];
     ShowAlphabet = NO;
     [ourTableView reloadData];
     
@@ -510,7 +482,7 @@
         
     }else if (ascendingPrice == NO){
         ascendingPrice = YES;
-        JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms" ascending:ascendingPrice];
+        _JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms" ascending:ascendingPrice withArray:_JsonDataArray];
         ShowAlphabet = NO;
         [ourTableView reloadData];
         
@@ -523,14 +495,14 @@
 #pragma mark PageViewController
 - (PageContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
-    if (([JsonDataArray count] == 0) ||( index >= [JsonDataArray count])) {
+    if (([_JsonDataArray count] == 0) ||( index >= [_JsonDataArray count])) {
         return nil;
     }
    // NSLog(@"%d",[[jsonData GetArray] count]);
     // Create a new view controller and pass suitable data.
     PageContentViewController *pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
     pageContentViewController.pageIndex = index;
-    pageContentViewController.arrayFromViewController = (NSMutableArray*)JsonDataArray;
+    pageContentViewController.arrayFromViewController = (NSMutableArray*)_JsonDataArray;
     
 
     return pageContentViewController;
@@ -557,7 +529,7 @@
     }
     
     index++;
-    if (index == [JsonDataArray count]) {
+    if (index == [_JsonDataArray count]) {
         return nil;
     }
     return [self viewControllerAtIndex:index];
@@ -582,18 +554,13 @@
 /*_______________________________________________________________________________________*/
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-   /*if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return [searchResults count];
-        
-    } else {
-        return [JsonDataArray count];
-    }*/
-    return [JsonDataArray count];
+
+    return [_JsonDataArray count];
     
 }
 
 //datan som en cell innehåller i min tableView
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //används för identifiering
     static NSString *simpleTableIdentifier = @"myCell";
@@ -619,11 +586,11 @@
     cell.textLabel.font = [UIFont systemFontOfSize:16];
     cell.imageView.frame = CGRectMake(0,0,40 ,40);
     cell.contentMode = UIViewContentModeScaleAspectFill;
-    cell.textLabel.text = [NSString stringWithFormat:@"%@\n%@ kr*",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"],[JsonDataArray[indexPath.row] objectForKey:@"Utpris exkl moms"]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@\n%@ kr*",[_JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"],[_JsonDataArray[indexPath.row] objectForKey:@"Utpris exkl moms"]];
     
     //[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"];
 
-    UIImage * imgFromMem =[jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]];
+    UIImage * imgFromMem =[jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[_JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]]]];
     
     if (imgFromMem != nil){
         cell.imageView.image = imgFromMem;
@@ -682,15 +649,15 @@
     int count = 0;
     int j = 0;
         // Match the section titls with the sections
-    NSString* first= [[JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
+    NSString* first= [[_JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
     
-    for (int i = 0; i< [JsonDataArray count]; i++) {
-        first= [[JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
+    for (int i = 0; i< [_JsonDataArray count]; i++) {
+        first= [[_JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
         if([first isEqualToString:indexTitle[index-j]]){
             NSLog(@"found %@",first);
             break;
         }
-        if(count==[JsonDataArray count]-1){
+        if(count==[_JsonDataArray count]-1){
             //nollställ i, count och addera ett till j.
             j+=1;
             i=0;
@@ -709,12 +676,12 @@
 
 #pragma mark - Sorting function
 
--(NSArray*)ourSortingFunction:(NSString*)sort ascending:(BOOL)order{
+-(NSArray*)ourSortingFunction:(NSString*)sort ascending:(BOOL)order withArray:(NSArray*)array{
     NSSortDescriptor *descriptor = [[NSSortDescriptor alloc]initWithKey:sort ascending:order selector:@selector(localizedStandardCompare:)];
     
     NSArray *sortDescriptors = [NSArray arrayWithObject:descriptor];
     NSArray *sortedArray;
-    sortedArray = [JsonDataArray sortedArrayUsingDescriptors:sortDescriptors];
+    sortedArray = [array sortedArrayUsingDescriptors:sortDescriptors];
     
     return sortedArray;
 }
