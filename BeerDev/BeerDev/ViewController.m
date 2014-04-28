@@ -685,12 +685,12 @@
     _JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_JsonDataArray];
     
   
-    [ourTableView reloadData];
+   
     
     if([_JsonDataArray count] == [_ForSearchArray count]){
       ShowAlphabet = YES;
     }
-    
+     [ourTableView reloadData];
     self.pageViewController.dataSource = nil;
     self.pageViewController.dataSource = self;
 
