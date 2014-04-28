@@ -24,7 +24,7 @@
         NSLog(@"connection");
         [jsonData SetJSON:[jsonData GetDataOnline]];
         [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
-        [jsonData GetDataOffline];
+       // [jsonData GetDataOffline];
     }
     else if([jsonData connected]==YES && [jsonData GetDataOnline] ==nil){
         if ([jsonData GetJsonArray:@"JSON"] == nil) {
@@ -65,6 +65,7 @@
 {
     NSLog(@"entering background");
      [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
+     NSLog(@"count %lu",(unsigned long)[[jsonData GetArray] count]);
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
@@ -75,6 +76,7 @@
         NSLog(@"connection on enterForeground");
         [jsonData SetJSON:[jsonData GetDataOnline]];
         [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
+        NSLog(@"count %lu",(unsigned long)[[jsonData GetArray] count]);
     }
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }

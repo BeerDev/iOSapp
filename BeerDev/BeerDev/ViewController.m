@@ -12,7 +12,7 @@
     
     //declare variables here to be global through this class
     BOOL button;
-    
+    BOOL noResultsToDisplay;
 
     UIButton* priceSort;
     UIButton* alphabeticSort;
@@ -158,8 +158,6 @@
     
     _OursearchBar.scopeBarBackgroundImage = [[UIImage alloc] init];
     _OursearchBar.tintColor = [UIColor whiteColor];
-    
-    //NSLog(@"%@",_OursearchBar.);
     _OursearchBar.barTintColor = [UIColor clearColor];
 
      UIView* view=_OursearchBar.subviews[0];
@@ -197,17 +195,20 @@
                                scope:[[_OursearchBar scopeButtonTitles]
                                       objectAtIndex:[_OursearchBar
                                                      selectedScopeButtonIndex]]];
+    
     if([searchResults count]>0){
+    noResultsToDisplay = NO;
     _JsonDataArray = searchResults;
     [ourTableView reloadData];
     }
     else if ([searchResults count] <=0 && product == YES){
         _JsonDataArray = _ForSearchArray;
-
+        noResultsToDisplay = NO;
         
     }
     else if ([searchResults count] <=0 && list == YES){
     _JsonDataArray = nil;
+    noResultsToDisplay = YES;
     [ourTableView reloadData];
         
     }
@@ -245,8 +246,6 @@
                 [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
         
                 self.pageViewController.dataSource = self;
-            
-                        NSLog(@"träffar");
                 }
         
         //om du inte får några träffar på produkt vyn gör detta kod.
@@ -265,19 +264,28 @@
                 [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
             
                 self.pageViewController.dataSource = self;
-
         }
+        
     }
     
     //gör denna else om du inte har några träffar i listvyn.
         else{
         [searchBar resignFirstResponder];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                        message:@"Din sökning gav inga träffar"
+                                                        delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alert show];
         [UIView animateWithDuration:0.5 animations:^{
             _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
             _OursearchBar.alpha = 0;
         } completion:^(BOOL finished) {
+            _JsonDataArray = _ForSearchArray;
+            noResultsToDisplay = NO;
+            [ourTableView reloadData];
+            searchBar.text = nil;
         }];
-        NSLog(@"no results");
     }
     
 }
@@ -325,8 +333,7 @@
 
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    //titta på detta senare!! 
-    NSLog(@"träffar");
+    //titta på detta senare!!
     [_searchButton setImage:magnifier forState:UIControlStateNormal];
 }
 
@@ -350,10 +357,10 @@
    
     
     if([scope isEqualToString:@"Namn"]){
-         NSLog(@"du söker i namn!");
+   
         searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", searchText]];
     }else if([scope isEqualToString:@"Kategori"]){
-        NSLog(@"du söker i kateogri");
+
         searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Kategori contains[c] %@", searchText]];
 
     }
@@ -439,7 +446,6 @@
                                 
                                 [menu HideDownMenu];
                                 [self.view bringSubviewToFront:_OursearchBar];
-                                NSLog(@"you switched");
             }];
     if(product == YES || list == YES){
           _searchButton.hidden = NO;
@@ -623,7 +629,7 @@
     UIImage* priceSortIcon = [UIImage imageNamed:@"PRICE"];
    // priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     priceSort = [UIButton buttonWithType:UIButtonTypeCustom];
-    priceSort.frame = CGRectMake(64, 20, 45, 45);
+    priceSort.frame = CGRectMake(64, 20, 50, 50);
     
     [priceSort setImage:priceSortIcon forState:UIControlStateNormal];
     priceSort.titleLabel.font = [UIFont systemFontOfSize:20];
@@ -638,7 +644,7 @@
     UIImage* AZ = [UIImage imageNamed:@"A-Z"];
     alphabeticSort = [UIButton buttonWithType:UIButtonTypeCustom];
     //alphabeticSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    alphabeticSort.frame = CGRectMake(124, 20, 45, 45);
+    alphabeticSort.frame = CGRectMake(124, 20, 50, 50);
     
     alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
     [alphabeticSort setImage:AZ forState:UIControlStateNormal];
@@ -809,9 +815,14 @@
 /*_______________________________________________________________________________________*/
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-
-    return [_JsonDataArray count];
-    
+    if(noResultsToDisplay == NO){
+        return [_JsonDataArray count];
+    }
+    else if (noResultsToDisplay == YES){
+        return 1;
+    }else{
+        return 0;
+    }
 }
 
 //datan som en cell innehåller i min tableView
@@ -819,12 +830,17 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //används för identifiering
     static NSString *simpleTableIdentifier = @"myCell";
-    
-    
-    
     //skapa en cell med identifieraren ovan
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
     
+    
+    //denna kod används för inga resultat i sökningen
+    if (noResultsToDisplay) {
+        cell.textLabel.text = @"Inga träffar";
+        cell.imageView.image = nil;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    }else{
     //om den inte är nil så allocera en ny cell, skapa med en stil och använd identifieraren ovan
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
@@ -835,7 +851,8 @@
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.shadowColor =[UIColor blackColor];
     cell.textLabel.shadowOffset = CGSizeMake(1, 1);
-    
+    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     cell.textLabel.numberOfLines = 2;
     cell.textLabel.font = [UIFont systemFontOfSize:16];
@@ -849,12 +866,19 @@
     
     if (imgFromMem != nil){
         cell.imageView.image = imgFromMem;
+        }
+        
     }
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSUInteger row = [indexPath row];
+    
+    if (noResultsToDisplay) {
+        //gör inget vid träff
+        
+    }else{
     [jsonData SetIndex:indexPath.row];
     
     [self goToPageIndex:(int)indexPath.row];
@@ -883,10 +907,7 @@
                                 }];
                                 
                             }];
-}
-
--(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"accessory");
+    }
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -917,7 +938,6 @@
     for (int i = 0; i< [_JsonDataArray count]; i++) {
         first= [[_JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
         if([first isEqualToString:indexTitle[index-j]]){
-            NSLog(@"found %@",first);
             break;
         }
         if(count==[_JsonDataArray count]-1){
@@ -930,7 +950,7 @@
     }
 
     
-    NSLog(@"count %d",count);
+
     
     [ourTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:count inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
