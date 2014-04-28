@@ -828,7 +828,6 @@
 }
 #pragma mark - Category
 -(void)startCategory{
-    
     catY = 30;
     NSString * path = [[NSBundle mainBundle] bundlePath];
     NSString * finalPatch = [path stringByAppendingPathComponent:@"CategoryList.plist"];
@@ -836,26 +835,14 @@
     NSMutableArray * typeArray = [[NSMutableArray alloc] init];
     NSMutableArray * infoArray = [[NSMutableArray alloc] init];
     typeArray = [Categories objectForKey:@"Type"];
-    NSLog(@"%@",typeArray);
     infoArray = [Categories objectForKey:@"Info"];
     
     for (NSInteger i = 0; i<[typeArray count];  i++) {
         type = [typeArray objectAtIndex:i];
-         NSLog(@"%@",type);
         info = [infoArray objectAtIndex:i];
         [self createCategoryHead];
         [self createCategoryBody];
     }
-    
-    /*
-    for (NSString* key in Categories) {
-        type = key;
-        info = [Categories objectForKey:key];
-        
-        [self createCategoryHead];
-        [self createCategoryBody];
-    }
-     */
 }
 
 -(void)createCategoryHead{
@@ -888,12 +875,7 @@
     [CategoryInfo sizeToFit];
     [scrollView addSubview:CategoryInfo];
     catY = catY + CategoryInfo.frame.size.height+20;
-    ;
     
 }
-
-
-
-
 
 @end
