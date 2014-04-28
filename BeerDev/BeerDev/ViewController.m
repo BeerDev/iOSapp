@@ -28,6 +28,8 @@
     NSArray *viewControllers;
     NSArray *indexTitle;
 
+    UIImage *magnifierCross;
+    UIImage *magnifier;
     //table
     UITableView *ourTableView;
 
@@ -43,11 +45,13 @@
 
     //cache the keyboard
     [UIResponder cacheKeyboard];
-    
+    magnifier = [UIImage imageNamed:@"magnifier"];
+    magnifierCross = [UIImage imageNamed:@"magnifierCross"];
+    //this array is used for searching and caching images
     _ForSearchArray = [jsonData GetArray];
     _ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_ForSearchArray];
 
-    
+    //this array is used to display the current filtered products
     _JsonDataArray = [jsonData GetArray];
     _JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_JsonDataArray];
 
@@ -55,8 +59,6 @@
     [self cacheEverything];
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
-
-    NSLog(@"%@",_ForSearchArray);
     
     ShowAlphabet = YES;
     
@@ -116,6 +118,9 @@
     [[UITableView appearance] setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
     [[UITableView appearance] setSectionIndexColor:[UIColor whiteColor]];
     
+    
+
+    
     [self createListButtons];
     
     //Create searchbar and stuff.
@@ -143,39 +148,96 @@
 #pragma mark - searchBar
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     ShowAlphabet = NO;
+
     [self filterContentForSearchText:searchText
                                scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
                                       objectAtIndex:[self.searchDisplayController.searchBar
                                                      selectedScopeButtonIndex]]];
-    
+    if([searchResults count]>0){
     _JsonDataArray = searchResults;
     [ourTableView reloadData];
+    }
+    else if ([searchResults count] <=0 && product == YES){
+        _JsonDataArray = _ForSearchArray;
+
+        
+    }
+    else if ([searchResults count] <=0 && list == YES){
+    _JsonDataArray = nil;
+    [ourTableView reloadData];
+        
+    }
+  
     
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     
-    [searchBar resignFirstResponder];
-    [UIView animateWithDuration:0.5 animations:^{
-        _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
-    } completion:^(BOOL finished) {
-        self.pageViewController.dataSource = nil;
-        self.pageViewController.dataSource = self;
-    }];
+    //denna kod kollar vad som ska hända när man har tryckt på "sök" knappen.
+    //om du har resultat gå in i denna if-sats
+    if([_JsonDataArray count]<=[_ForSearchArray count] && [_JsonDataArray count]>0 ){
+        //animera bort sökfältet och fixa till med datasourcen.
+        [searchBar resignFirstResponder];
+        
+        //animerings kod
+        [UIView animateWithDuration:0.5 animations:^{
+                _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);}
+         
+                         completion:^(BOOL finished) {
+                             self.pageViewController.dataSource = nil;
+                             self.pageViewController.dataSource = self;
+   
+                         }];
+        //fixa BILDEN
+        [searchButton setImage:magnifierCross forState:UIControlStateNormal];
+        //om du dessutom är på "produkt" vyn och får sökträffar gör denna kod.
+            if(product == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
+                startingViewController = [self viewControllerAtIndex:0];
+                viewControllers = @[startingViewController];
+                
+                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+        
+                self.pageViewController.dataSource = self;
+            
+                        NSLog(@"träffar");
+                }
+        
+        //om du inte får några träffar på produkt vyn gör detta kod.
+            else if(product == YES && [_JsonDataArray count] == [_ForSearchArray count]){
+            
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                            message:@"Din sökning gav inga träffar"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+                [alert show];
+            
+                startingViewController = [self viewControllerAtIndex:0];
+                viewControllers = @[startingViewController];
+            
+                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+            
+                self.pageViewController.dataSource = self;
+
+        }
+    }
     
-    if(product == YES && [_JsonDataArray count] != 0){
-        startingViewController = [self viewControllerAtIndex:0];
-        viewControllers = @[startingViewController];
-        
-        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
-        
-        self.pageViewController.dataSource = self;
+    //gör denna else om du inte har några träffar i listvyn.
+        else{
+        [searchBar resignFirstResponder];
+        [UIView animateWithDuration:0.5 animations:^{
+            _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
+        } completion:^(BOOL finished) {
+        }];
+        NSLog(@"no results");
     }
     
 }
 
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
+    
+    if([_JsonDataArray count]<[_ForSearchArray count]){
     searchBar.text = nil;
     ShowAlphabet = YES;
     [searchBar resignFirstResponder];
@@ -185,10 +247,12 @@
         self.pageViewController.dataSource = nil;
         self.pageViewController.dataSource = self;
         }];
-
+        
+        [searchButton setImage:magnifier forState:UIControlStateNormal];
     
     _JsonDataArray = _ForSearchArray;
     [ourTableView reloadData];
+        
     if(product == YES && [_JsonDataArray count] != 0){
         
         startingViewController = [self viewControllerAtIndex:0];
@@ -198,10 +262,28 @@
 
         self.pageViewController.dataSource = self;
     }
-    
+    }else {
+        searchBar.text = nil;
+        ShowAlphabet = YES;
+        [searchBar resignFirstResponder];
+        [UIView animateWithDuration:0.5 animations:^{
+            _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
+        } completion:^(BOOL finished) {
 
-    
+        }];
+    }
 }
+
+
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    //titta på detta senare!! 
+    NSLog(@"träffar");
+    [searchButton setImage:magnifier forState:UIControlStateNormal];
+}
+
+
+
 
 -(void)searchInList{
         [_OursearchBar becomeFirstResponder];
@@ -410,9 +492,6 @@
     [dropButton addTarget:self action:@selector(DropMenu) forControlEvents:UIControlEventTouchUpInside];
 
     [self.view addSubview:dropButton];
-
-    
-    UIImage *magnifier = [UIImage imageNamed:@"magnifier"];
     
     searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
     searchButton.frame = CGRectMake(4, 20, 50, 50);
