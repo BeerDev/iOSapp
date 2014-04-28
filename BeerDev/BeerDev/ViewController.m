@@ -13,7 +13,7 @@
     //declare variables here to be global through this class
     BOOL button;
     
-    UIButton* dropButton;
+
     UIButton* priceSort;
     UIButton* alphabeticSort;
    
@@ -120,13 +120,13 @@
     menu = [[DDMenu alloc ]initWithFrame:CGRectMake(0, -220, self.view.frame.size.width, 220)];
     [self.view addSubview:menu];
     [self.view bringSubviewToFront:menu];
-    [self.view bringSubviewToFront:dropButton];
+    [self.view bringSubviewToFront:_dropButton];
     [self.view bringSubviewToFront:_OursearchBar];
     [self.view bringSubviewToFront:_searchButton];
     
 
     //Create a table
-    ourTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70) ];
+    ourTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 95, self.view.frame.size.width, self.view.frame.size.height-95) ];
     [self.ListController.view addSubview:ourTableView];
     ourTableView.backgroundColor = [UIColor clearColor];
     ourTableView.showsVerticalScrollIndicator = YES;
@@ -147,10 +147,19 @@
     
     //Create searchbar and stuff.
     
-    _OursearchBar= [[UISearchBar alloc] initWithFrame:CGRectMake(0,-70, self.view.frame.size.width, 70)];
+    _OursearchBar= [[UISearchBar alloc] initWithFrame:CGRectMake(0,-100, self.view.frame.size.width, 78)];
     _OursearchBar.showsCancelButton = YES;
     _OursearchBar.delegate = self;
     _OursearchBar.backgroundImage= [UIImage alloc];
+    //set the scope bar
+    _OursearchBar.scopeBarBackgroundImage = nil;
+    _OursearchBar.showsScopeBar = YES;
+    _OursearchBar.scopeButtonTitles =[NSArray arrayWithObjects:@"Namn",@"Kategori", nil];
+    
+    _OursearchBar.scopeBarBackgroundImage = [[UIImage alloc] init];
+    _OursearchBar.tintColor = [UIColor whiteColor];
+    
+    //NSLog(@"%@",_OursearchBar.);
 
      UIView* view=_OursearchBar.subviews[0];
      for (UIView *subView in view.subviews) {
@@ -184,8 +193,8 @@
     ShowAlphabet = NO;
 
     [self filterContentForSearchText:searchText
-                               scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
-                                      objectAtIndex:[self.searchDisplayController.searchBar
+                               scope:[[_OursearchBar scopeButtonTitles]
+                                      objectAtIndex:[_OursearchBar
                                                      selectedScopeButtonIndex]]];
     if([searchResults count]>0){
     _JsonDataArray = searchResults;
@@ -206,6 +215,7 @@
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    _dropButton.hidden = NO;
     
     //denna kod kollar vad som ska hända när man har tryckt på "sök" knappen.
     //om du har resultat gå in i denna if-sats
@@ -215,7 +225,9 @@
         
         //animerings kod
         [UIView animateWithDuration:0.5 animations:^{
-                _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);}
+                _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
+                _OursearchBar.alpha = 0;
+        }
          
                          completion:^(BOOL finished) {
                              self.pageViewController.dataSource = nil;
@@ -260,7 +272,8 @@
         else{
         [searchBar resignFirstResponder];
         [UIView animateWithDuration:0.5 animations:^{
-            _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
+            _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
+            _OursearchBar.alpha = 0;
         } completion:^(BOOL finished) {
         }];
         NSLog(@"no results");
@@ -270,13 +283,13 @@
 
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
-    
+    _dropButton.hidden = NO;
     if([_JsonDataArray count]<=[_ForSearchArray count]){
     searchBar.text = nil;
     ShowAlphabet = YES;
     [searchBar resignFirstResponder];
         [UIView animateWithDuration:0.5 animations:^{
-            _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
+            _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
         } completion:^(BOOL finished) {
         self.pageViewController.dataSource = nil;
         self.pageViewController.dataSource = self;
@@ -301,7 +314,7 @@
         ShowAlphabet = YES;
         [searchBar resignFirstResponder];
         [UIView animateWithDuration:0.5 animations:^{
-            _OursearchBar.frame = CGRectMake(0, -70,  self.view.frame.size.width, 70);
+            _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
         } completion:^(BOOL finished) {
 
         }];
@@ -319,10 +332,12 @@
 
 
 
--(void)searchInList{
+-(void)SearchIconPressed{
+        _dropButton.hidden = YES;
         [_OursearchBar becomeFirstResponder];
         [UIView animateWithDuration:0.3 animations:^{
-            _OursearchBar.frame = CGRectMake(0, 10,  self.view.frame.size.width-30, 70);
+            _OursearchBar.alpha = 1;
+            _OursearchBar.frame = CGRectMake(0, 22,  self.view.frame.size.width, 78);
             
         } completion:^(BOOL finished) {
         }];
@@ -330,7 +345,17 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
-    searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", searchText]];
+    
+   
+    
+    if([scope isEqualToString:@"Namn"]){
+         NSLog(@"du söker i namn!");
+        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", searchText]];
+    }else if([scope isEqualToString:@"Kategori"]){
+        NSLog(@"du söker i kateogri");
+        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Kategori contains[c] %@", searchText]];
+
+    }
 }
 
 
@@ -455,7 +480,7 @@
     
     else{
         [menu HideDownMenu];
-        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        [_dropButton setTitle:@"▼" forState:UIControlStateNormal];
         button = NO;
     }
 }
@@ -488,7 +513,7 @@
     else
     {
         [menu HideDownMenu];
-        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        [_dropButton setTitle:@"▼" forState:UIControlStateNormal];
         button = NO;
     }
 }
@@ -521,7 +546,7 @@
     else
     {
         [menu HideDownMenu];
-        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        [_dropButton setTitle:@"▼" forState:UIControlStateNormal];
         button = NO;
     }
 }
@@ -553,7 +578,7 @@
     else
     {
         [menu HideDownMenu];
-        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        [_dropButton setTitle:@"▼" forState:UIControlStateNormal];
         button = NO;
     }
 }
@@ -586,7 +611,7 @@
     else
     {
         [menu HideDownMenu];
-        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        [_dropButton setTitle:@"▼" forState:UIControlStateNormal];
         button = NO;
     }
 }
@@ -627,21 +652,25 @@
 
 -(void)setButton{
     button = NO;
-    dropButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
-    [dropButton setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
-    dropButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
-    dropButton.titleLabel.font = [UIFont systemFontOfSize:24];
-    [dropButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 45, 45);
-    [dropButton addTarget:self action:@selector(DropMenu) forControlEvents:UIControlEventTouchUpInside];
+    UIImage* MENU = [UIImage imageNamed:@"menu"];
+       _dropButton = [UIButton buttonWithType:UIButtonTypeCustom];
+  //  _dropButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+  //  [_dropButton setTitle:@"▼" forState:UIControlStateNormal];
+     [_dropButton setImage:MENU forState:UIControlStateNormal];
+ 
+ //   [_dropButton setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+ //   _dropButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
+ //   _dropButton.titleLabel.font = [UIFont systemFontOfSize:24];
+    [_dropButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 45, 45);
+    [_dropButton addTarget:self action:@selector(DropMenu) forControlEvents:UIControlEventTouchUpInside];
 
-    [self.view addSubview:dropButton];
+    [self.view addSubview:_dropButton];
     
     _searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _searchButton.frame = CGRectMake(4, 20, 50, 50);
     [_searchButton setImage:magnifier forState:UIControlStateNormal];
-    [_searchButton addTarget:self action:@selector(searchInList)
+    [_searchButton addTarget:self action:@selector(SearchIconPressed)
            forControlEvents:UIControlEventTouchUpInside];
     _searchButton.titleLabel.font = [UIFont systemFontOfSize:20];
    // float size = 35;
@@ -652,7 +681,7 @@
 -(void)DropMenu{
     if(button == NO){
         [menu DropDownMenu];
-        [dropButton setTitle:@"▲" forState:UIControlStateNormal];
+        [_dropButton setTitle:@"▲" forState:UIControlStateNormal];
         [[menu omOssButton] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
         [[menu omKistanButton] addTarget:self action:@selector(GoToOmKistan) forControlEvents:UIControlEventTouchUpInside];
         [[menu categoryButton] addTarget:self action:@selector(GoToCategory) forControlEvents:UIControlEventTouchUpInside];
@@ -663,16 +692,16 @@
     }
     else if (button == YES){
         [menu HideDownMenu];
-        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        [_dropButton setTitle:@"▼" forState:UIControlStateNormal];
          button = NO;
     }
 }
 
 -(void)menuBarToFront{
-    [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+    [_dropButton setTitle:@"▼" forState:UIControlStateNormal];
     button = NO;
     [self.view bringSubviewToFront:menu];
-    [self.view bringSubviewToFront:dropButton];
+    [self.view bringSubviewToFront:_dropButton];
     [self.view bringSubviewToFront:_searchButton];
     [self.view bringSubviewToFront:_OursearchBar];
     
