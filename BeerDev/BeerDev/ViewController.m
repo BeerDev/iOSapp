@@ -17,10 +17,14 @@
     UIButton* priceSort;
     UIButton* alphabeticSort;
     UIButton* searchButton;
+   
     DDMenu*menu;
     BOOL about;
+    BOOL kistan;
+    BOOL category;
     BOOL list;
     BOOL product;
+    
     BOOL ShowAlphabet;
     BOOL ascendingPrice;
     
@@ -34,6 +38,13 @@
     UITableView *ourTableView;
 
     NSArray * searchResults;
+    
+    //For Category
+    UIScrollView * scrollView;
+   NSMutableDictionary *Categories;
+    NSInteger catY;
+    NSString *type;
+    NSString *info;
     
 }
 @end
@@ -67,6 +78,18 @@
     self.omOssController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     [self.omOssController willMoveToParentViewController:self];
     [self addChildViewController:self.omOssController];
+    
+    //create omKistanController
+    self.omKistanController = [self.storyboard instantiateViewControllerWithIdentifier:@"OmKistanViewController"];
+    self.omKistanController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.omKistanController willMoveToParentViewController:self];
+    [self addChildViewController:self.omKistanController];
+    
+    //create categoryController
+    self.categoryController = [self.storyboard instantiateViewControllerWithIdentifier:@"CategoryViewController"];
+    self.categoryController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.categoryController willMoveToParentViewController:self];
+    [self addChildViewController:self.categoryController];
     
     // Create listcontroller
     indexTitle = [NSArray arrayWithArray: [@"A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|Å|Ä|Ö" componentsSeparatedByString:@"|"]];
@@ -141,6 +164,18 @@
      }
 
     [self.view addSubview: _OursearchBar];
+    //Category
+    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 60, self.view.frame.size.width, self.view.frame.size.height)];
+    scrollView.backgroundColor = [UIColor clearColor];
+    scrollView.showsHorizontalScrollIndicator = NO;
+    scrollView.showsVerticalScrollIndicator = YES;
+    //[scrollView setDelegate:self];
+    [scrollView setShowsVerticalScrollIndicator:NO];
+    [scrollView setShowsHorizontalScrollIndicator:NO];
+    [self.categoryController.view  addSubview:scrollView];
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 3800);
+    [scrollView setScrollEnabled:YES];
+    [self startCategory];
     
 }
 
@@ -382,7 +417,6 @@
             }];
 }
 
-
 -(void)GoToProductInfo{
     if (about == YES) {
         about = NO;
@@ -395,7 +429,21 @@
         product = YES;
         [self switchTo:self.ListController to:self.pageViewController];
         [self menuBarToFront];
-    }else{
+    }
+    else if (kistan == YES){
+        kistan = NO;
+        product = YES;
+        [self switchTo:self.omKistanController to:self.pageViewController];
+        [self menuBarToFront];
+    }
+    else if (category == YES){
+        category = NO;
+        product = YES;
+        [self switchTo:self.categoryController to:self.pageViewController];
+        [self menuBarToFront];
+    }
+    
+    else{
         [menu HideDownMenu];
         [dropButton setTitle:@"▼" forState:UIControlStateNormal];
         button = NO;
@@ -415,6 +463,18 @@
         [self switchTo:self.pageViewController to:self.ListController];
         [self menuBarToFront];
     }
+    else if (kistan == YES){
+        kistan = NO;
+        list = YES;
+        [self switchTo:self.omKistanController to:self.ListController];
+        [self menuBarToFront];
+    }
+    else if (category == YES){
+        category = NO;
+        list = YES;
+        [self switchTo:self.categoryController to:self.ListController];
+        [self menuBarToFront];
+    }
     else
     {
         [menu HideDownMenu];
@@ -432,10 +492,55 @@
     }
     else if (product == YES){
         product = NO;
-        about= YES;
+        about = YES;
         [self switchTo:self.pageViewController to:self.omOssController];
         [self menuBarToFront];
-    }else
+    }
+    else if (kistan == YES){
+        kistan = NO;
+        about = YES;
+        [self switchTo:self.omKistanController to:self.omOssController];
+        [self menuBarToFront];
+    }
+    else if (category == YES){
+        category = NO;
+        about = YES;
+        [self switchTo:self.categoryController to:self.omOssController];
+        [self menuBarToFront];
+    }
+    else
+    {
+        [menu HideDownMenu];
+        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        button = NO;
+    }
+}
+-(void)GoToOmKistan{
+    if (list == YES) {
+        list = NO;
+        kistan = YES;
+        [self switchTo:self.ListController to:self.omKistanController];
+        [self menuBarToFront];
+    }
+    else if (product == YES){
+        product = NO;
+        kistan = YES;
+        [self switchTo:self.pageViewController to:self.omKistanController];
+        [self menuBarToFront];
+    }
+    else if (about == YES){
+        about = NO;
+        kistan = YES;
+        [self switchTo:self.omOssController to:self.omKistanController];
+        [self menuBarToFront];
+    }
+    else if (category == YES){
+        category = NO;
+        kistan = YES;
+        [self switchTo:self.categoryController to:self.omKistanController];
+        [self menuBarToFront];
+    }
+    else
     {
         [menu HideDownMenu];
         [dropButton setTitle:@"▼" forState:UIControlStateNormal];
@@ -443,7 +548,38 @@
     }
 }
 
-
+-(void)GoToCategory{
+    if (list == YES) {
+        list = NO;
+        category = YES;
+        [self switchTo:self.ListController to:self.categoryController];
+        [self menuBarToFront];
+    }
+    else if (product == YES){
+        product = NO;
+        category = YES;
+        [self switchTo:self.pageViewController to:self.categoryController];
+        [self menuBarToFront];
+    }
+    else if (about == YES){
+        about = NO;
+        category = YES;
+        [self switchTo:self.omOssController to:self.categoryController];
+        [self menuBarToFront];
+    }
+    else if (kistan == YES){
+        kistan = NO;
+        category = YES;
+        [self switchTo:self.omKistanController to:self.categoryController];
+        [self menuBarToFront];
+    }
+    else
+    {
+        [menu HideDownMenu];
+        [dropButton setTitle:@"▼" forState:UIControlStateNormal];
+        button = NO;
+    }
+}
 
 #pragma mark - Buttons and menu
 -(void)createTabBarButtons{
@@ -509,11 +645,12 @@
     if(button == NO){
         [menu DropDownMenu];
         [dropButton setTitle:@"▲" forState:UIControlStateNormal];
-        
         [[menu omOssButton] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
+        [[menu omKistanButton] addTarget:self action:@selector(GoToOmKistan) forControlEvents:UIControlEventTouchUpInside];
+        [[menu categoryButton] addTarget:self action:@selector(GoToCategory) forControlEvents:UIControlEventTouchUpInside];
         [[menu productViewButton] addTarget:self action:@selector(GoToProductInfo) forControlEvents:UIControlEventTouchUpInside];
         [[menu listViewButton] addTarget:self action:@selector(GoToList) forControlEvents:UIControlEventTouchUpInside];
-
+        
         button = YES;
     }
     else if (button == YES){
@@ -768,8 +905,56 @@
     
     return sortedArray;
 }
+#pragma mark - Category
+-(void)startCategory{
+    catY = 30;
+    NSString * path = [[NSBundle mainBundle] bundlePath];
+    NSString * finalPatch = [path stringByAppendingPathComponent:@"CategoryList.plist"];
+    Categories = [NSDictionary dictionaryWithContentsOfFile:finalPatch];
+    NSMutableArray * typeArray = [[NSMutableArray alloc] init];
+    NSMutableArray * infoArray = [[NSMutableArray alloc] init];
+    typeArray = [Categories objectForKey:@"Type"];
+    infoArray = [Categories objectForKey:@"Info"];
+    
+    for (NSInteger i = 0; i<[typeArray count];  i++) {
+        type = [typeArray objectAtIndex:i];
+        info = [infoArray objectAtIndex:i];
+        [self createCategoryHead];
+        [self createCategoryBody];
+    }
+}
 
+-(void)createCategoryHead{
+    
+    UILabel *CategoryInfo = [[UILabel alloc]initWithFrame:CGRectMake(20, catY, self.view.frame.size.width-40, 50)];
+    CategoryInfo.text = type;
+    CategoryInfo.numberOfLines = 1;
+    CategoryInfo.font = [UIFont fontWithName:@"Arial" size:30];
+    CategoryInfo.shadowColor =[UIColor blackColor];
+    CategoryInfo.shadowOffset = CGSizeMake(1, 1);
+    CategoryInfo.clipsToBounds = YES;
+    CategoryInfo.backgroundColor = [UIColor clearColor];
+    CategoryInfo.textColor = [UIColor whiteColor];
+    CategoryInfo.textAlignment = NSTextAlignmentCenter;
+    [scrollView addSubview:CategoryInfo];
+    catY = catY + 50;
+}
 
-
+-(void)createCategoryBody{
+    UILabel *CategoryInfo = [[UILabel alloc]initWithFrame:CGRectMake(20, catY, self.view.frame.size.width-40, 200)];
+    CategoryInfo.text = info;
+    CategoryInfo.numberOfLines = 30;
+    CategoryInfo.font = [UIFont fontWithName:@"Arial" size:13];
+    CategoryInfo.shadowColor =[UIColor blackColor];
+    CategoryInfo.shadowOffset = CGSizeMake(1, 1);
+    CategoryInfo.clipsToBounds = YES;
+    CategoryInfo.backgroundColor = [UIColor clearColor];
+    CategoryInfo.textColor = [UIColor whiteColor];
+    CategoryInfo.textAlignment = NSTextAlignmentLeft;
+    [CategoryInfo sizeToFit];
+    [scrollView addSubview:CategoryInfo];
+    catY = catY + CategoryInfo.frame.size.height+20;
+    
+}
 
 @end
