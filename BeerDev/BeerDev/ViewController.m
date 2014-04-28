@@ -160,6 +160,8 @@
     _OursearchBar.tintColor = [UIColor whiteColor];
     
     //NSLog(@"%@",_OursearchBar.);
+    _OursearchBar.searchBarStyle = UISearchBarStyleMinimal;
+
 
      UIView* view=_OursearchBar.subviews[0];
      for (UIView *subView in view.subviews) {
@@ -860,13 +862,6 @@
     self.pageViewController.dataSource = nil;
     self.pageViewController.dataSource = self;
     
-    [_OursearchBar resignFirstResponder];
-    [UIView animateWithDuration:0.5 animations:^{
-        _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
-        _OursearchBar.alpha = 0;
-    } completion:^(BOOL finished) {
-    }];
-    
     [self transitionFromViewController:self.ListController
                       toViewController: self.pageViewController
                               duration:0.4
@@ -879,6 +874,15 @@
                                 [menu HideDownMenu];
                                 [self menuBarToFront];
                                 [self viewWillDisappear:NO];
+                             
+                                [_OursearchBar resignFirstResponder];
+                                [UIView animateWithDuration:0.5 animations:^{
+                                    _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
+                                    _OursearchBar.alpha = 0;
+                                } completion:^(BOOL finished) {
+                                       _dropButton.hidden = NO;
+                                }];
+                                
                             }];
 }
 
