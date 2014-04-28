@@ -39,7 +39,7 @@
     
     //For Category
     UIScrollView * scrollView;
-    NSMutableDictionary *Categories;
+   NSMutableDictionary *Categories;
     NSInteger catY;
     NSString *type;
     NSString *info;
@@ -830,19 +830,32 @@
 -(void)startCategory{
     
     catY = 30;
-    NSLog(@"Emma Testar");
-    //Categories = [[NSMutableDictionary alloc]init];
-    
     NSString * path = [[NSBundle mainBundle] bundlePath];
     NSString * finalPatch = [path stringByAppendingPathComponent:@"CategoryList.plist"];
     Categories = [NSDictionary dictionaryWithContentsOfFile:finalPatch];
+    NSMutableArray * typeArray = [[NSMutableArray alloc] init];
+    NSMutableArray * infoArray = [[NSMutableArray alloc] init];
+    typeArray = [Categories objectForKey:@"Type"];
+    NSLog(@"%@",typeArray);
+    infoArray = [Categories objectForKey:@"Info"];
     
-    for (NSString* key in Categories) {
-        type = key;
-        info = [Categories objectForKey:key];
+    for (NSInteger i = 0; i<[typeArray count];  i++) {
+        type = [typeArray objectAtIndex:i];
+         NSLog(@"%@",type);
+        info = [infoArray objectAtIndex:i];
         [self createCategoryHead];
         [self createCategoryBody];
     }
+    
+    /*
+    for (NSString* key in Categories) {
+        type = key;
+        info = [Categories objectForKey:key];
+        
+        [self createCategoryHead];
+        [self createCategoryBody];
+    }
+     */
 }
 
 -(void)createCategoryHead{
@@ -853,7 +866,6 @@
     CategoryInfo.font = [UIFont fontWithName:@"Arial" size:30];
     CategoryInfo.shadowColor =[UIColor blackColor];
     CategoryInfo.shadowOffset = CGSizeMake(1, 1);
-    //  CategoryInfo.baselineAdjustment = UIBaselineAdjustmentAlignBaselines; // or UIBaselineAdjustmentAlignCenters, or UIBaselineAdjustmentNone
     CategoryInfo.clipsToBounds = YES;
     CategoryInfo.backgroundColor = [UIColor clearColor];
     CategoryInfo.textColor = [UIColor whiteColor];
@@ -866,11 +878,9 @@
     UILabel *CategoryInfo = [[UILabel alloc]initWithFrame:CGRectMake(20, catY, self.view.frame.size.width-40, 200)];
     CategoryInfo.text = info;
     CategoryInfo.numberOfLines = 30;
-    
     CategoryInfo.font = [UIFont fontWithName:@"Arial" size:13];
     CategoryInfo.shadowColor =[UIColor blackColor];
     CategoryInfo.shadowOffset = CGSizeMake(1, 1);
-    // CategoryInfo.baselineAdjustment = UIBaselineAdjustmentNone; // or UIBaselineAdjustmentAlignCenters, or UIBaselineAdjustmentNone
     CategoryInfo.clipsToBounds = YES;
     CategoryInfo.backgroundColor = [UIColor clearColor];
     CategoryInfo.textColor = [UIColor whiteColor];
