@@ -160,8 +160,7 @@
     _OursearchBar.tintColor = [UIColor whiteColor];
     
     //NSLog(@"%@",_OursearchBar.);
-    _OursearchBar.searchBarStyle = UISearchBarStyleMinimal;
-
+    _OursearchBar.barTintColor = [UIColor clearColor];
 
      UIView* view=_OursearchBar.subviews[0];
      for (UIView *subView in view.subviews) {
