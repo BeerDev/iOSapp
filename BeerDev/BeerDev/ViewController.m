@@ -619,7 +619,7 @@
 #pragma mark - Buttons and menu
 
 -(void)createListButtons{
-    UIImage* priceSortIcon = [UIImage imageNamed:@"menu"];
+    UIImage* priceSortIcon = [UIImage imageNamed:@"PRICE"];
    // priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     priceSort = [UIButton buttonWithType:UIButtonTypeCustom];
     priceSort.frame = CGRectMake(64, 20, 45, 45);
@@ -712,9 +712,6 @@
 
 -(void)sortAlphabetically{
     _JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_JsonDataArray];
-    
-  
-   
     
     if([_JsonDataArray count] == [_ForSearchArray count]){
       ShowAlphabet = YES;
@@ -862,6 +859,14 @@
     [self goToPageIndex:(int)indexPath.row];
     self.pageViewController.dataSource = nil;
     self.pageViewController.dataSource = self;
+    
+    [_OursearchBar resignFirstResponder];
+    [UIView animateWithDuration:0.5 animations:^{
+        _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
+        _OursearchBar.alpha = 0;
+    } completion:^(BOOL finished) {
+    }];
+    
     [self transitionFromViewController:self.ListController
                       toViewController: self.pageViewController
                               duration:0.4
@@ -874,8 +879,6 @@
                                 [menu HideDownMenu];
                                 [self menuBarToFront];
                                 [self viewWillDisappear:NO];
-                                
-                                NSLog(@"you switched");
                             }];
 }
 
