@@ -310,6 +310,7 @@
     _dropButton.hidden = NO;
     if([_JsonDataArray count]<=[_ForSearchArray count]){
     searchBar.text = nil;
+        NSLog(@"hej?");
     ShowAlphabet = YES;
     [searchBar resignFirstResponder];
         [UIView animateWithDuration:0.5 animations:^{
@@ -321,6 +322,7 @@
         
         [_searchButton setImage:magnifier forState:UIControlStateNormal];
     
+    noResultsToDisplay = NO;
     _JsonDataArray = _ForSearchArray;
     [ourTableView reloadData];
         
@@ -334,6 +336,7 @@
         self.pageViewController.dataSource = self;
     }
     }else {
+        
         searchBar.text = nil;
         ShowAlphabet = YES;
         [searchBar resignFirstResponder];
