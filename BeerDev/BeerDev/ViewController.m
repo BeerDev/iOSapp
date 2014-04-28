@@ -49,6 +49,7 @@
 @end
 @implementation ViewController
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -140,9 +141,6 @@
     [[UITableView appearance] setSectionIndexTrackingBackgroundColor:[UIColor clearColor]];
     [[UITableView appearance] setSectionIndexColor:[UIColor whiteColor]];
     
-    
-
-    
     [self createListButtons];
     
     //Create searchbar and stuff.
@@ -183,6 +181,23 @@
     scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 3800);
     [scrollView setScrollEnabled:YES];
     [self startCategory];
+    
+    //en lyssnartråd! :D
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        int temp = 0;
+        while (temp <1) {
+            temp++;
+            [NSThread sleepForTimeInterval:5];
+            if([_ForSearchArray count] < [[jsonData GetArray] count] || [_ForSearchArray count] > [[jsonData GetArray] count]){
+            _ForSearchArray = [jsonData GetArray];
+            _ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_ForSearchArray];
+            }
+          //  NSLog(@"sovande bakgrundstråd! temp %d",temp);
+            temp--;
+        }
+    });
+    
     
 }
 
@@ -905,7 +920,6 @@
                                 } completion:^(BOOL finished) {
                                        _dropButton.hidden = NO;
                                 }];
-                                
                             }];
     }
 }
