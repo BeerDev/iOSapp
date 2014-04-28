@@ -16,7 +16,6 @@
     UIButton* dropButton;
     UIButton* priceSort;
     UIButton* alphabeticSort;
-    UIButton* searchButton;
    
     DDMenu*menu;
     BOOL about;
@@ -66,7 +65,7 @@
     _JsonDataArray = [jsonData GetArray];
     _JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_JsonDataArray];
 
-    
+    [self setButton];
     [self cacheEverything];
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
@@ -117,13 +116,13 @@
     [self goToPageIndex:0];
     
     // menu and buttons
-    [self setButton];
+
     menu = [[DDMenu alloc ]initWithFrame:CGRectMake(0, -220, self.view.frame.size.width, 220)];
     [self.view addSubview:menu];
     [self.view bringSubviewToFront:menu];
     [self.view bringSubviewToFront:dropButton];
     [self.view bringSubviewToFront:_OursearchBar];
-    [self.view bringSubviewToFront:searchButton];
+    [self.view bringSubviewToFront:_searchButton];
     
 
     //Create a table
@@ -224,7 +223,7 @@
    
                          }];
         //fixa BILDEN
-        [searchButton setImage:magnifierCross forState:UIControlStateNormal];
+        [_searchButton setImage:magnifierCross forState:UIControlStateNormal];
         //om du dessutom är på "produkt" vyn och får sökträffar gör denna kod.
             if(product == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
                 startingViewController = [self viewControllerAtIndex:0];
@@ -272,7 +271,7 @@
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
     
-    if([_JsonDataArray count]<[_ForSearchArray count]){
+    if([_JsonDataArray count]<=[_ForSearchArray count]){
     searchBar.text = nil;
     ShowAlphabet = YES;
     [searchBar resignFirstResponder];
@@ -283,7 +282,7 @@
         self.pageViewController.dataSource = self;
         }];
         
-        [searchButton setImage:magnifier forState:UIControlStateNormal];
+        [_searchButton setImage:magnifier forState:UIControlStateNormal];
     
     _JsonDataArray = _ForSearchArray;
     [ourTableView reloadData];
@@ -314,7 +313,7 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     //titta på detta senare!! 
     NSLog(@"träffar");
-    [searchButton setImage:magnifier forState:UIControlStateNormal];
+    [_searchButton setImage:magnifier forState:UIControlStateNormal];
 }
 
 
@@ -403,6 +402,7 @@
 
 - (void)switchTo:(UIViewController*)from to:(UIViewController *)controller
 {
+  
     [self transitionFromViewController:from
                       toViewController: controller
                               duration:0.4
@@ -415,30 +415,40 @@
                                 [self.view bringSubviewToFront:_OursearchBar];
                                 NSLog(@"you switched");
             }];
+    if(product == YES || list == YES){
+          _searchButton.hidden = NO;
+    }else{
+        _searchButton.hidden = YES;
+    }
+    
 }
 
 -(void)GoToProductInfo{
     if (about == YES) {
         about = NO;
         product = YES;
+        _searchButton.hidden = NO;
         [self switchTo:self.omOssController to:self.pageViewController];
         [self menuBarToFront];
     }
     else if (list == YES){
         list = NO;
         product = YES;
+        _searchButton.hidden = NO;
         [self switchTo:self.ListController to:self.pageViewController];
         [self menuBarToFront];
     }
     else if (kistan == YES){
         kistan = NO;
         product = YES;
+        _searchButton.hidden = YES;
         [self switchTo:self.omKistanController to:self.pageViewController];
         [self menuBarToFront];
     }
     else if (category == YES){
         category = NO;
         product = YES;
+        _searchButton.hidden = YES;
         [self switchTo:self.categoryController to:self.pageViewController];
         [self menuBarToFront];
     }
@@ -584,29 +594,32 @@
 #pragma mark - Buttons and menu
 
 -(void)createListButtons{
-    priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    priceSort.frame = CGRectMake(64, 20, 50, 50);
+    UIImage* priceSortIcon = [UIImage imageNamed:@"menu"];
+   // priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    priceSort = [UIButton buttonWithType:UIButtonTypeCustom];
+    priceSort.frame = CGRectMake(64, 20, 45, 45);
+    
+    [priceSort setImage:priceSortIcon forState:UIControlStateNormal];
     priceSort.titleLabel.font = [UIFont systemFontOfSize:20];
-
-
-
     [priceSort setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
     priceSort.titleLabel.shadowOffset = CGSizeMake(1, 1);
     
-    [priceSort setTitle:@"$" forState:UIControlStateNormal];
+    //[priceSort setTitle:@"$" forState:UIControlStateNormal];
     [priceSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [priceSort addTarget:self action:@selector(sortPrice) forControlEvents:UIControlEventTouchUpInside];
     [self.ListController.view addSubview:priceSort];
     
+    UIImage* AZ = [UIImage imageNamed:@"A-Z"];
+    alphabeticSort = [UIButton buttonWithType:UIButtonTypeCustom];
+    //alphabeticSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    alphabeticSort.frame = CGRectMake(124, 20, 45, 45);
     
-    alphabeticSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    alphabeticSort.frame = CGRectMake(124, 20, 50, 50);
     alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
-    
+    [alphabeticSort setImage:AZ forState:UIControlStateNormal];
     [alphabeticSort setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
     alphabeticSort.titleLabel.shadowOffset = CGSizeMake(1, 1);
     
-    [alphabeticSort setTitle:@"A - Ö" forState:UIControlStateNormal];
+   // [alphabeticSort setTitle:@"A - Ö" forState:UIControlStateNormal];
     [alphabeticSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [alphabeticSort addTarget:self action:@selector(sortAlphabetically) forControlEvents:UIControlEventTouchUpInside];
     [self.ListController.view addSubview:alphabeticSort];
@@ -620,21 +633,20 @@
     dropButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
     dropButton.titleLabel.font = [UIFont systemFontOfSize:24];
     [dropButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 50, 50);
+    dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 45, 45);
     [dropButton addTarget:self action:@selector(DropMenu) forControlEvents:UIControlEventTouchUpInside];
 
     [self.view addSubview:dropButton];
     
-    searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    searchButton.frame = CGRectMake(4, 20, 50, 50);
-    
-    [searchButton setImage:magnifier forState:UIControlStateNormal];
-    [searchButton addTarget:self action:@selector(searchInList)
+    _searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _searchButton.frame = CGRectMake(4, 20, 50, 50);
+    [_searchButton setImage:magnifier forState:UIControlStateNormal];
+    [_searchButton addTarget:self action:@selector(searchInList)
            forControlEvents:UIControlEventTouchUpInside];
-    
-    float size = 35;
-    [searchButton setImageEdgeInsets:UIEdgeInsetsMake(size, size, size, size)];
-    [self.view addSubview:searchButton];
+    _searchButton.titleLabel.font = [UIFont systemFontOfSize:20];
+   // float size = 35;
+  //  [_searchButton setImageEdgeInsets:UIEdgeInsetsMake(size, size, size, size)];
+    [self.view addSubview:_searchButton];
 }
 
 -(void)DropMenu{
@@ -661,7 +673,7 @@
     button = NO;
     [self.view bringSubviewToFront:menu];
     [self.view bringSubviewToFront:dropButton];
-    [self.view bringSubviewToFront:searchButton];
+    [self.view bringSubviewToFront:_searchButton];
     [self.view bringSubviewToFront:_OursearchBar];
     
     
