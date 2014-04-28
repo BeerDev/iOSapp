@@ -582,10 +582,6 @@
 }
 
 #pragma mark - Buttons and menu
--(void)createTabBarButtons{
-   // UITabBarController *tabBarController = [[UITabBarController alloc] init];
-
-}
 
 -(void)createListButtons{
     priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];

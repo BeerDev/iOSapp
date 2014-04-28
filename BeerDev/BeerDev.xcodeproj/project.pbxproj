@@ -139,6 +139,7 @@
 		C93AED8D18E5A88F003F5A5A /* BeerDev */ = {
 			isa = PBXGroup;
 			children = (
+				CBFA178A190AAA7A0081FC6D /* CategoryList.plist */,
 				C982E9461908FD1200CD7C7B /* json.json */,
 				C9ED1A4218F43A4F00842719 /* Views */,
 				C9ED1A4118F43A4500842719 /* Classes */,
@@ -148,7 +149,6 @@
 				C93AED9918E5A88F003F5A5A /* Main.storyboard */,
 				C93AED9C18E5A88F003F5A5A /* ViewController.h */,
 				C93AED9D18E5A88F003F5A5A /* ViewController.m */,
-				CBFA178A190AAA7A0081FC6D /* CategoryList.plist */,
 				C93AED9F18E5A88F003F5A5A /* Images.xcassets */,
 				C93AED8E18E5A88F003F5A5A /* Supporting Files */,
 			);
