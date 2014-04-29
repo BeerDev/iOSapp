@@ -27,6 +27,7 @@
     
     BOOL ShowAlphabet;
     BOOL ascendingPrice;
+    BOOL thereIsResults;
     
     PageContentViewController *startingViewController;
     NSArray *viewControllers;
@@ -122,7 +123,7 @@
     
     // menu and buttons
 
-    menu = [[DDMenu alloc ]initWithFrame:CGRectMake( self.view.frame.size.width+220, 0, 200, self.view.frame.size.height)];
+    menu = [[DDMenu alloc ]initWithFrame:CGRectMake( self.view.frame.size.width+220, 0, 220, self.view.frame.size.height)];
     [self.view addSubview:menu];
     [self.view bringSubviewToFront:menu];
     [self.view bringSubviewToFront:_dropButton];
@@ -226,6 +227,9 @@
                                       objectAtIndex:[_OursearchBar
                                                      selectedScopeButtonIndex]]];
     
+    
+
+    
     if([searchResults count]>0){
     noResultsToDisplay = NO;
     _JsonDataArray = searchResults;
@@ -238,11 +242,18 @@
     }
     else if ([searchResults count] <=0 && list == YES){
     _JsonDataArray = nil;
+
     noResultsToDisplay = YES;
     [ourTableView reloadData];
         
     }
-  
+    if([searchText isEqualToString:@""]){
+        noResultsToDisplay = NO;
+        _JsonDataArray = _ForSearchArray;
+        [ourTableView reloadData];
+    }
+    
+    
     
 }
 
@@ -371,7 +382,7 @@
     Button.hidden = yesOrNo;
     
     //UIButton
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.35 animations:^{
         Button.alpha = zeroOrOne;
     }
      
@@ -380,7 +391,7 @@
 
     }
     else {
-        [UIView animateWithDuration:0.5 animations:^{
+        [UIView animateWithDuration:0.35 animations:^{
             Button.alpha = zeroOrOne;
         }
          
@@ -745,7 +756,7 @@
 #pragma mark - Buttons and menu
 
 -(void)createListButtons{
-    UIImage* priceSortIcon = [UIImage imageNamed:@"PRICE"];
+    UIImage* priceSortIcon = [UIImage imageNamed:@"Pris"];
    // priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     priceSort = [UIButton buttonWithType:UIButtonTypeCustom];
     priceSort.frame = CGRectMake(64, 20, 50, 50);
@@ -823,6 +834,7 @@
         [self animateButton:_searchButton Hidden:YES Alpa:0];
         [self animateButton:alphabeticSort Hidden:YES Alpa:0];
         [self animateButton:priceSort Hidden:YES Alpa:0];
+        [self animateButton:_cancelSearch Hidden:YES Alpa:0];
         
         [menu DropDownMenu:self.view.frame.size.width];
         [[menu omOssButton] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
@@ -852,13 +864,26 @@
         allowToPress = NO;
         [menu HideDownMenu:self.view.frame.size.width];
          button = NO;
-        if(list == YES || product == YES){
-        [self animateButton:_searchButton Hidden:NO Alpa:1];
+        
+        if([_JsonDataArray count]<[_ForSearchArray count]){
+            thereIsResults = YES;
+        }else{
+            thereIsResults = NO;
         }
-        if(list == YES){
-        [self animateButton:alphabeticSort Hidden:NO Alpa:1];
-        [self animateButton:priceSort Hidden:NO Alpa:1];
+        
+        
+        if( (list == YES  && thereIsResults == NO) || (product == YES && thereIsResults == NO)){
+            [self animateButton:_searchButton Hidden:NO Alpa:1];
+        }else if(thereIsResults == YES){
+            [self animateButton:_cancelSearch Hidden:NO Alpa:1];
         }
+        if(list== YES){
+            [self animateButton:alphabeticSort Hidden:NO Alpa:1];
+            [self animateButton:priceSort Hidden:NO Alpa:1];
+        }
+
+        
+        
         [UIView animateWithDuration:0.5 animations:^{
             self.pageViewController.view.frame = CGRectMake(0, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
             self.ListController.view.frame = CGRectMake(0, 0,  self.ListController.view.frame.size.width,  self.ListController.view.frame.size.height);
@@ -881,13 +906,25 @@
     [self.view bringSubviewToFront:alphabeticSort];
     [self.view bringSubviewToFront:priceSort];
     
-    if(list == YES || product == YES){
+    NSLog(@"%d",_cancelSearch.hidden);
+    
+    if([_JsonDataArray count]<[_ForSearchArray count]){
+        thereIsResults = YES;
+    }else{
+        thereIsResults = NO;
+    }
+    
+    
+    if( (list == YES  && thereIsResults == NO) || (product == YES && thereIsResults == NO)){
         [self animateButton:_searchButton Hidden:NO Alpa:1];
+    }else if(thereIsResults == YES){
+        [self animateButton:_cancelSearch Hidden:NO Alpa:1];
     }
     if(list== YES){
         [self animateButton:alphabeticSort Hidden:NO Alpa:1];
         [self animateButton:priceSort Hidden:NO Alpa:1];
     }
+    
 
     
     
@@ -1093,13 +1130,14 @@
                                 [menu HideDownMenu:self.view.frame.size.width];
                                 [self menuBarToFront];
                                 [self viewWillDisappear:NO];
-                             
+                                [self animateButton:_dropButton Hidden:NO Alpa:1];
                                 [_OursearchBar resignFirstResponder];
                                 [UIView animateWithDuration:0.5 animations:^{
                                     _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
                                     _OursearchBar.alpha = 0;
                                 } completion:^(BOOL finished) {
-                                       _dropButton.hidden = NO;
+                                   
+                                    //   _dropButton.hidden = NO;
                                 }];
                             }];
     }

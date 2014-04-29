@@ -271,7 +271,7 @@
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="35" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="mi2-Ss-Rds">
                                 <rect key="frame" x="20" y="103" width="280" height="362"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <string key="text">Kistan är INsektionens sektionslokal belägen i Kista. Med sina cirka 120 olika sorters öl är Kistan en av Stockholms mest välsorterade sektionslokaler gällande ölutbud. 
+                                <mutableString key="text">Kistan är INsektionens sektionslokal belägen i Kista. Med sina cirka 120 olika sorters öl är Kistan en av Stockholms mest välsorterade sektionslokaler gällande ölutbud. 
 
 Kistan är vanligtvis öppen på tisdagar och torsdagar med sektionens mästerier bakom baren. Även på vissa fredagar kan en pubkväll smyga sig in. 
 
@@ -280,8 +280,8 @@ Kistans breda sortiment består av allt från vardagliga öltyper så som Ale, L
 Kistans konstbeklädda väggar skapar en gemytlig känsla i din mage, dem matchas ihop bra med en tydlig eftersmak av hemtrevlighet och gemensak. 
 
 *Observera att alla priser gälller medlemmar i INsektionen. 
-</string>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+</mutableString>
+                                <fontDescription key="fontDescription" name="Helvetica-Light" family="Helvetica" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                                 <color key="shadowColor" cocoaTouchSystemColor="darkTextColor"/>
