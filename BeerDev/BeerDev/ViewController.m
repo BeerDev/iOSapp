@@ -258,7 +258,7 @@
     else if ([searchResults count] ==0 && product == YES){
         _JsonDataArray = tempArray;
         noResultsToDisplay = NO;
-        [self noResultsAlert];
+        
         
     }
     else if ([searchResults count] ==0 && list == YES){
