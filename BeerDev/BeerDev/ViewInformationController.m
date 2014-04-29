@@ -43,7 +43,7 @@
 -(void)createLable
 {
     Ycord = self.view.frame.size.height*1;
-    NSLog(@"%ld",(long)Ycord);
+    //NSLog(@"%ld",(long)Ycord);
     
     //Skapa namnlabel
     UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord*0.16, self.view.frame.size.width-40, 50)];

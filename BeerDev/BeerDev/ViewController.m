@@ -198,7 +198,7 @@
     [scrollView setShowsVerticalScrollIndicator:NO];
     [scrollView setShowsHorizontalScrollIndicator:NO];
     [self.categoryController.view  addSubview:scrollView];
-    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 4500);
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 4550);
     [scrollView setScrollEnabled:YES];
     [self startCategory];
     
@@ -245,7 +245,6 @@
     else if ([searchResults count] <=0 && product == YES){
         _JsonDataArray = _ForSearchArray;
         noResultsToDisplay = NO;
-        
     }
     else if ([searchResults count] <=0 && list == YES){
     _JsonDataArray = nil;
@@ -258,6 +257,20 @@
         noResultsToDisplay = NO;
         _JsonDataArray = _ForSearchArray;
         [ourTableView reloadData];
+    }
+    
+    if(product == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
+
+        startingViewController = [self viewControllerAtIndex:0];
+        viewControllers = @[startingViewController];
+        
+        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+            _pageViewController.dataSource = nil;
+            _pageViewController.dataSource = self;
+        }];
+
+        self.pageViewController.dataSource = self;
+      //  [self animateButton:_cancelSearch Hidden:NO Alpa:1];
     }
     
     
@@ -287,7 +300,7 @@
                 startingViewController = [self viewControllerAtIndex:0];
                 viewControllers = @[startingViewController];
                 
-                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
         
                 self.pageViewController.dataSource = self;
                 [self animateButton:_cancelSearch Hidden:NO Alpa:1];
@@ -1276,9 +1289,10 @@
 
 #pragma mark - extra
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-    
+    NSLog(@"lala");
     if(product == YES && didbegin == NO ){
-        
+        didbegin =YES;
+        [_OursearchBar resignFirstResponder];
     }
     else if(list == YES && didbegin == NO ){
         didbegin =YES;
@@ -1294,7 +1308,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if(product == YES){
-   // NSLog(@"??");
+
     }
 }
 

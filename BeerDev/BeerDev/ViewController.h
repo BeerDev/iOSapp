@@ -16,7 +16,7 @@
 
 @interface ViewController : UIViewController <UIPageViewControllerDataSource,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate , UISearchDisplayDelegate, UIAlertViewDelegate>
 
-@property (strong, nonatomic) UIPageViewController *pageViewController;
+@property (weak, nonatomic) UIPageViewController *pageViewController;
 @property (strong, nonatomic) UIViewController *omOssController;
 @property (strong, nonatomic) UIViewController *omKistanController;
 @property (strong, nonatomic) UIViewController *categoryController;
