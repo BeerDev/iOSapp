@@ -29,6 +29,7 @@
 @property (strong, nonatomic) NSArray * ForSearchArray;
 @property (strong, nonatomic) UIButton* searchButton;
 @property (strong, nonatomic) UIButton* dropButton;
+@property (strong, nonatomic) UIButton* cancelSearch;
 
 @end
 

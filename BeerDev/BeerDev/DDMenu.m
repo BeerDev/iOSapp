@@ -15,7 +15,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        menuSize = 220;
+        menuSize = 320;
         
        // self.backgroundColor = [UIColor blackColor];
         //self.alpha = 0.6;
@@ -71,18 +71,19 @@
     return self;
 }
 
--(void)DropDownMenu{
+-(void)DropDownMenu:(float)phoneWidth{
+
     [UIView animateWithDuration:0.5 animations:^{
-        self.frame = CGRectMake(0, 0,  self.frame.size.width, menuSize);
+        self.frame = CGRectMake(phoneWidth-menuSize, 0,  menuSize, self.frame.size.height);
     } completion:^(BOOL finished) {
         NSLog(@"Drop");
     }];
 }
 
--(void)HideDownMenu{
+-(void)HideDownMenu:(float)phoneWidth{
     NSLog(@"Hide");
-    [UIView animateWithDuration:0.4 animations:^{
-        self.frame = CGRectMake(0, -menuSize,  self.frame.size.width, menuSize);
+    [UIView animateWithDuration:0.5 animations:^{
+        self.frame = CGRectMake(phoneWidth+menuSize, 0,  menuSize, self.frame.size.height);
         
     }];
 }
