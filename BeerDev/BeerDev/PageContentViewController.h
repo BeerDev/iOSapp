@@ -14,13 +14,7 @@
 
 //image for the product
 @property (strong, nonatomic) IBOutlet UIImageView *displayImage;
-//label for the name of the product
-@property (weak, nonatomic) IBOutlet UILabel *artikelnamnLabel;
-//label for price
-@property (weak, nonatomic) IBOutlet UILabel *priceLabel;
-//label for information
-//@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
-@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+
 
 @property (strong, nonatomic) ViewInformationController* InformationController;
 //this is used in pageViewController to track on what index you are at.
@@ -30,7 +24,7 @@
 @property BOOL informationIsShowing;
 
 
-//connection functions from NSURLConnection. 
+//connection functions from NSURLConnection.
 @property (nonatomic,retain) NSMutableArray* jsonObjects;
 @property (nonatomic, copy) void (^completionHandler)(void);
 @property (nonatomic, strong) NSMutableData *activeDownload;
