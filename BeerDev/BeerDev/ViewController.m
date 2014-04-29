@@ -14,6 +14,8 @@
     BOOL button;
     BOOL noResultsToDisplay;
     BOOL allowToPress;
+    UIImageView *backgroundView ;
+    float offset;
 
     UIButton* priceSort;
     UIButton* alphabeticSort;
@@ -29,6 +31,7 @@
     BOOL ShowAlphabet;
     BOOL ascendingPrice;
     BOOL thereIsResults;
+    BOOL didGoRight;
     
     PageContentViewController *startingViewController;
     NSArray *viewControllers;
@@ -42,12 +45,14 @@
     NSArray * searchResults;
     
     //For Category
-    UIScrollView * scrollView;
+    UIScrollView * ourScrollView;
     NSMutableDictionary *Categories;
     NSInteger catY;
     NSString *type;
     NSString *info;
-    
+    int taggen;
+    NSMutableArray * typeArray;
+    NSArray *tempArray;
 }
 @end
 @implementation ViewController
@@ -71,9 +76,12 @@
 
     [self setButton];
     [self cacheEverything];
+    
     //set backgroundcolor
     self.view.backgroundColor = [UIColor whiteColor];
-    
+    backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Background"]];
+    backgroundView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:backgroundView];
     ShowAlphabet = YES;
     allowToPress = YES;
 
@@ -108,6 +116,7 @@
     // Create PageViewController
     self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageViewController"];
     self.pageViewController.dataSource = self;
+    self.pageViewController.delegate = self;
     //[jsonData SetIndex:0];
 
     // Change the size of page view controller if needed.
@@ -115,10 +124,10 @@
     [self addChildViewController:_pageViewController];
     [self.view addSubview:_pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
-    
-    
+
     // Set page that is showing
     product = YES;
+    tempArray = [[NSArray alloc] init];
     //[jsonData SetIndex:1];
     
     [self goToPageIndex:0];
@@ -190,16 +199,17 @@
      }
     [self.view addSubview: _OursearchBar];
     //Category
-    scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 60, self.view.frame.size.width, self.view.frame.size.height)];
-    scrollView.backgroundColor = [UIColor clearColor];
-    scrollView.showsHorizontalScrollIndicator = NO;
-    scrollView.showsVerticalScrollIndicator = YES;
+    ourScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70)];
+    ourScrollView.backgroundColor = [UIColor clearColor];
+    ourScrollView.showsHorizontalScrollIndicator = NO;
+    ourScrollView.showsVerticalScrollIndicator = YES;
     //[scrollView setDelegate:self];
-    [scrollView setShowsVerticalScrollIndicator:NO];
-    [scrollView setShowsHorizontalScrollIndicator:NO];
-    [self.categoryController.view  addSubview:scrollView];
-    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 4550);
-    [scrollView setScrollEnabled:YES];
+    [ourScrollView setShowsVerticalScrollIndicator:NO];
+    [ourScrollView setShowsHorizontalScrollIndicator:NO];
+    
+    [self.categoryController.view  addSubview:ourScrollView];
+    ourScrollView.contentSize = CGSizeMake(self.view.frame.size.width, 4550);
+    [ourScrollView setScrollEnabled:YES];
     [self startCategory];
     
     //en lyssnartråd! :D
@@ -227,6 +237,8 @@
 
 #pragma mark - searchBar
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    
+    
     ShowAlphabet = NO;
 
     [self filterContentForSearchText:searchText
@@ -240,13 +252,16 @@
     if([searchResults count]>0){
     noResultsToDisplay = NO;
     _JsonDataArray = searchResults;
+    tempArray = searchResults;
     [ourTableView reloadData];
     }
-    else if ([searchResults count] <=0 && product == YES){
-        _JsonDataArray = _ForSearchArray;
+    else if ([searchResults count] ==0 && product == YES){
+        _JsonDataArray = tempArray;
         noResultsToDisplay = NO;
+        [self noResultsAlert];
+        
     }
-    else if ([searchResults count] <=0 && list == YES){
+    else if ([searchResults count] ==0 && list == YES){
     _JsonDataArray = nil;
 
     noResultsToDisplay = YES;
@@ -261,20 +276,9 @@
     
     if(product == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
 
-        startingViewController = [self viewControllerAtIndex:0];
-        viewControllers = @[startingViewController];
-        
-        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-            _pageViewController.dataSource = nil;
-            _pageViewController.dataSource = self;
-        }];
-
-        self.pageViewController.dataSource = self;
+        [self dataSource];
       //  [self animateButton:_cancelSearch Hidden:NO Alpa:1];
     }
-    
-    
-    
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
@@ -297,12 +301,7 @@
         //fixa BILDEN
         //om du dessutom är på "produkt" vyn och får sökträffar gör denna kod.
             if(product == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
-                startingViewController = [self viewControllerAtIndex:0];
-                viewControllers = @[startingViewController];
-                
-                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-        
-                self.pageViewController.dataSource = self;
+                [self dataSource];
                 [self animateButton:_cancelSearch Hidden:NO Alpa:1];
                 }
         
@@ -311,12 +310,7 @@
             
                 [self noResultsAlert];
                 searchBar.text = nil;
-                startingViewController = [self viewControllerAtIndex:0];
-                viewControllers = @[startingViewController];
-            
-                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-            
-                self.pageViewController.dataSource = self;
+                [self dataSource];
                 [self animateButton:_searchButton Hidden:NO Alpa:1];
         }
         
@@ -333,7 +327,7 @@
             [UIView animateWithDuration:0.5 animations:^{
             _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
             _OursearchBar.alpha = 0;
-        } completion:^(BOOL finished) {
+            } completion:^(BOOL finished) {
             _JsonDataArray = _ForSearchArray;
             noResultsToDisplay = NO;
             [ourTableView reloadData];
@@ -345,12 +339,14 @@
 
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
+    //fix buttons
     [self animateButton:_dropButton Hidden:NO Alpa:1];
     [self animateButton:_searchButton Hidden:NO Alpa:1];
     if(list == YES){
     [self animateButton:alphabeticSort Hidden:NO Alpa:1];
     [self animateButton:priceSort Hidden:NO Alpa:1];
     }
+    
     if([_JsonDataArray count]<=[_ForSearchArray count]){
         
         searchBar.text = nil;
@@ -362,12 +358,7 @@
         [ourTableView reloadData];
         
             if(product == YES && [_JsonDataArray count] != 0){
-        
-                startingViewController = [self viewControllerAtIndex:0];
-                viewControllers = @[startingViewController];
-        
-                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
-                self.pageViewController.dataSource = self;
+                [self dataSource];
             }
     }
     else {
@@ -377,6 +368,15 @@
         [searchBar resignFirstResponder];
         [self searchBarAnimationUp];
     }
+}
+
+-(void)dataSource{
+    startingViewController = [self viewControllerAtIndex:0];
+    viewControllers = @[startingViewController];
+    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+        _pageViewController.dataSource = nil;
+        _pageViewController.dataSource = self;
+    }];
 }
 
 -(void)searchBarAnimationUp{
@@ -389,8 +389,8 @@
      
                      completion:^(BOOL finished) {
 
-                         self.pageViewController.dataSource = nil;
-                         self.pageViewController.dataSource = self;
+                       //  self.pageViewController.dataSource = nil;
+                       //  self.pageViewController.dataSource = self;
                              NSLog(@"search bar time %f", [[NSDate date] timeIntervalSinceDate:startDate]);
                          
     }];
@@ -482,7 +482,6 @@
     ShowAlphabet = YES;
     noResultsToDisplay = NO;
 
-    [self performSelector:@selector(updateSource) withObject:nil afterDelay:0.5];
     [ourTableView reloadData];
     
     if(product == YES && [_JsonDataArray count] != 0){
@@ -490,17 +489,14 @@
         startingViewController = [self viewControllerAtIndex:0];
         viewControllers = @[startingViewController];
         
-        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
+            _pageViewController.dataSource = nil;
+            _pageViewController.dataSource = self;
+        }];
         self.pageViewController.dataSource = self;
     }
 
 }
-
--(void)updateSource{
-    self.pageViewController.dataSource = nil;
-    self.pageViewController.dataSource = self;
-}
-
 #pragma mark - background caching
 -(void)cacheEverything{
     int threadNumber = 1;
@@ -563,6 +559,9 @@
     return UIStatusBarStyleLightContent;
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return NO;
+}
 
 
 #pragma mark - Switching between views.
@@ -939,17 +938,13 @@
     
     if( (list == YES  && thereIsResults == NO) || (product == YES && thereIsResults == NO)){
         [self animateButton:_searchButton Hidden:NO Alpa:1];
-    }else if(thereIsResults == YES){
+    }else if((list == YES && thereIsResults == YES) || (product == YES && thereIsResults == YES)){
         [self animateButton:_cancelSearch Hidden:NO Alpa:1];
     }
     if(list== YES){
         [self animateButton:alphabeticSort Hidden:NO Alpa:1];
         [self animateButton:priceSort Hidden:NO Alpa:1];
     }
-    
-
-    
-    
 }
 
 -(void)slideAllViews{
@@ -1019,7 +1014,7 @@
     pageContentViewController.pageIndex = index;
     pageContentViewController.arrayFromViewController = (NSMutableArray*)_JsonDataArray;
     
-
+    //didGoToNextPage = NO;
     return pageContentViewController;
 }
 
@@ -1030,7 +1025,7 @@
     if ((index == 0) || (index == NSNotFound)) {
         return nil;
     }
-    
+    didGoRight = NO;
     index--;
     return [self viewControllerAtIndex:index];
 }
@@ -1042,13 +1037,24 @@
     if (index == NSNotFound) {
         return nil;
     }
-    
+    didGoRight = YES;
     index++;
     if (index == [_JsonDataArray count]) {
         return nil;
     }
     return [self viewControllerAtIndex:index];
 }
+
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed{
+    
+    if(!completed ){
+        return;
+    }
+   
+    
+     //  NSLog(@"did go right ? %d",didGoRight);
+}
+
 
 -(void)goToPageIndex:(int)number{
     //Start the page view controller with this first page at index 0;
@@ -1059,9 +1065,8 @@
     [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 
-- (BOOL)prefersStatusBarHidden {
-    return NO;
-}
+
+
 
 #pragma mark - Table
 
@@ -1216,7 +1221,7 @@
 
     
 
-    
+    NSLog(@"%d",count);
     [ourTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:count inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
     return count;
@@ -1234,19 +1239,70 @@
     return sortedArray;
 }
 
-#pragma mark - Category
 
+#pragma mark - extra
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+  //  NSLog(@"lala");
+    if(product == YES && didbegin == NO ){
+        didbegin =YES;
+        [_OursearchBar resignFirstResponder];
+    }
+    else if(list == YES && didbegin == NO ){
+        didbegin =YES;
+        [_OursearchBar resignFirstResponder];
+    }
+    
+    _contentOffsetInPage = scrollView.contentOffset.x;
+    
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    didbegin = NO;
+
+
+}
+
+
+//EJ FÄRDIG KOD HÄR
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if(product == YES){
+      //  NSLog(@"offset %f",scrollView.contentOffset.x);
+        ScrollDirection scrollDirection;
+        if (_contentOffsetInPage > scrollView.contentOffset.x){
+            scrollDirection = ScrollDirectionRight;
+            offset=(scrollView.contentOffset.x)/6;
+        }
+        else if (_contentOffsetInPage < scrollView.contentOffset.x){
+            scrollDirection = ScrollDirectionLeft;
+
+        offset=(scrollView.contentOffset.x)/6;
+            offset-=1;
+        }
+        
+
+      //  backgroundView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+       // _contentOffsetInPage = scrollView.contentOffset.x;
+    }
+ 
+    
+
+}
+
+
+#pragma mark - Category
 -(void)startCategory{
     catY = 0;
     NSString * path = [[NSBundle mainBundle] bundlePath];
     NSString * finalPatch = [path stringByAppendingPathComponent:@"CategoryList.plist"];
     Categories = [NSDictionary dictionaryWithContentsOfFile:finalPatch];
-    NSMutableArray * typeArray = [[NSMutableArray alloc] init];
+    typeArray = [[NSMutableArray alloc] init];
     NSMutableArray * infoArray = [[NSMutableArray alloc] init];
     typeArray = [Categories objectForKey:@"Type"];
     infoArray = [Categories objectForKey:@"Info"];
     
-    for (NSInteger i = 0; i<[typeArray count];  i++) {
+    for (int i = 0; i<[typeArray count];  i++) {
+        taggen = i;
         type = [typeArray objectAtIndex:i];
         info = [infoArray objectAtIndex:i];
         [self createCategoryHead];
@@ -1255,19 +1311,35 @@
 }
 
 -(void)createCategoryHead{
+    UIButton * categoryInfo = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [categoryInfo setFrame:CGRectMake(20, catY, self.view.frame.size.width-40, 50)];
     
+    [categoryInfo setTitle:type forState:UIControlStateNormal];
+    [categoryInfo setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [categoryInfo setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [categoryInfo addTarget:self action:@selector(presentBeerTypeInList:) forControlEvents:UIControlEventTouchUpInside];
+    
+    categoryInfo.tag = taggen;
+    categoryInfo.titleLabel.shadowOffset = CGSizeMake(1, 1);
+    categoryInfo.titleLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:30];
+    categoryInfo.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [ourScrollView addSubview:categoryInfo];
+    catY = catY + 50;
+  
+/*
     UILabel *CategoryInfo = [[UILabel alloc]initWithFrame:CGRectMake(20, catY, self.view.frame.size.width-40, 50)];
     CategoryInfo.text = type;
     CategoryInfo.numberOfLines = 1;
     CategoryInfo.font = [UIFont fontWithName:@"Helvetica-Light" size:30];
     CategoryInfo.shadowColor =[UIColor blackColor];
     CategoryInfo.shadowOffset = CGSizeMake(1, 1);
-   // CategoryInfo.clipsToBounds = YES;
+    // CategoryInfo.clipsToBounds = YES;
     CategoryInfo.backgroundColor = [UIColor clearColor];
     CategoryInfo.textColor = [UIColor whiteColor];
     CategoryInfo.textAlignment = NSTextAlignmentCenter;
     [scrollView addSubview:CategoryInfo];
     catY = catY + 50;
+ */
 }
 
 -(void)createCategoryBody{
@@ -1277,39 +1349,26 @@
     CategoryInfo.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
     CategoryInfo.shadowColor =[UIColor blackColor];
     CategoryInfo.shadowOffset = CGSizeMake(1, 1);
-  //  CategoryInfo.clipsToBounds = YES;
+    //  CategoryInfo.clipsToBounds = YES;
     CategoryInfo.backgroundColor = [UIColor clearColor];
     CategoryInfo.textColor = [UIColor whiteColor];
     CategoryInfo.textAlignment = NSTextAlignmentLeft;
     [CategoryInfo sizeToFit];
-    [scrollView addSubview:CategoryInfo];
+    [ourScrollView addSubview:CategoryInfo];
     catY = catY + CategoryInfo.frame.size.height+20;
     
 }
 
-#pragma mark - extra
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
-    NSLog(@"lala");
-    if(product == YES && didbegin == NO ){
-        didbegin =YES;
-        [_OursearchBar resignFirstResponder];
-    }
-    else if(list == YES && didbegin == NO ){
-        didbegin =YES;
-        [_OursearchBar resignFirstResponder];
-    }    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    didbegin = NO;
-    NSLog(@"slut?");
+-(void)presentBeerTypeInList:(UIButton *)sender{
+  
+    _JsonDataArray = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Kategori ==[c] %@", [typeArray objectAtIndex:(int)sender.tag]]];
+    
+    ShowAlphabet = NO;
+    [ourTableView reloadData];
+   
+    [self GoToList];
 
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    if(product == YES){
-
-    }
-}
 
 @end

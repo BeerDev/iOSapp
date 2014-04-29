@@ -92,7 +92,7 @@
 -(void)createContact:(NSString *)contact{
     UILabel *contactLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-40, 50)];
     contactLabel.text = contact;
-    contactLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:17];
+    contactLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
     contactLabel.shadowColor =[UIColor blackColor];
     contactLabel.shadowOffset = CGSizeMake(1, 1);
     contactLabel.textColor = [UIColor whiteColor];

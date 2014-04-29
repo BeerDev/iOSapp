@@ -61,7 +61,7 @@
     /*---------------------------------------------------------------------------------*/
     //check if there is a image on disk with a pathname according the the name of the product.
     if([jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]] != nil){
-        NSLog(@"there was a file on disk");
+     //   NSLog(@"there was a file on disk");
         //set the image to display from cache according to the page index and the products name.
         self.displayImage.image = [jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]]];
     }
@@ -155,7 +155,36 @@
 - (IBAction)SetInformationView:(id)sender {
     //if the information is not showing set the information view.
     //calls information method which sets the information.
-    
+    if(_informationIsShowing == NO){
+        NSLog(@"adding informationView");
+        _informationIsShowing = YES;
+        
+        nameLabel.hidden = YES;
+        priceLabel.hidden = YES;
+        infoLabel.hidden = YES;
+        self.displayImage.alpha = 0.45;
+        
+        //set values for the information screen.
+        _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
+        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"];
+        _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
+        _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
+        _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
+        _InformationController.brygg = [JsonDataArray[_pageIndex] objectForKey:@"Bryggeri"];
+        _InformationController.kategori = [JsonDataArray[_pageIndex] objectForKey:@"Kategori"];
+        
+        //denna behövs egentligen inte just nu, men eventuellt i framtiden.
+        _InformationController.pageIndex = _pageIndex;
+        
+        _InformationController.view.alpha = 0;
+        [self.view addSubview:_InformationController.view];
+        
+        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 1;}
+                         completion:^(BOOL finished){
+                             NSLog(@"klar");
+                         }];
+    }
+
 }
 - (IBAction)tap:(id)sender {
     if(_informationIsShowing == NO){
@@ -205,7 +234,19 @@
 
 - (IBAction)downSwipe:(id)sender {
     //if the information is showing remove it with animation.
+    if(_informationIsShowing == YES){
+        _informationIsShowing = NO;
+        
+        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;self.displayImage.alpha = 1;}
+                         completion:^(BOOL finished){
+                             [_InformationController.view removeFromSuperview];
+                             nameLabel.hidden = NO;
+                             priceLabel.hidden = NO;
+                             infoLabel.hidden = NO;
+                         }];
+    }
     
+
     
 }
 -(void)labelTemplet:(UILabel *)label
@@ -218,22 +259,22 @@
 }
 - (void) createLabel{
     Ycord = 430;
-    NSLog(@"%ld",(long)Ycord);
+   // NSLog(@"%ld",(long)Ycord);
     
     //Skapa namnlabel
     nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-90, 50)];
     nameLabel.text= [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
     [self labelTemplet:nameLabel];
-    nameLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:20];
+    nameLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:18];
     nameLabel.numberOfLines = 0;
     [nameLabel sizeToFit];
     [self.view addSubview:nameLabel];
     
     //Skapa prisLabel
-    priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width-70, Ycord+5, self.view.frame.size.width-40, 50)];
-    priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr *", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"]];
+    priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width-70, Ycord, self.view.frame.size.width-40, 50)];
+    priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr*", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"]];
     [self labelTemplet:priceLabel];
-    priceLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:16];
+    priceLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:17];
     priceLabel.textAlignment = NSTextAlignmentRight;
     [priceLabel sizeToFit];
     [self.view addSubview:priceLabel];

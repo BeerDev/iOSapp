@@ -14,7 +14,7 @@
 
 
 
-@interface ViewController : UIViewController <UIPageViewControllerDataSource,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate , UISearchDisplayDelegate, UIAlertViewDelegate>
+@interface ViewController : UIViewController <UIPageViewControllerDataSource,UIPageViewControllerDelegate,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate , UISearchDisplayDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) UIPageViewController *pageViewController;
 @property (strong, nonatomic) UIViewController *omOssController;
@@ -30,6 +30,16 @@
 @property (strong, nonatomic) UIButton* searchButton;
 @property (strong, nonatomic) UIButton* dropButton;
 @property (strong, nonatomic) UIButton* cancelSearch;
+@property float contentOffsetInPage;
+
+typedef enum ScrollDirection {
+    ScrollDirectionNone,
+    ScrollDirectionRight,
+    ScrollDirectionLeft,
+    ScrollDirectionUp,
+    ScrollDirectionDown,
+    ScrollDirectionCrazy,
+} ScrollDirection;
 
 @end
 
