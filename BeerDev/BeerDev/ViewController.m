@@ -198,7 +198,7 @@
     [scrollView setShowsVerticalScrollIndicator:NO];
     [scrollView setShowsHorizontalScrollIndicator:NO];
     [self.categoryController.view  addSubview:scrollView];
-    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 3800);
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 4500);
     [scrollView setScrollEnabled:YES];
     [self startCategory];
     
@@ -1246,10 +1246,10 @@
     UILabel *CategoryInfo = [[UILabel alloc]initWithFrame:CGRectMake(20, catY, self.view.frame.size.width-40, 50)];
     CategoryInfo.text = type;
     CategoryInfo.numberOfLines = 1;
-    CategoryInfo.font = [UIFont fontWithName:@"Arial" size:30];
+    CategoryInfo.font = [UIFont fontWithName:@"Helvetica-Light" size:30];
     CategoryInfo.shadowColor =[UIColor blackColor];
     CategoryInfo.shadowOffset = CGSizeMake(1, 1);
-    CategoryInfo.clipsToBounds = YES;
+   // CategoryInfo.clipsToBounds = YES;
     CategoryInfo.backgroundColor = [UIColor clearColor];
     CategoryInfo.textColor = [UIColor whiteColor];
     CategoryInfo.textAlignment = NSTextAlignmentCenter;
@@ -1261,10 +1261,10 @@
     UILabel *CategoryInfo = [[UILabel alloc]initWithFrame:CGRectMake(20, catY, self.view.frame.size.width-40, 200)];
     CategoryInfo.text = info;
     CategoryInfo.numberOfLines = 30;
-    CategoryInfo.font = [UIFont fontWithName:@"Arial" size:13];
+    CategoryInfo.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
     CategoryInfo.shadowColor =[UIColor blackColor];
     CategoryInfo.shadowOffset = CGSizeMake(1, 1);
-    CategoryInfo.clipsToBounds = YES;
+  //  CategoryInfo.clipsToBounds = YES;
     CategoryInfo.backgroundColor = [UIColor clearColor];
     CategoryInfo.textColor = [UIColor whiteColor];
     CategoryInfo.textAlignment = NSTextAlignmentLeft;
@@ -1280,7 +1280,8 @@
     if(product == YES && didbegin == NO ){
         
     }
-    else if(list == YES){
+    else if(list == YES && didbegin == NO ){
+        didbegin =YES;
         [_OursearchBar resignFirstResponder];
     }    
 }
