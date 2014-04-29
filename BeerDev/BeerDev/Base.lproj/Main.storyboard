@@ -132,10 +132,10 @@
             </objects>
             <point key="canvasLocation" x="647" y="549"/>
         </scene>
-        <!--View Controller-->
+        <!--Om Kistan View Controller-->
         <scene sceneID="kci-nn-BjL">
             <objects>
-                <viewController storyboardIdentifier="OmKistanViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4pp-wS-EeZ" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OmKistanViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="4pp-wS-EeZ" customClass="OmKistanViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mSz-go-TRx"/>
                         <viewControllerLayoutGuide type="bottom" id="NhP-Gi-UYc"/>
@@ -150,10 +150,10 @@
             </objects>
             <point key="canvasLocation" x="-574" y="616"/>
         </scene>
-        <!--View Controller-->
+        <!--Om Oss View Controller-->
         <scene sceneID="dIZ-x9-sPa">
             <objects>
-                <viewController storyboardIdentifier="OmossViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r4K-ku-Zvi" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OmossViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r4K-ku-Zvi" customClass="OmOssViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="REV-Ig-45A"/>
                         <viewControllerLayoutGuide type="bottom" id="blP-sL-iNn"/>

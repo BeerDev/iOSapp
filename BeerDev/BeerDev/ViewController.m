@@ -42,7 +42,7 @@
     
     //For Category
     UIScrollView * scrollView;
-   NSMutableDictionary *Categories;
+    NSMutableDictionary *Categories;
     NSInteger catY;
     NSString *type;
     NSString *info;
@@ -1205,7 +1205,7 @@
 #pragma mark - Category
 
 -(void)startCategory{
-    catY = 30;
+    catY = 0;
     NSString * path = [[NSBundle mainBundle] bundlePath];
     NSString * finalPatch = [path stringByAppendingPathComponent:@"CategoryList.plist"];
     Categories = [NSDictionary dictionaryWithContentsOfFile:finalPatch];
