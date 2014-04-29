@@ -24,6 +24,7 @@
     BOOL category;
     BOOL list;
     BOOL product;
+    BOOL didbegin;
     
     BOOL ShowAlphabet;
     BOOL ascendingPrice;
@@ -115,6 +116,7 @@
     [self.view addSubview:_pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
     
+    
     // Set page that is showing
     product = YES;
     //[jsonData SetIndex:1];
@@ -150,6 +152,11 @@
     [self createListButtons];
     
     //Create searchbar and stuff.
+    for (UIView *v in self.pageViewController.view.subviews) {
+        if ([v isKindOfClass:[UIScrollView class]]) {
+            ((UIScrollView *)v).delegate = self;
+        }
+    }
     
     _OursearchBar= [[UISearchBar alloc] initWithFrame:CGRectMake(0,-100, self.view.frame.size.width, 78)];
     _OursearchBar.showsCancelButton = YES;
@@ -201,12 +208,12 @@
         int temp = 0;
         while (temp <1) {
             temp++;
-            [NSThread sleepForTimeInterval:5];
+            [NSThread sleepForTimeInterval:10];
             if([_ForSearchArray count] < [[jsonData GetArray] count] || [_ForSearchArray count] > [[jsonData GetArray] count]){
             _ForSearchArray = [jsonData GetArray];
             _ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_ForSearchArray];
             }
-          //  NSLog(@"sovande bakgrundstråd! temp %d",temp);
+
             temp--;
         }
     });
@@ -368,7 +375,7 @@
     }
      
                      completion:^(BOOL finished) {
-                         NSLog(@"log?");
+
                          self.pageViewController.dataSource = nil;
                          self.pageViewController.dataSource = self;
                              NSLog(@"search bar time %f", [[NSDate date] timeIntervalSinceDate:startDate]);
@@ -759,7 +766,7 @@
     UIImage* priceSortIcon = [UIImage imageNamed:@"Pris"];
    // priceSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     priceSort = [UIButton buttonWithType:UIButtonTypeCustom];
-    priceSort.frame = CGRectMake(64, 20, 50, 50);
+    priceSort.frame = CGRectMake(64, 20, 55, 55);
     
     [priceSort setImage:priceSortIcon forState:UIControlStateNormal];
     priceSort.titleLabel.font = [UIFont systemFontOfSize:20];
@@ -774,7 +781,7 @@
     UIImage* AZ = [UIImage imageNamed:@"A-Z"];
     alphabeticSort = [UIButton buttonWithType:UIButtonTypeCustom];
     //alphabeticSort = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    alphabeticSort.frame = CGRectMake(124, 20, 50, 50);
+    alphabeticSort.frame = CGRectMake(124, 20, 55, 55);
     
     alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
     [alphabeticSort setImage:AZ forState:UIControlStateNormal];
@@ -799,13 +806,13 @@
  //   _dropButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
  //   _dropButton.titleLabel.font = [UIFont systemFontOfSize:24];
     [_dropButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _dropButton.frame = CGRectMake(self.view.frame.size.width-44, 20, 45, 45);
+    _dropButton.frame = CGRectMake(self.view.frame.size.width-55, 20, 55, 55);
     [_dropButton addTarget:self action:@selector(DropMenu) forControlEvents:UIControlEventTouchUpInside];
 
     [self.view addSubview:_dropButton];
     
     _searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _searchButton.frame = CGRectMake(4, 20, 50, 50);
+    _searchButton.frame = CGRectMake(4, 20, 55, 55);
     [_searchButton setImage:magnifier forState:UIControlStateNormal];
     [_searchButton addTarget:self action:@selector(SearchIconPressed)
            forControlEvents:UIControlEventTouchUpInside];
@@ -815,7 +822,7 @@
     [self.view addSubview:_searchButton];
     
     _cancelSearch = [UIButton buttonWithType:UIButtonTypeCustom];
-    _cancelSearch.frame = CGRectMake(4, 20, 50, 50);
+    _cancelSearch.frame = CGRectMake(4, 20, 55, 55);
     [_cancelSearch setImage:magnifierCross forState:UIControlStateNormal];
     [_cancelSearch addTarget:self action:@selector(SearchCancel)
             forControlEvents:UIControlEventTouchUpInside];
@@ -824,17 +831,20 @@
     //  [_searchButton setImageEdgeInsets:UIEdgeInsetsMake(size, size, size, size)];
     [self.view addSubview:_cancelSearch];
     _cancelSearch.hidden = YES;
+    
 }
 
 -(void)DropMenu{
   
     if(button == NO && allowToPress == YES){
           allowToPress = NO;
-
+        
         [self animateButton:_searchButton Hidden:YES Alpa:0];
         [self animateButton:alphabeticSort Hidden:YES Alpa:0];
         [self animateButton:priceSort Hidden:YES Alpa:0];
         [self animateButton:_cancelSearch Hidden:YES Alpa:0];
+    
+
         
         [menu DropDownMenu:self.view.frame.size.width];
         [[menu omOssButton] addTarget:self action:@selector(GoToOmOss) forControlEvents:UIControlEventTouchUpInside];
@@ -862,6 +872,7 @@
     }
     else if (button == YES && allowToPress == YES){
         allowToPress = NO;
+        
         [menu HideDownMenu:self.view.frame.size.width];
          button = NO;
         
@@ -906,8 +917,6 @@
     [self.view bringSubviewToFront:alphabeticSort];
     [self.view bringSubviewToFront:priceSort];
     
-    NSLog(@"%d",_cancelSearch.hidden);
-    
     if([_JsonDataArray count]<[_ForSearchArray count]){
         thereIsResults = YES;
     }else{
@@ -931,7 +940,6 @@
 }
 
 -(void)slideAllViews{
-    NSLog(@"is this running?");
     [UIView animateWithDuration:0.5 animations:^{
         self.pageViewController.view.frame = CGRectMake(0, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
         self.ListController.view.frame = CGRectMake(0, 0,  self.ListController.view.frame.size.width,  self.ListController.view.frame.size.height);
@@ -943,7 +951,7 @@
         self.categoryController.view.frame = CGRectMake(0, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
         
     } completion:^(BOOL finished) {
-        NSLog(@"slide");
+
     }];
 
 }
@@ -992,7 +1000,7 @@
     if (([_JsonDataArray count] == 0) ||( index >= [_JsonDataArray count])) {
         return nil;
     }
-   // NSLog(@"%d",[[jsonData GetArray] count]);
+
     // Create a new view controller and pass suitable data.
     PageContentViewController *pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
     pageContentViewController.pageIndex = index;
@@ -1046,6 +1054,7 @@
 
 
 /*_______________________________________________________________________________________*/
+
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if(noResultsToDisplay == NO){
@@ -1117,7 +1126,14 @@
     [self goToPageIndex:(int)indexPath.row];
     self.pageViewController.dataSource = nil;
     self.pageViewController.dataSource = self;
-    
+        
+        alphabeticSort.alpha = 0 ;
+        alphabeticSort.hidden = YES;
+        priceSort.alpha = 0 ;
+        priceSort.hidden = YES;
+
+        
+        
     [self transitionFromViewController:self.ListController
                       toViewController: self.pageViewController
                               duration:0.4
@@ -1131,10 +1147,13 @@
                                 [self menuBarToFront];
                                 [self viewWillDisappear:NO];
                                 [self animateButton:_dropButton Hidden:NO Alpa:1];
+                                
+
                                 [_OursearchBar resignFirstResponder];
                                 [UIView animateWithDuration:0.5 animations:^{
                                     _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
                                     _OursearchBar.alpha = 0;
+                                    
                                 } completion:^(BOOL finished) {
                                    
                                     //   _dropButton.hidden = NO;
@@ -1253,6 +1272,29 @@
     [scrollView addSubview:CategoryInfo];
     catY = catY + CategoryInfo.frame.size.height+20;
     
+}
+
+#pragma mark - extra
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    
+    if(product == YES && didbegin == NO ){
+        
+    }
+    else if(list == YES){
+        [_OursearchBar resignFirstResponder];
+    }    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    didbegin = NO;
+    NSLog(@"slut?");
+
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if(product == YES){
+   // NSLog(@"??");
+    }
 }
 
 @end

@@ -27,25 +27,12 @@
         [self setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.55]];
         int correction = 30;
         
-        /* 
-         alphabeticSort.titleLabel.font = [UIFont systemFontOfSize:20];
-         [alphabeticSort setImage:AZ forState:UIControlStateNormal];
-         [alphabeticSort setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
-         alphabeticSort.titleLabel.shadowOffset = CGSizeMake(1, 1);
-         
-         // [alphabeticSort setTitle:@"A - Ö" forState:UIControlStateNormal];
-         [alphabeticSort setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-         [alphabeticSort addTarget:self action:@selector(sortAlphabetically) forControlEvents:UIControlEventTouchUpInside];
-         [self.view addSubview:alphabeticSort];
-         */
-        
-       // self.backgroundColor = [UIColor blackColor];
-        //self.alpha = 0.6;
+
         if(self.frame.size.height == 480){
             correction = 0;
             
         }
-        NSLog(@"%f",self.frame.size.height);
+      //  NSLog(@"%f",self.frame.size.height);
 
         _productViewButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_productViewButton setImage:Galleri forState:UIControlStateNormal];
@@ -82,12 +69,12 @@
     [UIView animateWithDuration:0.5 animations:^{
         self.frame = CGRectMake(phoneWidth-menuSize, 0,  menuSize, self.frame.size.height);
     } completion:^(BOOL finished) {
-        NSLog(@"Drop");
+      
     }];
 }
 
 -(void)HideDownMenu:(float)phoneWidth{
-    NSLog(@"Hide");
+
     [UIView animateWithDuration:0.5 animations:^{
         self.frame = CGRectMake(phoneWidth+menuSize, 0,  menuSize, self.frame.size.height);
         
