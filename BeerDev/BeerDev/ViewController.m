@@ -458,9 +458,6 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
-    
-   
-    
     if([scope isEqualToString:@"Namn"]){
    
         searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", searchText]];
@@ -483,18 +480,8 @@
     noResultsToDisplay = NO;
 
     [ourTableView reloadData];
-    
-    if(product == YES && [_JsonDataArray count] != 0){
-        
-        startingViewController = [self viewControllerAtIndex:0];
-        viewControllers = @[startingViewController];
-        
-        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:^(BOOL finished) {
-            _pageViewController.dataSource = nil;
-            _pageViewController.dataSource = self;
-        }];
-        self.pageViewController.dataSource = self;
-    }
+    [self dataSource];
+
 
 }
 #pragma mark - background caching
@@ -1367,6 +1354,7 @@
     [ourTableView reloadData];
    
     [self GoToList];
+    [self dataSource];
 
 }
 
