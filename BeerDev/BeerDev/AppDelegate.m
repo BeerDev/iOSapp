@@ -19,6 +19,26 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSString *docDir = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+ //   NSString *dirName = [docDir stringByAppendingPathComponent:@"MyDir"];
+
+    NSString *tempDir = [docDir stringByAppendingPathComponent:@"imageCache"];
+    
+    [[NSFileManager defaultManager] createDirectoryAtPath:tempDir
+                              withIntermediateDirectories:NO
+                                               attributes:nil
+                                                    error:nil];
+    
+    NSURL *tempDirPathURL = [NSURL fileURLWithPath:tempDir];
+    
+    
+    if ([jsonData addSkipBackupAttributeToItemAtURL:tempDirPathURL]) {
+        NSLog(@"did add attribute!");
+    } else {
+        NSLog(@"adding attribute failed! :(");
+    }
+    
+    
     NSLog(@"reachability in delegate %d",[jsonData connected]);
     if([jsonData connected]==YES && [jsonData GetDataOnline] !=nil){
         NSLog(@"connection");

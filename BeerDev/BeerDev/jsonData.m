@@ -182,7 +182,7 @@ static NSCache * myImageCache;
     if (img != nil) {
         
 
-    path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/%@.png",name]];
+    path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/imageCache/%@.png",name]];
     
     NSData * myImage =UIImagePNGRepresentation(img);
     [myImage writeToFile:path atomically:YES];

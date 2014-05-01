@@ -109,7 +109,7 @@
 +(BOOL)connected;
 
 //skip icloud backup
-//+(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
++(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 
 
 @end

@@ -480,7 +480,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // Load the shared assets in the background.
         //[self loadSceneAssets];
-        NSLog(@"laddning sker på tråd nr %d",threadNumber);
+        //   NSLog(@"laddning sker på tråd nr %d",threadNumber);
         for (int i = threadNumber; i < (int)[_ForSearchArray count] ; i+=2) {
         //    NSLog(@"getting %d",i);
             UIImage* image;
