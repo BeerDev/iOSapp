@@ -41,7 +41,6 @@
     [scrollView setShowsVerticalScrollIndicator:NO];
     [scrollView setShowsHorizontalScrollIndicator:NO];
     [self.view  addSubview:scrollView];
-    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 700);
     [scrollView setScrollEnabled:YES];
    
     
@@ -100,6 +99,7 @@
     contactLabel.textColor = [UIColor whiteColor];
     contactLabel.textAlignment = NSTextAlignmentCenter;
     [scrollView addSubview:contactLabel];
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, Ycord + contactLabel.frame.size.height + 50);
 }
 
 @end

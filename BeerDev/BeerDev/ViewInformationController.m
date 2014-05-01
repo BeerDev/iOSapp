@@ -42,22 +42,19 @@
 
 -(void)createLable
 {
-    Ycord = self.view.frame.size.height*1;
-    //NSLog(@"%ld",(long)Ycord);
-    
     //Skapa namnlabel
-    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord*0.16, self.view.frame.size.width-40, 50)];
+    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.16, self.view.frame.size.width-40, 50)];
     nameLabel.text=_name;
     [self labelTemplet:nameLabel];
     nameLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:25];
     nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.adjustsFontSizeToFitWidth = YES;
-    nameLabel.numberOfLines = 2;
+    nameLabel.numberOfLines = 1;
     //[nameLabel sizeToFit];
     [self.view addSubview:nameLabel];
     
     //Skapa bryggerilable
-    UILabel *brewLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord*0.21, self.view.frame.size.width-40, 50)];
+    UILabel *brewLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.16 + nameLabel.frame.size.height-20, self.view.frame.size.width-40, 50)];
     brewLabel.text=_brygg;
     [self labelTemplet:brewLabel];
     brewLabel.textAlignment = NSTextAlignmentCenter;
@@ -66,33 +63,33 @@
     [self.view addSubview:brewLabel];
     
     //Skapa storlekLabel
-    UILabel *sizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord*0.31, self.view.frame.size.width-40, 50)];
+    UILabel *sizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.31, self.view.frame.size.width-40, 50)];
     sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ ml", _size];
     [self labelTemplet:sizeLabel];
     [self.view addSubview:sizeLabel];
     
     //Skapa prisLabel
-    UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord*0.31, self.view.frame.size.width-40, 50)];
+    UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.31, self.view.frame.size.width-40, 50)];
     priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr*", _SEK];
     [self labelTemplet:priceLabel];
     priceLabel.textAlignment = NSTextAlignmentRight;
     [self.view addSubview:priceLabel];
     
     //Skapa typLabel
-    UILabel *typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord*0.39, self.view.frame.size.width-40, 50)];
+    UILabel *typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.39, self.view.frame.size.width-40, 50)];
     typeLabel.text =_kategori;
     [self labelTemplet:typeLabel];
     [self.view addSubview:typeLabel];
     
     //Skapa procentLabel
-    UILabel *proLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord*0.39, self.view.frame.size.width-40, 50)];
+    UILabel *proLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.39, self.view.frame.size.width-40, 50)];
     proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", _pro];
     [self labelTemplet:proLabel];
     proLabel.textAlignment = NSTextAlignmentRight;
     [self.view addSubview:proLabel];
     
     //Skapa informationlable
-    UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord*0.51, self.view.frame.size.width-40, 50)];
+    UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.51, self.view.frame.size.width-40, 50)];
     infoLabel.text =_information;
     [self labelTemplet:infoLabel];
     infoLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:16];

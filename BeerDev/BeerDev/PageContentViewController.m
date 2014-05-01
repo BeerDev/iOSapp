@@ -258,9 +258,7 @@
     label.textAlignment = NSTextAlignmentLeft;
 }
 - (void) createLabel{
-    Ycord = 430;
-   // NSLog(@"%ld",(long)Ycord);
-    
+    Ycord = 430;    
     //Skapa namnlabel
     nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-90, 50)];
     nameLabel.text= [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];

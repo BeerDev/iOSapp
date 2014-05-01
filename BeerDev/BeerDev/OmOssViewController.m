@@ -39,7 +39,6 @@
     [scrollView setShowsVerticalScrollIndicator:NO];
     [scrollView setShowsHorizontalScrollIndicator:NO];
     [self.view  addSubview:scrollView];
-    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 600);
     [scrollView setScrollEnabled:YES];
     
     [self createOmOss];
@@ -92,12 +91,13 @@
 -(void)createContact:(NSString *)contact{
     UILabel *contactLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-40, 50)];
     contactLabel.text = contact;
-    contactLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
+    contactLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:17];
     contactLabel.shadowColor =[UIColor blackColor];
     contactLabel.shadowOffset = CGSizeMake(1, 1);
     contactLabel.textColor = [UIColor whiteColor];
     contactLabel.textAlignment = NSTextAlignmentCenter;
     [scrollView addSubview:contactLabel];
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, Ycord + contactLabel.frame.size.height + 50);
 }
 
 @end

@@ -214,17 +214,15 @@
          
      }
     [self.view addSubview: _OursearchBar];
+    
     //Category
     ourScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70)];
     ourScrollView.backgroundColor = [UIColor clearColor];
     ourScrollView.showsHorizontalScrollIndicator = NO;
     ourScrollView.showsVerticalScrollIndicator = YES;
-    //[scrollView setDelegate:self];
     [ourScrollView setShowsVerticalScrollIndicator:NO];
     [ourScrollView setShowsHorizontalScrollIndicator:NO];
-    
     [self.categoryController.view  addSubview:ourScrollView];
-    ourScrollView.contentSize = CGSizeMake(self.view.frame.size.width, 4550);
     [ourScrollView setScrollEnabled:YES];
     [self startCategory];
     
@@ -1395,13 +1393,13 @@
     CategoryInfo.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
     CategoryInfo.shadowColor =[UIColor blackColor];
     CategoryInfo.shadowOffset = CGSizeMake(1, 1);
-    //  CategoryInfo.clipsToBounds = YES;
     CategoryInfo.backgroundColor = [UIColor clearColor];
     CategoryInfo.textColor = [UIColor whiteColor];
     CategoryInfo.textAlignment = NSTextAlignmentLeft;
     [CategoryInfo sizeToFit];
     [ourScrollView addSubview:CategoryInfo];
     catY = catY + CategoryInfo.frame.size.height+20;
+    ourScrollView.contentSize = CGSizeMake(self.view.frame.size.width, catY + 50);
     
 }
 
