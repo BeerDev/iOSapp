@@ -11,27 +11,35 @@
 @interface ViewController (){
     
     //declare variables here to be global through this class
-    BOOL button;
-    BOOL noResultsToDisplay;
-    BOOL allowToPress;
+    //bakgrundsbilden
     UIImageView *backgroundView ;
+    //offset som ska användas för scrollning av bilden
     float offset;
-
+    
+    //knappar för att sortera listan
     UIButton* priceSort;
     UIButton* alphabeticSort;
-   
+    
+    //en instans av våran meny.
     DDMenu*menu;
+    //variabler som håller koll på vilken sida du är på/går till.
     BOOL about;
     BOOL kistan;
     BOOL category;
     BOOL list;
     BOOL product;
+    
+    //används för att hålla koll på scrollning
     BOOL didbegin;
     
+    //används för att hjälpa till med sorteringen.
     BOOL ShowAlphabet;
     BOOL ascendingPrice;
     BOOL thereIsResults;
-    BOOL didGoRight;
+    
+    BOOL button;
+    BOOL noResultsToDisplay;
+    BOOL allowToPress;
     
     PageContentViewController *startingViewController;
     NSArray *viewControllers;
@@ -39,6 +47,8 @@
 
     UIImage *magnifierCross;
     UIImage *magnifier;
+    UIImage *heart;
+    UIImage *heartFilled;
     //table
     UITableView *ourTableView;
 
@@ -53,6 +63,8 @@
     int taggen;
     NSMutableArray * typeArray;
     NSArray *tempArray;
+    
+    
 }
 @end
 @implementation ViewController
@@ -66,6 +78,8 @@
     [UIResponder cacheKeyboard];
     magnifier = [UIImage imageNamed:@"magnifier"];
     magnifierCross = [UIImage imageNamed:@"magnifierCross"];
+    heart = [UIImage imageNamed:@"smallnotfilled"];
+    heartFilled = [UIImage imageNamed:@"smallHeartFilled"];
     //this array is used for searching and caching images
     _ForSearchArray = [jsonData GetArray];
     _ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_ForSearchArray];
@@ -74,6 +88,8 @@
     _JsonDataArray = [jsonData GetArray];
     _JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_JsonDataArray];
 
+   // _MyFav = [[NSMutableArray alloc] init];
+    
     [self setButton];
     [self cacheEverything];
     
@@ -218,12 +234,10 @@
         int temp = 0;
         while (temp <1) {
             temp++;
-            [NSThread sleepForTimeInterval:10];
-            if([_ForSearchArray count] < [[jsonData GetArray] count] || [_ForSearchArray count] > [[jsonData GetArray] count]){
+            [NSThread sleepForTimeInterval:30];
+           
             _ForSearchArray = [jsonData GetArray];
             _ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_ForSearchArray];
-            }
-
             temp--;
         }
     });
@@ -237,17 +251,12 @@
 
 #pragma mark - searchBar
 -(void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    
-    
     ShowAlphabet = NO;
 
     [self filterContentForSearchText:searchText
                                scope:[[_OursearchBar scopeButtonTitles]
                                       objectAtIndex:[_OursearchBar
                                                      selectedScopeButtonIndex]]];
-    
-    
-
     
     if([searchResults count]>0){
     noResultsToDisplay = NO;
@@ -275,9 +284,7 @@
     }
     
     if(product == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
-
         [self dataSource];
-      //  [self animateButton:_cancelSearch Hidden:NO Alpa:1];
     }
 }
 
@@ -396,30 +403,7 @@
     }];
 }
 
--(void)animateButton:(UIButton*)Button Hidden:(BOOL)yesOrNo Alpa:(int)zeroOrOne{
-    
-    if(Button.hidden == YES){
-    Button.hidden = yesOrNo;
-    
-    //UIButton
-    [UIView animateWithDuration:0.35 animations:^{
-        Button.alpha = zeroOrOne;
-    }
-     
-                     completion:^(BOOL finished) {
-                     }];
 
-    }
-    else {
-        [UIView animateWithDuration:0.35 animations:^{
-            Button.alpha = zeroOrOne;
-        }
-         
-                         completion:^(BOOL finished) {
-                                Button.hidden = yesOrNo;
-                         }];
-    }
-}
 
 -(void)noResultsAlert{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
@@ -521,6 +505,9 @@
           //  NSLog(@"getting %d",i);
             UIImage* image;
             if([jsonData LoadFromDisk:[jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]]] == nil){
+                
+             //  NSLog(@"returns? %d", [jsonData addSkipBackupAttributeToItemAtURL:[NSURL URLWithString:[_ForSearchArray[i]objectForKey:@"URL"]]]);
+                
                 
                 NSData* imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[_ForSearchArray[i]objectForKey:@"URL"]]];
                 image = [[UIImage alloc] initWithData:imageData];
@@ -951,6 +938,31 @@
 
 }
 
+-(void)animateButton:(UIButton*)Button Hidden:(BOOL)yesOrNo Alpa:(int)zeroOrOne{
+    
+    if(Button.hidden == YES){
+        Button.hidden = yesOrNo;
+        
+        //UIButton
+        [UIView animateWithDuration:0.35 animations:^{
+            Button.alpha = zeroOrOne;
+        }
+         
+                         completion:^(BOOL finished) {
+                         }];
+        
+    }
+    else {
+        [UIView animateWithDuration:0.25 animations:^{
+            Button.alpha = zeroOrOne;
+        }
+         
+                         completion:^(BOOL finished) {
+                             Button.hidden = yesOrNo;
+                         }];
+    }
+}
+
 #pragma mark - Sorting indexs in tableView
 
 -(void)sortAlphabetically{
@@ -1012,7 +1024,6 @@
     if ((index == 0) || (index == NSNotFound)) {
         return nil;
     }
-    didGoRight = NO;
     index--;
     return [self viewControllerAtIndex:index];
 }
@@ -1024,7 +1035,6 @@
     if (index == NSNotFound) {
         return nil;
     }
-    didGoRight = YES;
     index++;
     if (index == [_JsonDataArray count]) {
         return nil;
@@ -1037,9 +1047,7 @@
     if(!completed ){
         return;
     }
-   
-    
-     //  NSLog(@"did go right ? %d",didGoRight);
+
 }
 
 
@@ -1079,8 +1087,6 @@
     static NSString *simpleTableIdentifier = @"myCell";
     //skapa en cell med identifieraren ovan
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
-    
-    
     //denna kod används för inga resultat i sökningen
     if (noResultsToDisplay) {
         cell.textLabel.text = @"Inga träffar";
@@ -1092,6 +1098,30 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
     }
+        
+    /*
+        if([self checkIfInFav:[_JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]] == NO){
+            NSLog(@"fanns ej");
+            
+            UIButton* addToFav = [UIButton buttonWithType:UIButtonTypeCustom];
+            //[addToFav setTitle:@"add" forState:UIControlStateNormal];
+            [addToFav setImage:heart forState:UIControlStateNormal];
+            [addToFav setTag:[indexPath row]];
+            addToFav.frame = CGRectMake(255,51,50,50);
+            [addToFav addTarget:self action:@selector(favButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [cell.contentView addSubview:addToFav];
+        }else{
+            NSLog(@"fanns");
+            UIButton* removeFromFav = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+           // [removeFromFav setTitle:@"remove" forState:UIControlStateNormal];
+            [removeFromFav setImage:heartFilled forState:UIControlStateNormal];
+            [removeFromFav setTag:[indexPath row]];
+            removeFromFav.frame = CGRectMake(255,51,50,50);
+            [removeFromFav addTarget:self action:@selector(favButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [cell.contentView addSubview:removeFromFav];
+        }
+     */
+    
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
     //ställ in texten i cellen
     cell.backgroundColor = [UIColor clearColor];
@@ -1118,6 +1148,31 @@
     }
     return cell;
 }
+/*
+-(BOOL)checkIfInFav:(NSString*)artikelnamnet{
+    NSLog(@"artikelnamn att jämföra med %@",artikelnamnet);
+    for(int i =0;i<[_MyFav count]; i++){
+        NSLog(@"myfav array %@",[_MyFav[i] objectForKey:@"Artikelnamn"]);
+        
+        if([[_MyFav[i] objectForKey:@"ArtikelNamn"] isEqualToString:artikelnamnet]){
+            NSLog(@"hittade %@",[_MyFav[i] objectForKey:@"ArtikelNamn"]);
+            return YES;
+        }
+    }
+    return NO;
+}
+
+-(void)favButtonClicked:(UIButton *)sender{
+    
+   BOOL isinfav = [self checkIfInFav:[[_JsonDataArray objectAtIndex:sender.tag] objectForKey:@"Artikelnamn"]];
+    if (isinfav == NO) {
+        [_MyFav addObject:[_JsonDataArray objectAtIndex:sender.tag]];
+        NSLog(@"%@",_MyFav);
+    }
+    
+}
+*/
+
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     //NSUInteger row = [indexPath row];
@@ -1129,9 +1184,6 @@
     [jsonData SetIndex:indexPath.row];
     
     [self goToPageIndex:(int)indexPath.row];
-    self.pageViewController.dataSource = nil;
-    self.pageViewController.dataSource = self;
-        
         alphabeticSort.alpha = 0 ;
         alphabeticSort.hidden = YES;
         priceSort.alpha = 0 ;
@@ -1238,10 +1290,7 @@
         didbegin =YES;
         [_OursearchBar resignFirstResponder];
     }
-    
     _contentOffsetInPage = scrollView.contentOffset.x;
-    
-    
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
@@ -1254,28 +1303,38 @@
 //EJ FÄRDIG KOD HÄR
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     if(product == YES){
-      //  NSLog(@"offset %f",scrollView.contentOffset.x);
         ScrollDirection scrollDirection;
         if (_contentOffsetInPage > scrollView.contentOffset.x){
             scrollDirection = ScrollDirectionRight;
-            offset=(scrollView.contentOffset.x)/6;
+
         }
         else if (_contentOffsetInPage < scrollView.contentOffset.x){
             scrollDirection = ScrollDirectionLeft;
 
-        offset=(scrollView.contentOffset.x)/6;
-            offset-=1;
+ //       offset=(scrollView.contentOffset.x)/4;
         }
         
+  //  _contentOffsetInPage = scrollView.contentOffset.x;
+  //  backgroundView.frame = CGRectMake(320-offset, 0, self.view.frame.size.width, self.view.frame.size.height);
 
-      //  backgroundView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-       // _contentOffsetInPage = scrollView.contentOffset.x;
     }
- 
-    
-
 }
 
+-(BOOL)canBecomeFirstResponder{
+    return YES;
+}
+
+-(void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event{
+    if (motion == UIEventSubtypeMotionShake && product == YES) {
+        NSLog(@"shake");
+        [self goToPageIndex:(int)[self getRandomNumberBetween:0 maxNumber:[_JsonDataArray count]-1]];
+    }
+
+}
+- (NSInteger)getRandomNumberBetween:(NSInteger)min maxNumber:(NSInteger)max
+{
+    return min + arc4random() % (max - min + 1);
+}
 
 #pragma mark - Category
 -(void)startCategory{

@@ -131,7 +131,7 @@
             self.completionHandler();
     }else{
         self.displayImage.image = image;
-        NSLog(@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]);
+        //NSLog(@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]);
         [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)_pageIndex name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
         
         /*

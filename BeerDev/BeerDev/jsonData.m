@@ -88,6 +88,22 @@ static NSCache * myImageCache;
     JSONARRAY = myObject;
 }
 
+
++(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
+{
+    NSLog(@"excluding");
+    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+    
+    NSError *error = nil;
+    BOOL success =  [URL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
+    
+    if(!success){
+        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    
+    return success;
+}
+
 +(NSArray*)GetArray{
     return JSONARRAY;
 }

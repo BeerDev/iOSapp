@@ -108,5 +108,8 @@
 //connection
 +(BOOL)connected;
 
+//skip icloud backup
+//+(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
+
 
 @end
