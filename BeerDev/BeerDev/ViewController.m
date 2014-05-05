@@ -31,6 +31,7 @@
     
     //används för att hålla koll på scrollning
     BOOL didbegin;
+    BOOL SwipeAway;
     
     //används för att hjälpa till med sorteringen.
     BOOL ShowAlphabet;
@@ -822,6 +823,7 @@
   
     if(button == NO && allowToPress == YES){
           allowToPress = NO;
+        SwipeAway = YES;
         
         [self animateButton:_searchButton Hidden:YES Alpa:0];
         [self animateButton:alphabeticSort Hidden:YES Alpa:0];
@@ -856,6 +858,7 @@
     }
     else if (button == YES && allowToPress == YES){
         allowToPress = NO;
+        SwipeAway = NO;
         
         [menu HideDownMenu:self.view.frame.size.width];
          button = NO;
@@ -960,7 +963,13 @@
                          }];
     }
 }
-
+- (IBAction)SwipeAwayMenu:(id)sender {
+    if(SwipeAway == YES){
+        SwipeAway = NO;
+        [self DropMenu];
+    
+    }
+}
 #pragma mark - Sorting indexs in tableView
 
 -(void)sortAlphabetically{
