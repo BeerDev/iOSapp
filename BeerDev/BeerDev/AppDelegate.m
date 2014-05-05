@@ -92,19 +92,13 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    UIActivityIndicatorView *aiv = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    aiv.center = self.window.rootViewController.view.center;
-    [self.window.rootViewController.view addSubview:aiv];
-   
-    
-    
     if([jsonData connected]==YES){
         NSLog(@"connection on enterForeground");
         [jsonData SetJSON:[jsonData GetDataOnline]];
         [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
         NSLog(@"count %lu",(unsigned long)[[jsonData GetArray] count]);
-      //  [aiv stopAnimating];
-      //  [aiv removeFromSuperview];
+
+    }else{
     }
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
