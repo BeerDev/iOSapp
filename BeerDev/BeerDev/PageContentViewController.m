@@ -132,7 +132,7 @@
     }else{
         self.displayImage.image = image;
         //NSLog(@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]);
-        [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)_pageIndex name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
+     //   [jsonData SetFilePath:[jsonData writeToDisc:image name:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];
         
         /*
          [jsonData SetFilePath:[jsonData writeToDisc:image index:(int)_pageIndex] key:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]];

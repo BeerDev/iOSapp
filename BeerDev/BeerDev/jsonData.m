@@ -174,7 +174,7 @@ static NSCache * myImageCache;
 }
 
 
-+(NSString*)writeToDisc:(UIImage*)img index:(int)index name:(NSString*)name{
++(NSString*)writeToDisc:(UIImage*)img name:(NSString*)name{
     
     NSString *path = nil;
     

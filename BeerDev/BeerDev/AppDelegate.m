@@ -103,8 +103,8 @@
         [jsonData SetJSON:[jsonData GetDataOnline]];
         [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
         NSLog(@"count %lu",(unsigned long)[[jsonData GetArray] count]);
-        [aiv stopAnimating];
-        [aiv removeFromSuperview];
+      //  [aiv stopAnimating];
+      //  [aiv removeFromSuperview];
     }
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }

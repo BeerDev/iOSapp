@@ -100,7 +100,7 @@
 
 
 //write to file and get from file
-+(NSString*)writeToDisc:(UIImage*)img index:(int)index name:(NSString*)name;
++(NSString*)writeToDisc:(UIImage*)img name:(NSString*)name;
 +(UIImage*)LoadFromDisk:(NSString*)url;
 +(void)SetFilePath:(NSString*)path key:(NSString*)key;
 +(NSString*)GetFilePath:(NSString*)key;

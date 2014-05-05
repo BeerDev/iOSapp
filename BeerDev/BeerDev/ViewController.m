@@ -46,6 +46,7 @@
     NSArray *viewControllers;
     NSArray *indexTitle;
 
+    UIImage* MENU;
     UIImage *magnifierCross;
     UIImage *magnifier;
     UIImage *heart;
@@ -451,6 +452,47 @@
     }
 }
 
+-(void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope{
+
+    if(selectedScope == 0){
+        
+        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", _OursearchBar.text]];
+    }else if(selectedScope == 1){
+        
+        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Kategori contains[c] %@", _OursearchBar.text]];
+        
+    }
+    if([searchResults count]>0){
+        noResultsToDisplay = NO;
+        _JsonDataArray = searchResults;
+        tempArray = searchResults;
+        [ourTableView reloadData];
+    }
+    else if ([searchResults count] ==0 && product == YES){
+        _JsonDataArray = tempArray;
+        noResultsToDisplay = NO;
+        
+        
+    }
+    else if ([searchResults count] ==0 && list == YES){
+        _JsonDataArray = nil;
+        
+        noResultsToDisplay = YES;
+        [ourTableView reloadData];
+        
+    }
+    if([_OursearchBar.text isEqualToString:@""]){
+        noResultsToDisplay = NO;
+        _JsonDataArray = _ForSearchArray;
+        [ourTableView reloadData];
+    }
+    
+    if(product == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
+        [self dataSource];
+    }
+
+}
+
 -(void)SearchCancel{
     [self animateButton:_cancelSearch Hidden:YES Alpa:0];
     [self animateButton:_searchButton Hidden:NO Alpa:1];
@@ -469,8 +511,8 @@
 }
 #pragma mark - background caching
 -(void)cacheEverything{
-    int threadNumber = 1;
-    int MaxThreads = 2;
+    int threadNumber = 0;
+    int MaxThreads = 1;
     NSDate *startDate = [NSDate date];
     while(threadNumber <MaxThreads+1){
    
@@ -491,7 +533,7 @@
                 
                 if(image !=nil){
                    // NSLog(@ "cached image nr %d",i);
-                    [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]];
+                    [jsonData SetFilePath:[jsonData writeToDisc:image name:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]];
                 }
             }
         }
@@ -513,7 +555,7 @@
                 
                 if(image !=nil){
                    // NSLog(@"cached image nr %d",i);
-                    [jsonData SetFilePath:[jsonData writeToDisc:image index:i name:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]];
+                    [jsonData SetFilePath:[jsonData writeToDisc:image name:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]];
                 }
             }
         }
@@ -554,6 +596,8 @@
                                 [self slideAllViews];
                                 [self.view bringSubviewToFront:_OursearchBar];
                                 [self menuBarToFront];
+                                [_dropButton setImage:MENU forState:UIControlStateNormal];
+                                
                                 
             }];
     if(product == YES || list == YES){
@@ -568,6 +612,7 @@
     }else{
             alphabeticSort.hidden = YES;
             priceSort.hidden = YES;
+         [_dropButton setImage:MENU forState:UIControlStateNormal];
         }
 }
 
@@ -607,6 +652,7 @@
         button = NO;
         [self slideAllViews];
         [self menuBarToFront];
+         [_dropButton setImage:MENU forState:UIControlStateNormal];
     }
 }
 
@@ -641,6 +687,7 @@
         button = NO;
         [self slideAllViews];
         [self menuBarToFront];
+         [_dropButton setImage:MENU forState:UIControlStateNormal];
     }
 }
 
@@ -675,6 +722,7 @@
         button = NO;
         [self slideAllViews];
         [self menuBarToFront];
+         [_dropButton setImage:MENU forState:UIControlStateNormal];
     }
 }
 -(void)GoToOmKistan{
@@ -708,6 +756,7 @@
         button = NO;
         [self slideAllViews];
         [self menuBarToFront];
+         [_dropButton setImage:MENU forState:UIControlStateNormal];
     }
 }
 
@@ -742,6 +791,7 @@
         button = NO;
         [self slideAllViews];
         [self menuBarToFront];
+         [_dropButton setImage:MENU forState:UIControlStateNormal];
     }
 }
 
@@ -781,7 +831,7 @@
 
 -(void)setButton{
     button = NO;
-    UIImage* MENU = [UIImage imageNamed:@"menu"];
+    MENU = [UIImage imageNamed:@"menu"];
        _dropButton = [UIButton buttonWithType:UIButtonTypeCustom];
   //  _dropButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
   //  [_dropButton setTitle:@"▼" forState:UIControlStateNormal];
@@ -822,9 +872,9 @@
 -(void)DropMenu{
   
     if(button == NO && allowToPress == YES){
-          allowToPress = NO;
+        allowToPress = NO;
         SwipeAway = YES;
-        
+        [_dropButton setImage:magnifierCross forState:UIControlStateNormal];
         [self animateButton:_searchButton Hidden:YES Alpa:0];
         [self animateButton:alphabeticSort Hidden:YES Alpa:0];
         [self animateButton:priceSort Hidden:YES Alpa:0];
@@ -859,7 +909,7 @@
     else if (button == YES && allowToPress == YES){
         allowToPress = NO;
         SwipeAway = NO;
-        
+        [_dropButton setImage:MENU forState:UIControlStateNormal];
         [menu HideDownMenu:self.view.frame.size.width];
          button = NO;
         
@@ -1091,9 +1141,10 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     //används för identifiering
-    static NSString *simpleTableIdentifier = @"myCell";
+    static NSString *simpleTableIdentifier = nil;
     //skapa en cell med identifieraren ovan
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+
     //denna kod används för inga resultat i sökningen
     if (noResultsToDisplay) {
         cell.textLabel.text = @"Inga träffar";
@@ -1106,28 +1157,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
     }
         
-    /*
-        if([self checkIfInFav:[_JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"]] == NO){
-            NSLog(@"fanns ej");
-            
-            UIButton* addToFav = [UIButton buttonWithType:UIButtonTypeCustom];
-            //[addToFav setTitle:@"add" forState:UIControlStateNormal];
-            [addToFav setImage:heart forState:UIControlStateNormal];
-            [addToFav setTag:[indexPath row]];
-            addToFav.frame = CGRectMake(255,51,50,50);
-            [addToFav addTarget:self action:@selector(favButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [cell.contentView addSubview:addToFav];
-        }else{
-            NSLog(@"fanns");
-            UIButton* removeFromFav = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-           // [removeFromFav setTitle:@"remove" forState:UIControlStateNormal];
-            [removeFromFav setImage:heartFilled forState:UIControlStateNormal];
-            [removeFromFav setTag:[indexPath row]];
-            removeFromFav.frame = CGRectMake(255,51,50,50);
-            [removeFromFav addTarget:self action:@selector(favButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [cell.contentView addSubview:removeFromFav];
-        }
-     */
+    //create label
+
     
     cell.imageView.image = [UIImage imageNamed:@"placeholderbild"];
     //ställ in texten i cellen
@@ -1142,7 +1173,7 @@
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     cell.imageView.frame = CGRectMake(0,0,40 ,40);
     cell.contentMode = UIViewContentModeScaleAspectFill;
-    cell.textLabel.text = [NSString stringWithFormat:@"%@\n%@ kr* %@",[_JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"],[_JsonDataArray[indexPath.row] objectForKey:@"Utpris exkl moms"],[_JsonDataArray[indexPath.row] objectForKey:@"Kategori"]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@\n%@",[_JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"],[_JsonDataArray[indexPath.row] objectForKey:@"Kategori"]];
     
     //[JsonDataArray[indexPath.row] objectForKey:@"Artikelnamn"];
 
@@ -1151,6 +1182,17 @@
     if (imgFromMem != nil){
         cell.imageView.image = imgFromMem;
         }
+        
+        UILabel *priceLabel;
+        priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(250,50,60,20)];
+        [priceLabel setFont:[UIFont fontWithName:@"Helvetica" size:14]];
+        priceLabel.text =[NSString stringWithFormat:@"%@ kr*",[_JsonDataArray[indexPath.row] objectForKey:@"Utpris exkl moms"]];
+        priceLabel.backgroundColor=[UIColor clearColor];
+        priceLabel.numberOfLines=1;
+        priceLabel.textColor = [UIColor whiteColor];
+        priceLabel.shadowColor =[UIColor blackColor];
+        priceLabel.shadowOffset = CGSizeMake(1, 1);
+        [cell.contentView addSubview:priceLabel];
         
     }
     return cell;
