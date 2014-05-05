@@ -455,7 +455,6 @@
 -(void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope{
 
     if(selectedScope == 0){
-        
         searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", _OursearchBar.text]];
     }else if(selectedScope == 1){
         
@@ -1147,10 +1146,21 @@
 
     //denna kod används för inga resultat i sökningen
     if (noResultsToDisplay) {
+
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:simpleTableIdentifier];
+        }
         cell.textLabel.text = @"Inga träffar";
         cell.imageView.image = nil;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backgroundColor = [UIColor clearColor];
+        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.textLabel.shadowColor =[UIColor blackColor];
+        cell.textLabel.shadowOffset = CGSizeMake(1, 1);
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        cell.textLabel.font = [UIFont systemFontOfSize:14];
 
+        
     }else{
     //om den inte är nil så allocera en ny cell, skapa med en stil och använd identifieraren ovan
     if (cell == nil) {
