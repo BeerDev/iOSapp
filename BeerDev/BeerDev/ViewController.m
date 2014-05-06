@@ -64,6 +64,8 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    self.view.multipleTouchEnabled=NO;
+    self.view.exclusiveTouch = YES;
     //this array is used for searching and caching images.
     _ForSearchArray = [jsonData GetArray];
     _ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_ForSearchArray];
@@ -717,6 +719,13 @@
     [self.view bringSubviewToFront:_cancelSearch];
     
     allowToPress = YES;
+
+    for(UIView* v in self.view.subviews){
+        if([v isKindOfClass:[UIButton class]]){
+            UIButton* btn = (UIButton*)v;
+            [btn setExclusiveTouch:YES];
+        }
+    }
 }
 
 -(void)DropMenu{
@@ -770,7 +779,7 @@
             if( (listViewIsShowing == YES  && thereIsResults == NO) || (productViewIsShowing == YES && thereIsResults == NO)){
                 [self animateButton:_searchButton Hidden:NO Alpa:1];
             }
-            else if(thereIsResults == YES){
+            else if((listViewIsShowing == YES  && thereIsResults == YES) ||(productViewIsShowing == YES && thereIsResults == YES)){
                 [self animateButton:_cancelSearch Hidden:NO Alpa:1];
             }
             if(listViewIsShowing == YES){
@@ -855,14 +864,14 @@
                          }];
     }
 }
-
+/*
 - (IBAction)SwipeAwayMenu:(id)sender {
     if(SwipeAway == YES){
         SwipeAway = NO;
         [self DropMenu];
     }
 }
-
+*/
 #pragma mark - Sorting indexs in tableView
 
 -(void)sortAlphabetically{
@@ -1229,6 +1238,57 @@ BOOL returningFromBackgroundWithConnection;
 +(BOOL)restartCache:(bool)forCache{
     returningFromBackgroundWithConnection = forCache;
     return returningFromBackgroundWithConnection;
+}
+
+#pragma mark - Touch
+
+float difference;
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    CGPoint contentTouchPoint = [[touches anyObject] locationInView:menu];
+    difference = contentTouchPoint.x;
+    NSLog(@"hej");
+}
+
+-(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+    
+    CGPoint pointInView = [[touches anyObject] locationInView:self.view];
+    
+    float xTarget = pointInView.x - difference;
+    if(xTarget > menu.frame.size.width)
+        xTarget = menu.frame.size.width;
+    else if( xTarget < 0)
+        xTarget = 0;
+    NSLog(@"%f",xTarget);
+    [UIView animateWithDuration:.25
+                     animations:^{
+                         [menu HideDownMenuWithStyle:self.view.frame.size.width xCord:xTarget];
+
+                       //  [ setFrame:CGRectMake(xTarget, content.frame.origin.y, content.frame.size.width, content.frame.size.height)];
+                     }
+     ];
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    
+    
+    CGPoint endPoint = [[touches anyObject] locationInView:self.view];
+    float xTarget = endPoint.x - difference;
+    NSLog(@"%f",xTarget);
+    if(xTarget > (menu.frame.size.width/4)){
+        xTarget = 0;
+        [UIView animateWithDuration:.25
+                     animations:^{
+                         
+                         [self DropMenu];
+                         //[menu HideDownMenu:self.view.frame.size.width];
+                     }
+         ];}
+    else{
+        //xTarget = menu.frame.size.width;
+        [menu  DropDownMenu:self.view.frame.size.width];
+    }
+    
+
 }
 
 @end

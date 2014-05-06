@@ -19,6 +19,7 @@
 
 -(void)DropDownMenu:(float)phoneWidth;
 -(void)HideDownMenu:(float)phoneWidth;
+-(void)HideDownMenuWithStyle:(float)phoneWidth xCord:(float)xTarget;
 
 @property (strong, nonatomic) IBOutlet UIButton *omOssButton;
 @property (strong, nonatomic) IBOutlet UIButton *omKistanButton;
