@@ -1195,20 +1195,6 @@
     
     [ourScrollView addSubview:categoryInfo];
     catY = catY + 50;
-/*
-    UILabel *CategoryInfo = [[UILabel alloc]initWithFrame:CGRectMake(20, catY, self.view.frame.size.width-40, 50)];
-    CategoryInfo.text = type;
-    CategoryInfo.numberOfLines = 1;
-    CategoryInfo.font = [UIFont fontWithName:@"Helvetica-Light" size:30];
-    CategoryInfo.shadowColor =[UIColor blackColor];
-    CategoryInfo.shadowOffset = CGSizeMake(1, 1);
-    // CategoryInfo.clipsToBounds = YES;
-    CategoryInfo.backgroundColor = [UIColor clearColor];
-    CategoryInfo.textColor = [UIColor whiteColor];
-    CategoryInfo.textAlignment = NSTextAlignmentCenter;
-    [scrollView addSubview:CategoryInfo];
-    catY = catY + 50;
- */
 }
 
 -(void)createCategoryBody{
