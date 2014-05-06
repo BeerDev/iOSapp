@@ -8,65 +8,40 @@
 
 #import "jsonData.h"
 
-
 @implementation jsonData
 static NSArray* JSONARRAY = nil;
 static NSCache * myImageCache;
-//@synthesize jsonObjects = _jsonObjects;
 
--(id)init {
-    if (self = [super init]) {
-       
-    }
-    return self;
-}
-
-
-
-
-
-
-+(NSData*)GetDataOnline{
-    
++(NSData *)GetDataOnline{
     NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://beerdev.tk/sortiment.json"]];
     return jsonData;
 }
 
-+(NSData*)GetDataOffline{
-    NSString*path = [[NSBundle mainBundle] bundlePath];
-    NSString*finalPatch = [path stringByAppendingPathComponent:@"json.json"];
++(NSData *)GetDataOffline{
+    NSString *path = [[NSBundle mainBundle] bundlePath];
+    NSString *finalPatch = [path stringByAppendingPathComponent:@"json.json"];
     NSData *jsonData = [NSData dataWithContentsOfFile:finalPatch];
-  //  NSLog(@"%@",jsonData);
     return jsonData;
-
 }
 
-+(void)SetJSON:(NSData*)data{
-    
++(void)SetJSON:(NSData *)data{
     id jsonObjects = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
-
     // Define keys
-    NSString* info = @"Info";
-    NSString* url = @"URL";
-    NSString* price = @"Utpris exkl moms";
-    NSString* brewery = @"Bryggeri";
-    NSString* name = @"Artikelnamn";
-    NSString* alc = @"Alkoholhalt";
-    NSString* size = @"Storlek";
-    NSString* category = @"Kategori";
-    //specialt thing
-   // NSString* toApp = @"Till App";
-    
+    NSString *info = @"Info";
+    NSString *url = @"URL";
+    NSString *price = @"Utpris exkl moms";
+    NSString *brewery = @"Bryggeri";
+    NSString *name = @"Artikelnamn";
+    NSString *alc = @"Alkoholhalt";
+    NSString *size = @"Storlek";
+    NSString *category = @"Kategori";
     // Create array to hold dictionaries
     NSMutableArray *myObject = [[NSMutableArray alloc] init];
-    
-
-    
-    // values in foreach loop
-    for (NSDictionary *dataDict in jsonObjects) {
+    // Values in foreach loop
+    for (NSDictionary *dataDict in jsonObjects){
         NSString *artikelnamn = [dataDict objectForKey:name];
         NSString *bild = [dataDict objectForKey:url];
-        NSNumber* pris =  [dataDict objectForKey:price];
+        NSNumber *pris =  [dataDict objectForKey:price];
         NSString *bryggeri = [dataDict objectForKey:brewery];
         NSString *information = [dataDict objectForKey:info];
         NSString *alkohol = [dataDict objectForKey:alc];
@@ -88,19 +63,15 @@ static NSCache * myImageCache;
     JSONARRAY = myObject;
 }
 
-
-+(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
-{
++(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL{
     NSLog(@"excluding");
     assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
-    
     NSError *error = nil;
     BOOL success =  [URL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
     
     if(!success){
-        NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+       NSLog(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
     }
-    
     return success;
 }
 
@@ -108,21 +79,17 @@ static NSCache * myImageCache;
     return JSONARRAY;
 }
 
-+(void)SetArrayForKey:(NSMutableArray*)jsonData forKey:(NSString*)key
-{
++(void)SetArrayForKey:(NSMutableArray *)jsonData forKey:(NSString *)key{
 	NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-	if (standardUserDefaults)
-    {
+	if(standardUserDefaults){
 		[standardUserDefaults setObject:jsonData forKey:key];
 		[standardUserDefaults synchronize];
 	}
-
 }
 
-+(NSArray*)GetJsonArray:(NSString*)key
-{
-    NSArray* jsonData = nil;
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:key]){
++(NSArray *)GetJsonArray:(NSString *)key{
+    NSArray *jsonData = nil;
+    if([[NSUserDefaults standardUserDefaults] objectForKey:key]){
         jsonData = [[NSUserDefaults standardUserDefaults] mutableArrayValueForKey:key];
     }
     return jsonData;
@@ -132,12 +99,9 @@ static NSCache * myImageCache;
     JSONARRAY = array;
 }
 
-
 +(void)SetIndex:(NSInteger)index{
-
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-	if (standardUserDefaults)
-    {
+	if(standardUserDefaults){
 		[standardUserDefaults setInteger:index forKey:@"index"];
 		[standardUserDefaults synchronize];
 	}
@@ -145,6 +109,7 @@ static NSCache * myImageCache;
 
 +(NSInteger)GetIndex{
     NSInteger myIndex = 0;
+    
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"index"]){
         myIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"index"];
     }
@@ -153,104 +118,76 @@ static NSCache * myImageCache;
 
 +(void)SetCache{
     myImageCache = [[NSCache alloc] init];
-    //[myImageCache setCountLimit:2];
-  //  NSLog(@"%d",(int)[myImageCache countLimit]);
 }
 
-+(void)SetCacheItemForKey:(UIImage*)image forKey:(NSString*)key{
++(void)SetCacheItemForKey:(UIImage *)image forKey:(NSString *)key{
     [myImageCache setObject:image forKey:key];
-    
-  //  [self writeToDisc:image index:0 name:key];
 }
 
-+(UIImage*)GetCachedImage:(NSString*)forKey{
-    UIImage * cachedImage = [myImageCache objectForKey:forKey];
++(UIImage *)GetCachedImage:(NSString *)forKey{
+    UIImage *cachedImage = [myImageCache objectForKey:forKey];
     
     return cachedImage;
 }
 
-+(void)cacheEverythingAtStart{
-
-}
-
-
-+(NSString*)writeToDisc:(UIImage*)img name:(NSString*)name{
-    
++(NSString *)writeToDisc:(UIImage*)img name:(NSString *)name{
     NSString *path = nil;
-    
     //write a path only if there is an image
-    if (img != nil) {
-        
-
-    path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/imageCache/%@.png",name]];
-    
-    NSData * myImage =UIImagePNGRepresentation(img);
-    [myImage writeToFile:path atomically:YES];
-  //  NSLog(@"path %@",path);
+    if(img != nil){
+        path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/imageCache/%@.png",name]];
+        NSData *myImage =UIImagePNGRepresentation(img);
+        [myImage writeToFile:path atomically:YES];
     }
     return path;
-
 }
 
-+(UIImage*)LoadFromDisk:(NSString*)path{
- //   NSLog(@"file to get %@",path);
++(UIImage *)LoadFromDisk:(NSString *)path{
     UIImage *image = nil;
     if(path !=nil){
-    NSData* imageData = [NSData dataWithContentsOfFile:path];
-    image = [UIImage imageWithData:imageData];
+        NSData *imageData = [NSData dataWithContentsOfFile:path];
+        image = [UIImage imageWithData:imageData];
     }
     return image;
 }
 
-
-+(void)SetFilePath:(NSString*)path key:(NSString*)key{
-   // NSLog(@"Skriver PATH: %@  KEY: %@",path,key);
-    if(path !=nil){
-    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-	if (standardUserDefaults)
-    {
-		[standardUserDefaults setObject:path forKey:key];
-		[standardUserDefaults synchronize];
-	}
++(void)SetFilePath:(NSString *)path key:(NSString *)key{
+    if(path != nil){
+        NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+        if (standardUserDefaults){
+            [standardUserDefaults setObject:path forKey:key];
+            [standardUserDefaults synchronize];
+        }
     }
 }
 
-+(NSString*)GetFilePath:(NSString*)key{
-    NSString* path = nil;
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:key]){
++(NSString *)GetFilePath:(NSString *)key{
+    NSString *path = nil;
+    if([[NSUserDefaults standardUserDefaults] objectForKey:key]){
         path = [[NSUserDefaults standardUserDefaults] objectForKey:key];
     }
-        //NSLog(@"Hämtar PATH: %@  KEY: %@",path,key);
     return path;
 }
 
-
-
-+ (void)removeImage:(NSString *)fileName
-{
++ (void)removeImage:(NSString *)fileName{
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    
     NSString *filePath = [documentsPath stringByAppendingPathComponent:fileName];
     NSError *error;
     BOOL success = [fileManager removeItemAtPath:filePath error:&error];
-    if (success) {
+    if (success){
         UIAlertView *removeSuccessFulAlert=[[UIAlertView alloc]initWithTitle:@"Congratulation:" message:@"Successfully removed" delegate:self cancelButtonTitle:@"Close" otherButtonTitles:nil];
         [removeSuccessFulAlert show];
     }
-    else
-    {
+    else{
         NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
     }
-
 }
 
 +(BOOL)connected{
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [reachability currentReachabilityStatus];
+    
     return networkStatus != NotReachable;
 }
-
-
 
 @end

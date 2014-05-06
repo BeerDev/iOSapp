@@ -25,23 +25,26 @@
 static BOOL hasAlreadyCachedKeyboard;
 
 @interface UIResponder (KeyboardCache_Private)
+
 +(void) __cacheKeyboard;
+
 @end
 
 @implementation UIResponder (KeyboardCache)
 
-+(void) cacheKeyboard {
++(void)cacheKeyboard {
     [[self class] cacheKeyboard:NO];
 }
 
-+(void) cacheKeyboard:(BOOL)onNextRunloop {
-    if (! hasAlreadyCachedKeyboard)
-    {
++(void) cacheKeyboard:(BOOL)onNextRunloop{
+    if (! hasAlreadyCachedKeyboard){
         hasAlreadyCachedKeyboard = YES;
-        if (onNextRunloop)
+        if (onNextRunloop){
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.0), dispatch_get_main_queue(), ^(void){ [[self class] __cacheKeyboard]; });
-        else
+        }
+        else{
             [[self class] __cacheKeyboard];
+        }
     }
 }
 
@@ -54,3 +57,4 @@ static BOOL hasAlreadyCachedKeyboard;
 }
 
 @end
+

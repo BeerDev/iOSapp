@@ -15,12 +15,10 @@
     UIImage* Kistan;
     UIImage* Oltyper;
     UIImage* Utvecklare;
-
 }
+
 -(void)DropDownMenu:(float)phoneWidth;
 -(void)HideDownMenu:(float)phoneWidth;
-
-
 
 @property (strong, nonatomic) IBOutlet UIButton *omOssButton;
 @property (strong, nonatomic) IBOutlet UIButton *omKistanButton;

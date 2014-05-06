@@ -10,23 +10,23 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "Reachability.h"
 
-
 @interface jsonData : NSObject
-+(NSData*)GetDataOffline;
-+(NSData*)GetDataOnline;
+
++(NSData *)GetDataOffline;
++(NSData *)GetDataOnline;
 /**
  * Calling this method will connect to the server and get the JSON file. Doing this sets the NSMutableArray but you have to get it with the GetArray Method.
  * @author Maxim Frisk
- *  * @return JSON NSMutableArray
+ * @return JSON NSMutableArray
  */
-+(void)SetJSON:(NSData*)data;
++(void)SetJSON:(NSData *)data;
 
 /**
  * Get the NSMutableArray that contains the JSON file data. After recieving it you can use "getObjectForKey" to access the variables in the given index.
  * @author Maxim Frisk
- *  * @return JSON NSMutableArray
+ * @return JSON NSMutableArray
  */
-+(NSMutableArray*)GetArray;
++(NSMutableArray *)GetArray;
 
 /**
  * Saves an NSMutableArray in NSUserDefaults with a key.
@@ -35,7 +35,7 @@
  * @param NSString Key for the entry
  * @return nothing
  */
-+(void)SetArrayForKey:(NSMutableArray*)jsonData forKey:(NSString*)key;
++(void)SetArrayForKey:(NSMutableArray *)jsonData forKey:(NSString *)key;
 
 /**
  * Gets an NSMutableArray from NSUserDefaults for the given key
@@ -43,7 +43,7 @@
  * @param NSString Key for the item to get from NSUserDefaults
  * @return the NSMutableArray
  */
-+(NSMutableArray*)GetJsonArray:(NSString*)key;
++(NSMutableArray *)GetJsonArray:(NSString *)key;
 
 /**
  * This method is for setting the array from memory insteed of calling the setJSON method. This method should not be called if the app is launched the first time. Use SetJSON then.  
@@ -51,11 +51,9 @@
  * @param NSMutableArray
  * @return nothing
  */
-+(void)SetArrayWithoutInternet:(NSMutableArray*)array;
-
++(void)SetArrayWithoutInternet:(NSMutableArray *)array;
 
 //THIS METHODS IS NOT FINISHED //Write descriptions!!
-
 
 /**
  * This method sets the index on which bottle the user should be presented with.
@@ -85,8 +83,7 @@
  * @param Key The key for the image
  * @return index
  */
-+(void)SetCacheItemForKey:(UIImage*)image forKey:(NSString*)key;
-
++(void)SetCacheItemForKey:(UIImage *)image forKey:(NSString *)key;
 
 /**
  * Calling this method with a key, checks if there is an image for the corresponding key.
@@ -94,22 +91,18 @@
  * @param NSMutableArray
  * @return index
  */
-+(UIImage*)GetCachedImage:(NSString*)forKey;
++(UIImage *)GetCachedImage:(NSString *)forKey;
 
-//
+// Write to file and get from file.
++(NSString *)writeToDisc:(UIImage *)img name:(NSString *)name;
++(UIImage *)LoadFromDisk:(NSString *)url;
++(void)SetFilePath:(NSString *)path key:(NSString *)key;
++(NSString *)GetFilePath:(NSString *)key;
 
-
-//write to file and get from file
-+(NSString*)writeToDisc:(UIImage*)img name:(NSString*)name;
-+(UIImage*)LoadFromDisk:(NSString*)url;
-+(void)SetFilePath:(NSString*)path key:(NSString*)key;
-+(NSString*)GetFilePath:(NSString*)key;
-
-//connection
+// Connection.
 +(BOOL)connected;
 
-//skip icloud backup
+//Skip icloud backup.
 +(BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
-
 
 @end

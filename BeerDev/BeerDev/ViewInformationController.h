@@ -27,5 +27,4 @@
 @property NSString *brygg;
 @property NSString *kategori;
 
-
 @end

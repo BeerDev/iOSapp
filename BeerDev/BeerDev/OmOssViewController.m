@@ -8,7 +8,6 @@
 #import "OmOssViewController.h"
 
 @interface OmOssViewController (){
-    
     NSInteger Ycord;
     UIScrollView * scrollView;
 }
@@ -17,21 +16,9 @@
 
 @implementation OmOssViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
-    
     // Do any additional setup after loading the view.
-    
     scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 60, self.view.frame.size.width, self.view.frame.size.height)];
     scrollView.backgroundColor = [UIColor clearColor];
     scrollView.showsHorizontalScrollIndicator = NO;
@@ -42,12 +29,9 @@
     [scrollView setScrollEnabled:YES];
     
     [self createOmOss];
-    
-    
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -57,12 +41,9 @@
      [self createBody:@"Applikationen är skapad av BeerDev, en projektgrupp bestående av 9 KTH studenter. Appen skapades i en IT-projektkurs under våren 2014 och finns både till iOS och Android. \n\n Vi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, Jesper Nowak, Lina Poon, Christopher State, Patrik Stigeborn, Emma Ström och Jonathan Strömgren. \n\n Applikationen är skapad för att få en överblick över ölutbudet i Kistan. \n\n\n *Observera att alla priser gälller medlemmar i INsektionen. "];
      
     [self createContact:@"BeerDevelopment@gmail.com"];
-     
- 
- }
+}
 
 -(void)createHead:(NSString *)head{
-    
     UILabel *headLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-40, 50)];
     headLabel.text = head;
     headLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:30];
@@ -72,7 +53,6 @@
     headLabel.textAlignment = NSTextAlignmentCenter;
     [scrollView addSubview:headLabel];
     Ycord = Ycord + 50;
-    
 }
 
 -(void)createBody:(NSString *)body{
@@ -88,6 +68,7 @@
     [scrollView addSubview:bodyLabel];
     Ycord = Ycord + bodyLabel.frame.size.height + 20;
 }
+
 -(void)createContact:(NSString *)contact{
     UILabel *contactLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-40, 50)];
     contactLabel.text = contact;

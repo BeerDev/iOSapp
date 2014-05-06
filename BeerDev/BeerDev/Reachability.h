@@ -49,16 +49,13 @@
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <netinet/in.h>
 
-
 typedef enum : NSInteger {
 	NotReachable = 0,
 	ReachableViaWiFi,
 	ReachableViaWWAN
 } NetworkStatus;
 
-
 extern NSString *kReachabilityChangedNotification;
-
 
 @interface Reachability : NSObject
 
@@ -87,7 +84,6 @@ extern NSString *kReachabilityChangedNotification;
  */
 - (BOOL)startNotifier;
 - (void)stopNotifier;
-
 - (NetworkStatus)currentReachabilityStatus;
 
 /*!
@@ -96,5 +92,3 @@ extern NSString *kReachabilityChangedNotification;
 - (BOOL)connectionRequired;
 
 @end
-
-

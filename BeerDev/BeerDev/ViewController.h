@@ -12,8 +12,6 @@
 #import "DDMenu.h"
 #import "UIResponderKeyboardCache.h"
 
-
-
 @interface ViewController : UIViewController <UIPageViewControllerDataSource,UIPageViewControllerDelegate,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate , UISearchDisplayDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) UIPageViewController *pageViewController;
@@ -22,16 +20,16 @@
 @property (strong, nonatomic) UIViewController *categoryController;
 @property (strong, nonatomic) UIViewController *ListController;
 
-@property (strong, nonatomic) UISearchDisplayController* searchController;
+@property (strong, nonatomic) UISearchDisplayController *searchController;
 @property (strong, nonatomic) UISearchBar *OursearchBar;
 
-@property (strong, nonatomic) NSArray * JsonDataArray;
-@property (strong, nonatomic) NSArray * ForSearchArray;
-//@property (strong, nonatomic) NSMutableArray * MyFav;;
+@property (strong, nonatomic) NSArray *JsonDataArray;
+@property (strong, nonatomic) NSArray *ForSearchArray;
 
-@property (strong, nonatomic) UIButton* searchButton;
-@property (strong, nonatomic) UIButton* dropButton;
-@property (strong, nonatomic) UIButton* cancelSearch;
+@property (strong, nonatomic) UIButton *searchButton;
+@property (strong, nonatomic) UIButton *dropButton;
+@property (strong, nonatomic) UIButton *cancelSearch;
+
 @property float contentOffsetInPage;
 
 typedef enum ScrollDirection {
@@ -42,6 +40,6 @@ typedef enum ScrollDirection {
     ScrollDirectionDown,
     ScrollDirectionCrazy,
 } ScrollDirection;
++(BOOL)restartCache:(bool)forCache;
 
 @end
-

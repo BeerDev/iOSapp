@@ -20,18 +20,14 @@
     return UIStatusBarStyleLightContent;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
-    
     self.view.backgroundColor = [UIColor clearColor];
-    
     // Do any additional setup after loading the view.
     [self createLable];
 }
 
--(void)labelTemplet:(UILabel *)label
-{
+-(void)labelTemplet:(UILabel *)label{
     // Skapa Templet
     label.font = [UIFont fontWithName:@"Helvetica-Light" size:20];
     label.textColor = [UIColor whiteColor];
@@ -40,8 +36,7 @@
     label.textAlignment = NSTextAlignmentLeft;
 }
 
--(void)createLable
-{
+-(void)createLable{
     //Skapa namnlabel
     UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.16, self.view.frame.size.width-40, 50)];
     nameLabel.text=_name;
@@ -50,10 +45,8 @@
     nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.adjustsFontSizeToFitWidth = YES;
     nameLabel.numberOfLines = 1;
-    //[nameLabel sizeToFit];
     [self.view addSubview:nameLabel];
-    
-    //Skapa bryggerilable
+    // Create brewery label.
     UILabel *brewLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.16 + nameLabel.frame.size.height-20, self.view.frame.size.width-40, 50)];
     brewLabel.text=_brygg;
     [self labelTemplet:brewLabel];
@@ -61,34 +54,29 @@
     brewLabel.adjustsFontSizeToFitWidth = YES;
     brewLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
     [self.view addSubview:brewLabel];
-    
-    //Skapa storlekLabel
+    // Create size label.
     UILabel *sizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.31, self.view.frame.size.width-40, 50)];
     sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ ml", _size];
     [self labelTemplet:sizeLabel];
     [self.view addSubview:sizeLabel];
-    
-    //Skapa prisLabel
+    // Create price label.
     UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.31, self.view.frame.size.width-40, 50)];
     priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr*", _SEK];
     [self labelTemplet:priceLabel];
     priceLabel.textAlignment = NSTextAlignmentRight;
     [self.view addSubview:priceLabel];
-    
-    //Skapa typLabel
+    // Create type label.
     UILabel *typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.39, self.view.frame.size.width-40, 50)];
     typeLabel.text =_kategori;
     [self labelTemplet:typeLabel];
     [self.view addSubview:typeLabel];
-    
-    //Skapa procentLabel
+    // Create % label.
     UILabel *proLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.39, self.view.frame.size.width-40, 50)];
     proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", _pro];
     [self labelTemplet:proLabel];
     proLabel.textAlignment = NSTextAlignmentRight;
     [self.view addSubview:proLabel];
-    
-    //Skapa informationlable
+    // Create information label.
     UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.51, self.view.frame.size.width-40, 50)];
     infoLabel.text =_information;
     [self labelTemplet:infoLabel];
