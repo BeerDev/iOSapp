@@ -11,8 +11,17 @@
 #import "Reachability.h"
 
 @interface jsonData : NSObject
-
+/**
+ * Calling this method sets the JSON data offline from local copy.
+ * @author Maxim Frisk
+ * @return JSON data
+ */
 +(NSData *)GetDataOffline;
+/**
+ * Calling this method sets the JSON data online from server.
+ * @author Maxim Frisk
+ * @return JSON data
+ */
 +(NSData *)GetDataOnline;
 /**
  * Calling this method will connect to the server and get the JSON file. Doing this sets the NSMutableArray but you have to get it with the GetArray Method.
@@ -53,8 +62,6 @@
  */
 +(void)SetArrayWithoutInternet:(NSMutableArray *)array;
 
-//THIS METHODS IS NOT FINISHED //Write descriptions!!
-
 /**
  * This method sets the index on which bottle the user should be presented with.
  * @author Maxim Frisk
@@ -93,8 +100,16 @@
  */
 +(UIImage *)GetCachedImage:(NSString *)forKey;
 
-// Write to file and get from file.
+/**
+ * Call this method to save a UIImage to disk
+ * @author Maxim Frisk
+ * @param image to store
+ * @param name for the image to be stored
+ * @return returns the path to where the image is on disk
+ */
 +(NSString *)writeToDisc:(UIImage *)img name:(NSString *)name;
+
+
 +(UIImage *)LoadFromDisk:(NSString *)url;
 +(void)SetFilePath:(NSString *)path key:(NSString *)key;
 +(NSString *)GetFilePath:(NSString *)key;

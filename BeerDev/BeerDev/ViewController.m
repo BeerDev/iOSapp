@@ -73,6 +73,7 @@
     _JsonDataArray = [jsonData GetArray];
     _JsonDataArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_JsonDataArray];
 
+
     //cache the keyboard to remove the keyboard first time lag.
     [UIResponder cacheKeyboard];
     //create threads to cache the images from the web.
@@ -222,18 +223,18 @@
 
 -(void)createBackgroundThread{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        int temp = 0;
-        while (temp <1) {
-            temp++;
-            
+        while (true) {
             if(returningFromBackgroundWithConnection == YES){
                 returningFromBackgroundWithConnection = NO;
+                dispatch_async(dispatch_get_main_queue(), ^{
+
                 _ForSearchArray = [jsonData GetArray];
                 _ForSearchArray = [self ourSortingFunction:@"Artikelnamn" ascending:YES withArray:_ForSearchArray];
-                [self createThreadsForImageCache];
+
+                     [self createThreadsForImageCache];
+                });
             }
-            [NSThread sleepForTimeInterval:30];
-            temp--;
+            [NSThread sleepForTimeInterval:10];
         }
     });
 }
@@ -392,18 +393,12 @@
 }
 
 -(void)searchBarAnimationUp{
-    NSDate *startDate = [NSDate date];
-
     [UIView animateWithDuration:0.35 animations:^{
         _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
         _OursearchBar.alpha = 0;
     }
      
                      completion:^(BOOL finished) {
-
-                       //  self.pageViewController.dataSource = nil;
-                       //  self.pageViewController.dataSource = self;
-                             NSLog(@"search bar time %f", [[NSDate date] timeIntervalSinceDate:startDate]);
                          
     }];
 }
@@ -1246,19 +1241,17 @@ float difference;
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     CGPoint contentTouchPoint = [[touches anyObject] locationInView:menu];
     difference = contentTouchPoint.x;
-    NSLog(@"hej");
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     
     CGPoint pointInView = [[touches anyObject] locationInView:self.view];
-    
     float xTarget = pointInView.x - difference;
+    
     if(xTarget > menu.frame.size.width)
         xTarget = menu.frame.size.width;
     else if( xTarget < 0)
         xTarget = 0;
-    NSLog(@"%f",xTarget);
     [UIView animateWithDuration:.25
                      animations:^{
                          [menu HideDownMenuWithStyle:self.view.frame.size.width xCord:xTarget];
@@ -1269,22 +1262,17 @@ float difference;
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    
-    
     CGPoint endPoint = [[touches anyObject] locationInView:self.view];
     float xTarget = endPoint.x - difference;
-    NSLog(@"%f",xTarget);
+    
     if(xTarget > (menu.frame.size.width/4)){
         xTarget = 0;
         [UIView animateWithDuration:.25
                      animations:^{
-                         
                          [self DropMenu];
-                         //[menu HideDownMenu:self.view.frame.size.width];
                      }
          ];}
     else{
-        //xTarget = menu.frame.size.width;
         [menu  DropDownMenu:self.view.frame.size.width];
     }
     

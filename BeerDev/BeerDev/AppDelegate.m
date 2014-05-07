@@ -75,12 +75,37 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application{
+    
+    
     if([jsonData connected] == YES){
-        NSLog(@"connection on enterForeground");
-        [jsonData SetJSON:[jsonData GetDataOnline]];
-        [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
-        NSLog(@"count %lu",(unsigned long)[[jsonData GetArray] count]);
-        [ViewController restartCache:YES];
+        UIActivityIndicatorView *Indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        
+        Indicator.center = self.window.rootViewController.view.center;
+        Indicator.hidesWhenStopped = YES;
+        [self.window.rootViewController.view addSubview:Indicator];
+        [self.window.rootViewController.view bringSubviewToFront:Indicator];
+        [Indicator startAnimating];
+        
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+        dispatch_group_t group = dispatch_group_create();
+        
+            dispatch_group_async(group, queue, ^{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"connection on enterForeground");
+                [jsonData SetJSON:[jsonData GetDataOnline]];
+                [jsonData SetArrayForKey:[jsonData GetArray] forKey:@"JSON"];
+                [ViewController restartCache:YES];
+            });
+        });
+        dispatch_group_notify(group, queue, ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                     NSLog(@"done now");
+                    [Indicator stopAnimating];
+            });
+
+            
+            
+        });
     }
     else{
     }

@@ -13,7 +13,13 @@ static NSArray* JSONARRAY = nil;
 static NSCache * myImageCache;
 
 +(NSData *)GetDataOnline{
-    NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://beerdev.tk/sortiment.json"]];
+    NSError *error;
+    NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://beerdev.tk/sortiment.json"] options:NSDataReadingMappedAlways error:&error];
+    NSLog(@"error %@",error);
+    if(error){
+        return [self GetDataOffline];
+    }
+    
     return jsonData;
 }
 
@@ -25,7 +31,14 @@ static NSCache * myImageCache;
 }
 
 +(void)SetJSON:(NSData *)data{
-    id jsonObjects = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+    NSError *error = nil;
+    id jsonObjects;
+    jsonObjects = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+    
+    if(error){
+    jsonObjects = [NSJSONSerialization JSONObjectWithData:[self GetDataOffline] options:NSJSONReadingMutableContainers error:&error];
+    }
+    //NSLog(@"%@" ,error);
     // Define keys
     NSString *info = @"Info";
     NSString *url = @"URL";
