@@ -11,6 +11,7 @@
 #import "PageContentViewController.h"
 #import "DDMenu.h"
 #import "UIResponderKeyboardCache.h"
+#import "ViewInformationController.h"
 
 @interface ViewController : UIViewController <UIPageViewControllerDataSource,UIPageViewControllerDelegate,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate , UISearchDisplayDelegate, UIAlertViewDelegate>
 
@@ -19,6 +20,7 @@
 @property (strong, nonatomic) UIViewController *omKistanController;
 @property (strong, nonatomic) UIViewController *categoryController;
 @property (strong, nonatomic) UIViewController *ListController;
+@property (strong,nonatomic) ViewInformationController * informationController;
 
 @property (strong, nonatomic) UISearchDisplayController *searchController;
 @property (strong, nonatomic) UISearchBar *OursearchBar;

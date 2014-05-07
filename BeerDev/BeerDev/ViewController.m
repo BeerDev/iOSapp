@@ -34,8 +34,11 @@
     BOOL MenuIsShowing;
     BOOL ShowNoResultsToDisplay;
     BOOL allowToPress;
+    BOOL informationIsUp;
     
     PageContentViewController *startingViewController;
+    PageContentViewController *pendingPage;
+    PageContentViewController *previousPage;
     NSArray *viewControllers;
     NSArray *indexTitle;
 
@@ -44,7 +47,7 @@
     UIImage *magnifier;
     UIImage *heart;
     UIImage *heartFilled;
-    
+    NSUInteger indexOfPage;
     UITableView *ourTableView;
 
     NSArray *searchResults;
@@ -57,10 +60,13 @@
     int taggen;
     NSMutableArray *typeArray;
     NSArray *holdingTempResult;
+    
+    int offsetForInformation;
 }
 
 @end
 @implementation ViewController
+@synthesize informationController;
 
 - (void)viewDidLoad{
     [super viewDidLoad];
@@ -92,8 +98,33 @@
     [self createCategoryScrollView];
     //Checks if new content is available
     [self createBackgroundThread];
+    //adds motion effect
+    [self addMotionEffect];
 }
+#pragma mark - motion
+-(void)addMotionEffect{
+    UIInterpolatingMotionEffect *verticalMotionEffect =
+    [[UIInterpolatingMotionEffect alloc]
+     initWithKeyPath:@"center.y"
+     type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+    verticalMotionEffect.minimumRelativeValue = @(-10);
+    verticalMotionEffect.maximumRelativeValue = @(10);
 
+// Set horizontal effect
+    UIInterpolatingMotionEffect *horizontalMotionEffect =
+    [[UIInterpolatingMotionEffect alloc]
+     initWithKeyPath:@"center.x"
+     type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    horizontalMotionEffect.minimumRelativeValue = @(-10);
+    horizontalMotionEffect.maximumRelativeValue = @(10);
+
+// Create group to combine both
+    UIMotionEffectGroup *group = [UIMotionEffectGroup new];
+    group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
+
+// Add both effects to your view
+    [self.pageViewController.view addMotionEffect:group];
+}
 #pragma mark - on Startup functions
 
 -(void)createControllersAndBackground{
@@ -139,6 +170,15 @@
     [self addChildViewController:_pageViewController];
     [self.view addSubview:_pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
+    
+    offsetForInformation = 143;
+    //create the information View
+    informationController = [[ViewInformationController alloc] init];
+    informationController.arrayFromViewController = (NSMutableArray*)_JsonDataArray;
+    informationController.view.frame = CGRectMake(0, self.view.frame.size.height-offsetForInformation, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:informationController.view];
+    
+    [informationController didMoveToParentViewController:self];
     
     // Set inital values.
     scrollIndicatorIsShowing = YES;
@@ -239,6 +279,7 @@
     });
 }
 
+
 #pragma mark - functions
 
 -(void)noSearchResultsAlert{
@@ -300,11 +341,17 @@
     
     if(productViewIsShowing == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
         [self dataSource];
+        [self callInformationViewFromSearch:0];
+        NSLog(@"hejigen");
+        
     }
+    
+   
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     [self animateButton:_dropButton Hidden:NO Alpa:1];
+    [self callInformationViewFromSearch:0];
     if(listViewIsShowing == YES){
         [self animateButton:alphabeticSortButton Hidden:NO Alpa:1];
         [self animateButton:priceSortButton Hidden:NO Alpa:1];
@@ -368,7 +415,7 @@
     [self animateButton:alphabeticSortButton Hidden:NO Alpa:1];
     [self animateButton:priceSortButton Hidden:NO Alpa:1];
     }
-    
+    [self callInformationViewFromSearch:0];
     if([_JsonDataArray count]<=[_ForSearchArray count]){
         
         searchBar.text = nil;
@@ -454,6 +501,7 @@
     }
     
     if(productViewIsShowing == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
+        [self callInformationViewFromSearch:0];
         [self dataSource];
     }
 
@@ -469,6 +517,7 @@
     ShowNoResultsToDisplay = NO;
 
     [ourTableView reloadData];
+    [self callInformationViewFromSearch:0];
     [self dataSource];
 
 
@@ -751,6 +800,8 @@
             self.omOssController.view.frame = CGRectMake(-self.omOssController.view.frame.size.width, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
 
             self.categoryController.view.frame = CGRectMake(-self.categoryController.view.frame.size.width, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
+            
+             self.informationController.view.frame = CGRectMake(-self.informationController.view.frame.size.width, self.informationController.view.frame.origin.y,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
 
         } completion:^(BOOL finished) {
             allowToPress= YES;
@@ -788,6 +839,10 @@
             self.omKistanController.view.frame = CGRectMake(0, 0,  self.omKistanController.view.frame.size.width,  self.omKistanController.view.frame.size.height);
             self.omOssController.view.frame = CGRectMake(0, 0,  self.omOssController.view.frame.size.width,  self.omOssController.view.frame.size.height);
             self.categoryController.view.frame = CGRectMake(0, 0,  self.categoryController.view.frame.size.width,  self.categoryController.view.frame.size.height);
+            
+            if(productViewIsShowing == YES){
+            self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.origin.y,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
+            }
         } completion:^(BOOL finished) {
             allowToPress = YES;
         }];
@@ -833,8 +888,13 @@
         self.omOssController.view.frame = CGRectMake(0, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
         
         self.categoryController.view.frame = CGRectMake(0, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
+        if(productViewIsShowing == YES){
+        self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.origin.y,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
+            [self.view bringSubviewToFront:informationController.view];
+        }
         
     }
+     
                      completion:^(BOOL finished) {
                      }];
 
@@ -859,14 +919,7 @@
                          }];
     }
 }
-/*
-- (IBAction)SwipeAwayMenu:(id)sender {
-    if(SwipeAway == YES){
-        SwipeAway = NO;
-        [self DropMenu];
-    }
-}
-*/
+
 #pragma mark - Sorting indexs in tableView
 
 -(void)sortAlphabetically{
@@ -913,8 +966,35 @@
     PageContentViewController *pageContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PageContentViewController"];
     pageContentViewController.pageIndex = index;
     pageContentViewController.arrayFromViewController = (NSMutableArray*)_JsonDataArray;
-    
+    informationController.arrayFromViewController = (NSMutableArray*)_JsonDataArray;
+    //send some info to the info controller
+
     return pageContentViewController;
+}
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers
+{
+    
+
+    if([pendingViewControllers count]>0)
+    {
+        NSLog(@"hej");
+        pendingPage = (PageContentViewController*)[pendingViewControllers objectAtIndex:0];
+        NSUInteger indexOfCurrent =[(PageContentViewController*)[pendingViewControllers objectAtIndex:0] pageIndex];
+        informationController.pageIndex = indexOfCurrent;
+    }
+
+
+}
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed
+{
+
+    previousPage = (PageContentViewController*)[previousViewControllers objectAtIndex:0];
+    
+    if(finished && completed && [previousViewControllers count]>0)
+    {
+       
+        [informationController changeTextByIndex];
+    }
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController{
@@ -923,8 +1003,9 @@
     if ((index == 0) || (index == NSNotFound)){
         return nil;
     }
+
     index--;
-    
+
     return [self viewControllerAtIndex:index];
 }
 
@@ -934,18 +1015,13 @@
     if (index == NSNotFound){
         return nil;
     }
+
     index++;
-    
+
     if (index == [_JsonDataArray count]){
         return nil;
     }
     return [self viewControllerAtIndex:index];
-}
-
-- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed{
-    if(!completed){
-        return;
-    }
 }
 
 -(void)goToPageIndex:(int)number{
@@ -1044,7 +1120,9 @@
         alphabeticSortButton.hidden = YES;
         priceSortButton.alpha = 0 ;
         priceSortButton.hidden = YES;
-        
+        informationController.pageIndex = indexPath.row;
+        informationIsUp = NO;
+        self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
         [self transitionFromViewController:self.ListController
                           toViewController: self.pageViewController
                                   duration:0.4
@@ -1055,14 +1133,19 @@
                                     listViewIsShowing = NO;
                                     productViewIsShowing = YES;
                                     [menu HideDownMenu:self.view.frame.size.width];
-                                    [self menuBarToFront];
+                                
                                     [self viewWillDisappear:NO];
                                     [self animateButton:_dropButton Hidden:NO Alpa:1];
-
+                                
                                     [_OursearchBar resignFirstResponder];
                                     [UIView animateWithDuration:0.5 animations:^{
                                     _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
                                     _OursearchBar.alpha = 0;
+                         
+                                        [informationController changeTextByIndex];
+                                    
+                                        [self.view bringSubviewToFront:self.informationController.view];
+                                        [self menuBarToFront];
                                     }
                                                      completion:^(BOOL finished) {
                                                      }];
@@ -1126,6 +1209,7 @@
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope{
     if([scope isEqualToString:@"Namn"]){
         searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Artikelnamn contains[c] %@", searchText]];
+
     }
     else if([scope isEqualToString:@"Öltyper"]){
         searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Kategori contains[c] %@", searchText]];
@@ -1156,12 +1240,23 @@
 
 -(void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event{
     if (motion == UIEventSubtypeMotionShake && productViewIsShowing == YES){
-        [self goToPageIndex:(int)[self getRandomNumberBetween:0 maxNumber:[_JsonDataArray count]-1]];
+        
+        int random = (int)[self getRandomNumberBetween:0 maxNumber:[_JsonDataArray count]-1];
+        [self goToPageIndex:random];
+        [self callInformationViewFromSearch:random];
     }
 }
 
 - (NSInteger)getRandomNumberBetween:(NSInteger)min maxNumber:(NSInteger)max{
     return min + arc4random() % (max - min + 1);
+}
+
+-(void)callInformationViewFromSearch:(int)index{
+    informationController.arrayFromViewController = _JsonDataArray;
+    informationController.pageIndex = index;
+    [informationController changeTextByIndex];
+    
+
 }
 
 #pragma mark - Category
@@ -1237,46 +1332,115 @@ BOOL returningFromBackgroundWithConnection;
 
 #pragma mark - Touch
 
-float difference;
+float differenceX;
+float differenceY;
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     CGPoint contentTouchPoint = [[touches anyObject] locationInView:menu];
-    difference = contentTouchPoint.x;
+    differenceX = contentTouchPoint.x;
+    
+    CGPoint contentTouchPointinY = [[touches anyObject] locationInView:informationController.view];
+    differenceY = contentTouchPointinY.y;
+//    NSLog(@"%f",contentTouchPointinY.y);
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    
+    if(MenuIsShowing == YES){
     CGPoint pointInView = [[touches anyObject] locationInView:self.view];
-    float xTarget = pointInView.x - difference;
+    float xTarget = pointInView.x - differenceX;
     
     if(xTarget > menu.frame.size.width)
         xTarget = menu.frame.size.width;
     else if( xTarget < 0)
         xTarget = 0;
-    [UIView animateWithDuration:.25
+        [UIView animateWithDuration:.25
                      animations:^{
                          [menu HideDownMenuWithStyle:self.view.frame.size.width xCord:xTarget];
 
                        //  [ setFrame:CGRectMake(xTarget, content.frame.origin.y, content.frame.size.width, content.frame.size.height)];
                      }
-     ];
+        ];
+    }
+    if(productViewIsShowing == YES && MenuIsShowing == NO){
+        CGPoint pointInView = [[touches anyObject] locationInView:self.view];
+        float yTarget = pointInView.y - differenceY;
+         NSLog(@"yTarget %f",yTarget);
+        if(yTarget > informationController.view.frame.size.height){
+            yTarget = informationController.view.frame.size.height;
+        }
+        else if( yTarget > 0){
+        [UIView animateWithDuration:.25
+                         animations:^{
+                             [startingViewController setAlphaLevel:0.55];
+                             [previousPage setAlphaLevel:0.55];
+                             [pendingPage setAlphaLevel:0.55];
+                             informationController.view.frame = CGRectMake(0, yTarget, self.view.frame.size.width, self.view.frame.size.height);
+                         }
+            ];
+        }
+    
+    }
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    if(MenuIsShowing == YES){
     CGPoint endPoint = [[touches anyObject] locationInView:self.view];
-    float xTarget = endPoint.x - difference;
+    float xTarget = endPoint.x - differenceX;
     
-    if(xTarget > (menu.frame.size.width/4)){
-        xTarget = 0;
-        [UIView animateWithDuration:.25
-                     animations:^{
-                         [self DropMenu];
-                     }
-         ];}
-    else{
-        [menu  DropDownMenu:self.view.frame.size.width];
+        if(xTarget > (menu.frame.size.width/4)){
+            xTarget = 0;
+            [UIView animateWithDuration:.25
+                             animations:^{
+                                 [self DropMenu];
+                             }
+             ];}
+        else{
+            [menu  DropDownMenu:self.view.frame.size.width];
+            }
     }
-    
+    if(productViewIsShowing == YES && MenuIsShowing == NO){
+        CGPoint endPoint = [[touches anyObject] locationInView:self.view];
+        float yTarget = endPoint.y - differenceY;
+       
+
+        if (yTarget < self.view.frame.size.height-215 && informationIsUp == NO){
+            [self informationUp];
+        }else if(informationIsUp == NO){
+            [self dropDownInformation];
+        }
+        else if(yTarget > 50 && informationIsUp == YES){
+            [self dropDownInformation];
+        }
+        else if (informationIsUp == YES){
+            [self dropDownInformation];
+        }
+    }
+}
+-(void)informationUp{
+    [UIView animateWithDuration:.25
+                     animations:^{
+                         [startingViewController setAlphaLevel:0.3];
+                         [previousPage setAlphaLevel:0.3];
+                         [pendingPage setAlphaLevel:0.3];
+                         // [startingViewController setAlpha:0.4];
+                         informationIsUp = YES;
+                         informationController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+                     }
+     ];
+}
+
+-(void)dropDownInformation{
+    [UIView animateWithDuration:.25
+                     animations:^{
+                         [startingViewController setAlphaLevel:1];
+                         [previousPage setAlphaLevel:1];
+                         [pendingPage setAlphaLevel:1];
+                         informationIsUp = NO;
+                         informationController.view.frame = CGRectMake(0,  self.view.frame.size.height-offsetForInformation, self.view.frame.size.width, self.view.frame.size.height);
+                     }
+     ];
 
 }
+
+
 
 @end

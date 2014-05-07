@@ -12,10 +12,6 @@
 @interface PageContentViewController(){
     //this is used to hold the JSON data.
     NSArray * JsonDataArray;
-    NSInteger Ycord;
-    UILabel * nameLabel;
-    UILabel * priceLabel;
-    UILabel * infoLabel;
 }
 
 @end
@@ -27,6 +23,8 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil{
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        
+
         // Custom initialization
         // we are currently not using this method
     }
@@ -42,10 +40,23 @@
     JsonDataArray =  _arrayFromViewController;
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
-    self.displayImage.image = [UIImage imageNamed:@"placeholderbild"];
+    int sizeX;
+    
+    if(self.view.frame.size.height ==480){
+        NSLog(@"iphone 4");
+        sizeX = self.view.frame.size.width-225;
+    }else{
+        NSLog(@"iphone 5");
+        sizeX = self.view.frame.size.width-190;
+    }
+    
+    int sizeY   = self.view.frame.size.height-150;
     // Create a information view from our storyboard.
-    _InformationController = [self.storyboard instantiateViewControllerWithIdentifier:@"ViewInformationController"];
-    [self addChildViewController:_InformationController];
+    self.displayImage = [[UIImageView alloc] init];
+    self.displayImage.image = [UIImage imageNamed:@"placeholderbild"];
+    self.displayImage.frame = CGRectMake((self.view.frame.size.width-sizeX)/2, 90, sizeX ,sizeY);
+    
+    [self.view addSubview:_displayImage];
     // Check if there is a image on disk with a pathname according the the name of the product.
     if([jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"]]] != nil){
         // Set the image to display from cache according to the page index and the products name.
@@ -55,7 +66,6 @@
         // If there was no image on disk/cache start downloading the image.
         [self startDownload:(int)_pageIndex];
     }
-    [self createLabel];
 }
 
 - (void)didReceiveMemoryWarning{
@@ -117,125 +127,10 @@
     }
 }
 
-#pragma mark - Gesture Recognizer functions
 
-- (IBAction)SetInformationView:(id)sender{
-    // If the information is not showing set the information view.
-    // Calls information method which sets the information.
-    if(_informationIsShowing == NO){
-        NSLog(@"adding informationView");
-        _informationIsShowing = YES;
-        
-        nameLabel.hidden = YES;
-        priceLabel.hidden = YES;
-        infoLabel.hidden = YES;
-        self.displayImage.alpha = 0.45;
-        // Set values for the information screen.
-        _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
-        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"];
-        _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
-        _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
-        _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
-        _InformationController.brygg = [JsonDataArray[_pageIndex] objectForKey:@"Bryggeri"];
-        _InformationController.kategori = [JsonDataArray[_pageIndex] objectForKey:@"Kategori"];
-        _InformationController.pageIndex = _pageIndex;
-        _InformationController.view.alpha = 0;
-        
-        [self.view addSubview:_InformationController.view];
-        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 1;}
-                         completion:^(BOOL finished){
-                         }];
-    }
-
+-(void)setAlphaLevel:(float)alphaLevel{
+    _displayImage.alpha = alphaLevel;
 }
 
-- (IBAction)tap:(id)sender {
-    if(_informationIsShowing == NO){
-        NSLog(@"adding informationView");
-        _informationIsShowing = YES;
-        
-        nameLabel.hidden = YES;
-        priceLabel.hidden = YES;
-        infoLabel.hidden = YES;
-        self.displayImage.alpha = 0.45;
-        // Set values for the information screen.
-        _InformationController.name = [JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
-        _InformationController.SEK = [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"];
-        _InformationController.information = [JsonDataArray[_pageIndex] objectForKey:@"Info"];
-        _InformationController.pro = [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"];
-        _InformationController.size = [JsonDataArray[_pageIndex] objectForKey:@"Storlek"];
-        _InformationController.brygg = [JsonDataArray[_pageIndex] objectForKey:@"Bryggeri"];
-        _InformationController.kategori = [JsonDataArray[_pageIndex] objectForKey:@"Kategori"];
-        _InformationController.pageIndex = _pageIndex;
-        _InformationController.view.alpha = 0;
-        
-        [self.view addSubview:_InformationController.view];
-        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 1;}
-                         completion:^(BOOL finished){
-                         }];
-    }
-    else if(_informationIsShowing == YES){
-        _informationIsShowing = NO;
-
-        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;self.displayImage.alpha = 1;}
-                         completion:^(BOOL finished){
-                             [_InformationController.view removeFromSuperview];
-                             nameLabel.hidden = NO;
-                             priceLabel.hidden = NO;
-                             infoLabel.hidden = NO;
-                         }];
-    }
-}
-
-- (IBAction)downSwipe:(id)sender {
-    // If the information is showing remove it with animation.
-    if(_informationIsShowing == YES){
-        _informationIsShowing = NO;
-        
-        [UIView animateWithDuration:0.5 animations:^{_InformationController.view.alpha = 0.0;self.displayImage.alpha = 1;}
-                         completion:^(BOOL finished){
-                             [_InformationController.view removeFromSuperview];
-                             nameLabel.hidden = NO;
-                             priceLabel.hidden = NO;
-                             infoLabel.hidden = NO;
-                         }];
-    }
-    
-}
--(void)labelTemplet:(UILabel *)label{
-    // Create template.
-    label.textColor = [UIColor whiteColor];
-    label.shadowColor =[UIColor blackColor];
-    label.shadowOffset = CGSizeMake(1, 1) ;
-    label.textAlignment = NSTextAlignmentLeft;
-}
-- (void) createLabel{
-    Ycord = 430;    
-    // Create name label.
-    nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-90, 50)];
-    nameLabel.text= [JsonDataArray[_pageIndex] objectForKey:@"Artikelnamn"];
-    [self labelTemplet:nameLabel];
-    nameLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:18];
-    nameLabel.numberOfLines = 0;
-    [nameLabel sizeToFit];
-    [self.view addSubview:nameLabel];
-    // Create price label.
-    priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width-70, Ycord, self.view.frame.size.width-40, 50)];
-    priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr*", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"]];
-    [self labelTemplet:priceLabel];
-    priceLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:17];
-    priceLabel.textAlignment = NSTextAlignmentRight;
-    [priceLabel sizeToFit];
-    [self.view addSubview:priceLabel];
-    Ycord = Ycord + nameLabel.frame.size.height+30;
-    // Create information label.
-    infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-40, 50)];
-    infoLabel.text =[JsonDataArray[_pageIndex] objectForKey:@"Info"];
-    [self labelTemplet:infoLabel];
-    infoLabel.textAlignment = NSTextAlignmentLeft;
-    infoLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:16];
-    infoLabel.numberOfLines = 2;
-    [self.view addSubview:infoLabel];
-}
 
 @end

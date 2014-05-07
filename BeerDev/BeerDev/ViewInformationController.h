@@ -10,21 +10,8 @@
 
 @interface ViewInformationController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UILabel *artikelnamn;
-@property (weak, nonatomic) IBOutlet UILabel *pris;
-@property (weak, nonatomic) IBOutlet UILabel *info;
-@property (weak, nonatomic) IBOutlet UILabel *sizeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *proLabel;
-@property (weak, nonatomic) IBOutlet UILabel *kategoriLabel;
-@property (weak, nonatomic) IBOutlet UILabel *bryggLabel;
-
+@property NSArray *arrayFromViewController;
 @property NSUInteger pageIndex;
-@property NSString *name;
-@property NSString *information;
-@property NSString *SEK;
-@property NSString *size;
-@property NSString *pro;
-@property NSString *brygg;
-@property NSString *kategori;
+-(void)changeTextByIndex;
 
 @end

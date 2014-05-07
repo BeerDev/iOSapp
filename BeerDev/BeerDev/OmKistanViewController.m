@@ -49,7 +49,7 @@
     Ycord = 0;
     [self createHead:@"Kistan"];
     [self createBody:@"Kistan är INsektionens sektionslokal belägen i Kista. Med sina cirka 120 olika sorters öl är Kistan en av Stockholms mest välsorterade sektionslokaler gällande ölutbud.\n\n Kistan är vanligtvis öppen på tisdagar och torsdagar med sektionens mästerier bakom baren. Även på vissa fredagar kan en pubkväll smyga sig in. \n\n Kistans breda sortiment består av allt från vardagliga öltyper så som Ale, Lager, Pilsner till det lite mera ovanliga så som Trappis/Abbey, Lambik, Barley Wine och Saison. Givetvis finns även alkoholfri öl. \n\n Kistans konstbeklädda väggar skapar en gemytlig känsla i din mage, dem matchas ihop bra med en tydlig eftersmak av hemtrevlighet och gemensak.\n\n\n *Observera att alla priser gälller medlemmar i INsektionen."];
-    [self createContact:@"BeerDevelopment@gmail.com"];
+    //[self createContact:@"BeerDevelopment@gmail.com"];
 }
 
 -(void)createHead:(NSString *)head{
@@ -72,7 +72,7 @@
     bodyLabel.shadowColor =[UIColor blackColor];
     bodyLabel.shadowOffset = CGSizeMake(1, 1);
     bodyLabel.textColor = [UIColor whiteColor];
-    bodyLabel.textAlignment = NSTextAlignmentCenter;
+    bodyLabel.textAlignment = NSTextAlignmentLeft;
     [bodyLabel sizeToFit];
     [scrollView addSubview:bodyLabel];
     Ycord = Ycord + bodyLabel.frame.size.height + 20;

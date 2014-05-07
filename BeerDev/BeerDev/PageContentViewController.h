@@ -13,18 +13,16 @@
 @interface PageContentViewController : UIViewController
 
 // Image for the product.
-@property (strong, nonatomic) IBOutlet UIImageView *displayImage;
-
-@property (strong, nonatomic) ViewInformationController* InformationController;
+@property (strong, nonatomic) UIImageView *displayImage;
 // This is used in pageViewController to track on what index you are at.
 @property NSUInteger pageIndex;
 @property NSMutableArray *arrayFromViewController;
-// A BOOL to se if the information is showing or not.
-@property BOOL informationIsShowing;
+
 // Connection functions from NSURLConnection.
 @property (nonatomic,retain) NSMutableArray* jsonObjects;
 @property (nonatomic, copy) void (^completionHandler)(void);
 @property (nonatomic, strong) NSMutableData *activeDownload;
 @property (nonatomic, strong) NSURLConnection *imageConnection;
+-(void)setAlphaLevel:(float)alphaLevel;
 
 @end

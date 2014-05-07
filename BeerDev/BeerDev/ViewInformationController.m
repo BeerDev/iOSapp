@@ -9,7 +9,14 @@
 #import "ViewInformationController.h"
 
 @interface ViewInformationController (){
-    NSInteger Ycord;
+    NSArray * JsonDataArray;
+    UILabel *nameLabel;
+    UILabel *brewLabel;
+    UILabel *sizeLabel;
+    UILabel *priceLabel;
+    UILabel *typeLabel;
+    UILabel *proLabel;
+    UILabel *infoLabel;
 }
 
 @end
@@ -22,69 +29,91 @@
 
 - (void)viewDidLoad{
     [super viewDidLoad];
+    JsonDataArray =  _arrayFromViewController;
     self.view.backgroundColor = [UIColor clearColor];
     // Do any additional setup after loading the view.
     [self createLable];
 }
-
--(void)labelTemplet:(UILabel *)label{
-    // Skapa Templet
-    label.font = [UIFont fontWithName:@"Helvetica-Light" size:20];
-    label.textColor = [UIColor whiteColor];
-    label.shadowColor =[UIColor blackColor];
-    label.shadowOffset = CGSizeMake(1, 1) ;
-    label.textAlignment = NSTextAlignmentLeft;
+-(void)changeTextByIndex{
+    JsonDataArray =  _arrayFromViewController;
+    NSInteger rightIndex = _pageIndex;
+    brewLabel.text= [JsonDataArray[rightIndex] objectForKey:@"Bryggeri"];
+    sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ ml", [JsonDataArray[rightIndex] objectForKey:@"Storlek"]];
+    priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr*", [JsonDataArray[rightIndex] objectForKey:@"Utpris exkl moms"]];
+    nameLabel.text= [JsonDataArray[rightIndex]objectForKey:@"Artikelnamn"];
+    typeLabel.text =[JsonDataArray[rightIndex] objectForKey:@"Kategori"];
+    proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", [JsonDataArray[rightIndex] objectForKey:@"Alkoholhalt"]];
+    infoLabel.text =[JsonDataArray[rightIndex] objectForKey:@"Info"];
+    infoLabel.numberOfLines = 0;
+    [infoLabel sizeToFit];
 }
+
 
 -(void)createLable{
     //Skapa namnlabel
-    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.16, self.view.frame.size.width-40, 50)];
-    nameLabel.text=_name;
+    nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 77, self.view.frame.size.width-40, 50)];
+    nameLabel.text=[JsonDataArray[_pageIndex]objectForKey:@"Artikelnamn"];
     [self labelTemplet:nameLabel];
     nameLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:25];
     nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.adjustsFontSizeToFitWidth = YES;
     nameLabel.numberOfLines = 1;
     [self.view addSubview:nameLabel];
+    
     // Create brewery label.
-    UILabel *brewLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.16 + nameLabel.frame.size.height-20, self.view.frame.size.width-40, 50)];
-    brewLabel.text=_brygg;
+    brewLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 102, self.view.frame.size.width-40, 50)];
+    brewLabel.text=[JsonDataArray[_pageIndex] objectForKey:@"Bryggeri"];
     [self labelTemplet:brewLabel];
     brewLabel.textAlignment = NSTextAlignmentCenter;
     brewLabel.adjustsFontSizeToFitWidth = YES;
     brewLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
     [self.view addSubview:brewLabel];
+    
     // Create size label.
-    UILabel *sizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.31, self.view.frame.size.width-40, 50)];
-    sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ ml", _size];
+    sizeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 140, self.view.frame.size.width-40, 50)];
+    sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ ml", [JsonDataArray[_pageIndex] objectForKey:@"Storlek"]];
     [self labelTemplet:sizeLabel];
     [self.view addSubview:sizeLabel];
+   
     // Create price label.
-    UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.31, self.view.frame.size.width-40, 50)];
-    priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr*", _SEK];
+    priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 140, self.view.frame.size.width-40, 50)];
+    priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr*", [JsonDataArray[_pageIndex] objectForKey:@"Utpris exkl moms"]];
     [self labelTemplet:priceLabel];
     priceLabel.textAlignment = NSTextAlignmentRight;
     [self.view addSubview:priceLabel];
+    
     // Create type label.
-    UILabel *typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.39, self.view.frame.size.width-40, 50)];
-    typeLabel.text =_kategori;
+    typeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 180, self.view.frame.size.width-40, 50)];
+    typeLabel.text =[JsonDataArray[_pageIndex] objectForKey:@"Kategori"];
     [self labelTemplet:typeLabel];
     [self.view addSubview:typeLabel];
+    
     // Create % label.
-    UILabel *proLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.39, self.view.frame.size.width-40, 50)];
-    proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", _pro];
+    proLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 180, self.view.frame.size.width-40, 50)];
+    proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", [JsonDataArray[_pageIndex] objectForKey:@"Alkoholhalt"]];
     [self labelTemplet:proLabel];
     proLabel.textAlignment = NSTextAlignmentRight;
     [self.view addSubview:proLabel];
+    
     // Create information label.
-    UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, self.view.frame.size.height * 0.51, self.view.frame.size.width-40, 50)];
-    infoLabel.text =_information;
+    infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 230, self.view.frame.size.width-40,240)];
+    infoLabel.text =[JsonDataArray[_pageIndex] objectForKey:@"Info"];
     [self labelTemplet:infoLabel];
-    infoLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:16];
-    infoLabel.adjustsFontSizeToFitWidth = YES;
+    infoLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
+  //infoLabel.adjustsFontSizeToFitWidth = YES;
     infoLabel.numberOfLines = 0;
     [infoLabel sizeToFit];
+
     [self.view addSubview:infoLabel];
+}
+
+-(void)labelTemplet:(UILabel *)label{
+    // Skapa Templet
+    label.font = [UIFont fontWithName:@"Helvetica-Light" size:18];
+    label.textColor = [UIColor whiteColor];
+    label.shadowColor =[UIColor blackColor];
+    label.shadowOffset = CGSizeMake(1, 1) ;
+    label.textAlignment = NSTextAlignmentLeft;
 }
 
 @end
