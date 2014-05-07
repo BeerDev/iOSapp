@@ -342,8 +342,6 @@
     if(productViewIsShowing == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
         [self dataSource];
         [self callInformationViewFromSearch:0];
-        NSLog(@"hejigen");
-        
     }
     
    
@@ -977,7 +975,6 @@
 
     if([pendingViewControllers count]>0)
     {
-        NSLog(@"hej");
         pendingPage = (PageContentViewController*)[pendingViewControllers objectAtIndex:0];
         NSUInteger indexOfCurrent =[(PageContentViewController*)[pendingViewControllers objectAtIndex:0] pageIndex];
         informationController.pageIndex = indexOfCurrent;
@@ -1340,7 +1337,6 @@ float differenceY;
     
     CGPoint contentTouchPointinY = [[touches anyObject] locationInView:informationController.view];
     differenceY = contentTouchPointinY.y;
-//    NSLog(@"%f",contentTouchPointinY.y);
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -1363,7 +1359,6 @@ float differenceY;
     if(productViewIsShowing == YES && MenuIsShowing == NO){
         CGPoint pointInView = [[touches anyObject] locationInView:self.view];
         float yTarget = pointInView.y - differenceY;
-         NSLog(@"yTarget %f",yTarget);
         if(yTarget > informationController.view.frame.size.height){
             yTarget = informationController.view.frame.size.height;
         }
@@ -1402,7 +1397,7 @@ float differenceY;
         float yTarget = endPoint.y - differenceY;
        
 
-        if (yTarget < self.view.frame.size.height-215 && informationIsUp == NO){
+        if (yTarget < self.view.frame.size.height-245 && informationIsUp == NO){
             [self informationUp];
         }else if(informationIsUp == NO){
             [self dropDownInformation];
