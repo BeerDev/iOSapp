@@ -3,19 +3,19 @@
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "ikon58.png",
+      "filename" : "smallicon.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "ikon80.png",
+      "filename" : "iconspot.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "utantext2liten.png",
+      "filename" : "icon.png",
       "scale" : "2x"
     }
   ],

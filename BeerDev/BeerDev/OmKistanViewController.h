@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "ViewController.h"
 
-@interface OmKistanViewController: UIViewController
+@interface OmKistanViewController: UIViewController <UIScrollViewDelegate>
 
 @end

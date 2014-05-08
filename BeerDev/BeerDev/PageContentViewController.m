@@ -43,13 +43,10 @@
     int sizeX;
     
     if(self.view.frame.size.height ==480){
-        NSLog(@"iphone 4");
         sizeX = self.view.frame.size.width-225;
     }else{
-        NSLog(@"iphone 5");
         sizeX = self.view.frame.size.width-190;
     }
-    
     int sizeY   = self.view.frame.size.height-150;
     // Create a information view from our storyboard.
     self.displayImage = [[UIImageView alloc] init];

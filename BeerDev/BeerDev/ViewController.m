@@ -36,6 +36,8 @@
     BOOL allowToPress;
     BOOL informationIsUp;
     
+    BOOL seachBarShowing;
+    
     PageContentViewController *startingViewController;
     PageContentViewController *pendingPage;
     PageContentViewController *previousPage;
@@ -45,9 +47,6 @@
     UIImage *MENU;
     UIImage *magnifierCross;
     UIImage *magnifier;
-    UIImage *heart;
-    UIImage *heartFilled;
-    NSUInteger indexOfPage;
     UITableView *ourTableView;
 
     NSArray *searchResults;
@@ -124,13 +123,19 @@
 
 // Add both effects to your view
     [self.pageViewController.view addMotionEffect:group];
+    //[self.view addMotionEffect:group];
 }
 #pragma mark - on Startup functions
 
 -(void)createControllersAndBackground{
     // Set backgroundcolor and image.
     self.view.backgroundColor = [UIColor whiteColor];
-    backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Background"]];
+    
+    if(self.view.frame.size.height == 480){
+    backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background4"]];}
+    else{
+        backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background5"]];
+    }
     backgroundView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     [self.view addSubview:backgroundView];
     
@@ -171,7 +176,7 @@
     [self.view addSubview:_pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
     
-    offsetForInformation = 143;
+    offsetForInformation = 125;
     //create the information View
     informationController = [[ViewInformationController alloc] init];
     informationController.arrayFromViewController = (NSMutableArray*)_JsonDataArray;
@@ -188,8 +193,6 @@
 -(void)createImageAssets{
     magnifier = [UIImage imageNamed:@"magnifier"];
     magnifierCross = [UIImage imageNamed:@"magnifierCross"];
-    heart = [UIImage imageNamed:@"smallnotfilled"];
-    heartFilled = [UIImage imageNamed:@"smallHeartFilled"];
 }
 
 -(void)createTableAndSearchBar{
@@ -293,6 +296,7 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     [_searchButton setImage:magnifier forState:UIControlStateNormal];
+    [self callInformationViewFromSearch:0];
 }
 
 // Refresh gallery view data source.
@@ -348,8 +352,10 @@
 }
 
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    seachBarShowing = NO;
     [self animateButton:_dropButton Hidden:NO Alpa:1];
     [self callInformationViewFromSearch:0];
+
     if(listViewIsShowing == YES){
         [self animateButton:alphabeticSortButton Hidden:NO Alpa:1];
         [self animateButton:priceSortButton Hidden:NO Alpa:1];
@@ -406,16 +412,20 @@
 }
 
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    seachBarShowing = NO;
     //fix buttons
     [self animateButton:_dropButton Hidden:NO Alpa:1];
     [self animateButton:_searchButton Hidden:NO Alpa:1];
+    
     if(listViewIsShowing == YES){
-    [self animateButton:alphabeticSortButton Hidden:NO Alpa:1];
-    [self animateButton:priceSortButton Hidden:NO Alpa:1];
+        [self animateButton:alphabeticSortButton Hidden:NO Alpa:1];
+        [self animateButton:priceSortButton Hidden:NO Alpa:1];
     }
-    [self callInformationViewFromSearch:0];
+    
     if([_JsonDataArray count]<=[_ForSearchArray count]){
-        
+        informationController.pageIndex = 0;
+        [informationController changeTextByIndex];
+        [self dropDownInformation];
         searchBar.text = nil;
         scrollIndicatorIsShowing = YES;
         [searchBar resignFirstResponder];
@@ -423,13 +433,15 @@
         ShowNoResultsToDisplay = NO;
         _JsonDataArray = _ForSearchArray;
         [ourTableView reloadData];
+            [self callInformationViewFromSearch:0];
         
             if(productViewIsShowing == YES && [_JsonDataArray count] != 0){
                 [self dataSource];
             }
     }
     else {
-        
+        informationController.pageIndex = 0;
+        [informationController changeTextByIndex];
         searchBar.text = nil;
         scrollIndicatorIsShowing = YES;
         [searchBar resignFirstResponder];
@@ -449,7 +461,7 @@
 }
 
 -(void)SearchIconPressed{
-
+    seachBarShowing = YES;
     [self animateButton:_dropButton Hidden:YES Alpa:0];
     [self animateButton:_searchButton Hidden:YES Alpa:0];
     [self animateButton:alphabeticSortButton Hidden:YES Alpa:0];
@@ -457,8 +469,15 @@
     
         [_OursearchBar becomeFirstResponder];
         [UIView animateWithDuration:0.3 animations:^{
+            [startingViewController setAlphaLevel:1];
+            [previousPage setAlphaLevel:1];
+            [pendingPage setAlphaLevel:1];
             _OursearchBar.alpha = 1;
             _OursearchBar.frame = CGRectMake(0, 22,  self.view.frame.size.width, 78);
+            if(productViewIsShowing == YES){
+                informationController.view.frame = CGRectMake(0,  self.view.frame.size.height-offsetForInformation, self.view.frame.size.width, self.view.frame.size.height);
+                
+            }
             
         } completion:^(BOOL finished) {
         }];
@@ -513,7 +532,11 @@
     //table view
     scrollIndicatorIsShowing = YES;
     ShowNoResultsToDisplay = NO;
-
+    if(productViewIsShowing == YES){
+        [UIView animateWithDuration:0.3 animations:^{
+        informationController.view.frame = CGRectMake(0,  self.view.frame.size.height-offsetForInformation, self.view.frame.size.width, self.view.frame.size.height);
+        }];
+    }
     [ourTableView reloadData];
     [self callInformationViewFromSearch:0];
     [self dataSource];
@@ -525,14 +548,15 @@
 
 -(void)createThreadsForImageCache{
     int threadNumber = 0;
-    int MaxThreads = 1;
-    // NSDate *startDate = [NSDate date];
-    
-    while(threadNumber < MaxThreads+1){
+
+     NSDate *startDate = [NSDate date];
+
+    while(threadNumber < 3){
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         // Load the shared assets in the background.
-        for (int i = threadNumber; i < (int)[_ForSearchArray count] ; i+=2) {
+        for (int i = threadNumber; i < (int)[_ForSearchArray count] ; i+=3) {
             UIImage *image;
             
             if([jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] == nil){
@@ -544,26 +568,10 @@
                 }
             }
         }
-        // NSLog(@"Loaded all create images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
+        NSLog(@"Loaded all create images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
     });
-        threadNumber++;
+    threadNumber ++;
     }
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        for (int i = (int)[_ForSearchArray count]-1; i > 0 ; i--) {
-            UIImage *image;
-            
-            if([jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] == nil){
-                NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[_ForSearchArray[i]objectForKey:@"URL"]]];
-                image = [[UIImage alloc] initWithData:imageData];
-                
-                if(image != nil){
-                    [jsonData SetFilePath:[jsonData writeToDisc:image name:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]];
-                }
-            }
-        }
-      // NSLog(@"Loaded all create images in %f seconds", [[NSDate date] timeIntervalSinceDate:startDate]);
-    });
 }
 
 #pragma mark - Other
@@ -901,7 +909,7 @@
 -(void)animateButton:(UIButton*)Button Hidden:(BOOL)yesOrNo Alpa:(int)zeroOrOne{
     if(Button.hidden == YES){
         Button.hidden = yesOrNo;
-        [UIView animateWithDuration:0.35 animations:^{
+        [UIView animateWithDuration:0.50 animations:^{
             Button.alpha = zeroOrOne;
         }
                          completion:^(BOOL finished) {
@@ -989,7 +997,6 @@
     
     if(finished && completed && [previousViewControllers count]>0)
     {
-       
         [informationController changeTextByIndex];
     }
 }
@@ -1119,7 +1126,11 @@
         priceSortButton.hidden = YES;
         informationController.pageIndex = indexPath.row;
         informationIsUp = NO;
-        self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
+        [UIView animateWithDuration:0.7 animations:^{
+            self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
+                [informationController changeTextByIndex];
+        }];
+        
         [self transitionFromViewController:self.ListController
                           toViewController: self.pageViewController
                                   duration:0.4
@@ -1139,13 +1150,12 @@
                                     _OursearchBar.frame = CGRectMake(0, -100,  self.view.frame.size.width, 78);
                                     _OursearchBar.alpha = 0;
                          
-                                        [informationController changeTextByIndex];
+                                        
                                     
                                         [self.view bringSubviewToFront:self.informationController.view];
                                         [self menuBarToFront];
                                     }
-                                                     completion:^(BOOL finished) {
-                                                     }];
+                                                     completion:^(BOOL finished) {}];
                             }];
     }
 }
@@ -1218,7 +1228,11 @@
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     if(productViewIsShowing == YES && didbegin == NO){
         didbegin =YES;
-        [_OursearchBar resignFirstResponder];
+        //[informationController changeTextByIndex];
+
+        if([_OursearchBar resignFirstResponder]){
+        [informationController changeTextByIndex];
+        }
     }
     else if(listViewIsShowing == YES && didbegin == NO){
         didbegin =YES;
@@ -1413,12 +1427,21 @@ float differenceY;
 -(void)informationUp{
     [UIView animateWithDuration:.25
                      animations:^{
+                         if(seachBarShowing == NO){
                          [startingViewController setAlphaLevel:0.3];
                          [previousPage setAlphaLevel:0.3];
                          [pendingPage setAlphaLevel:0.3];
                          // [startingViewController setAlpha:0.4];
                          informationIsUp = YES;
                          informationController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+                         }else if(seachBarShowing == YES){
+                         
+                             [startingViewController setAlphaLevel:0.3];
+                             [previousPage setAlphaLevel:0.3];
+                             [pendingPage setAlphaLevel:0.3];
+                             // [startingViewController setAlpha:0.4];
+                             informationIsUp = YES;
+                             informationController.view.frame = CGRectMake(0, 40, self.view.frame.size.width, self.view.frame.size.height);}
                      }
      ];
 }
