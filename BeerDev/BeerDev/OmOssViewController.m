@@ -35,7 +35,7 @@
  -(void)createOmOss{
      UILabel *headLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-40, 50)];
      headLabel.text = @"BeerDev";
-     headLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:25];
+     headLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:30];
      headLabel.shadowColor =[UIColor blackColor];
      headLabel.shadowOffset = CGSizeMake(1, 1);
      headLabel.textColor = [UIColor whiteColor];
@@ -49,7 +49,7 @@
      UILabel *bodyLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-40, 400)];
      bodyLabel.text = @"Applikationen är skapad av BeerDev, en projektgrupp bestående av 9 KTH studenter. Appen skapades i en IT-projektkurs under våren 2014 och finns både till iOS och Android. \n\nVi som har skapat applikationen är Maxim Frisk, Anne Golinski, Joakim Larsson, Jesper Nowak, Lina Poon, Christopher State, Patrik Stigeborn, Emma Ström och Jonathan Strömgren. \n\nApplikationen är skapad för att få en överblick över ölutbudet i Kistan. ";
      bodyLabel.numberOfLines = 0;
-     bodyLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:14];
+     bodyLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
      bodyLabel.shadowColor =[UIColor blackColor];
      bodyLabel.shadowOffset = CGSizeMake(1, 1);
      bodyLabel.textColor = [UIColor whiteColor];

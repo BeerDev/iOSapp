@@ -107,7 +107,7 @@
  * @param name for the image to be stored
  * @return returns the path to where the image is on disk
  */
-+(NSString *)writeToDisc:(UIImage *)img name:(NSString *)name;
++(NSString *)writeToDisc:(NSData *)img name:(NSString *)name;
 
 
 +(UIImage *)LoadFromDisk:(NSString *)url;

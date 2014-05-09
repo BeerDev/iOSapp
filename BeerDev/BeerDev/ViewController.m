@@ -5,10 +5,21 @@
 //  Created by Maxim Frisk on 2014-03-28.
 //  Copyright (c) 2014 beerDev. All rights reserved.
 //
-
+#import <AVFoundation/AVFoundation.h>
 #import "ViewController.h"
 
-@interface ViewController (){
+@interface ViewController ()<AVCaptureMetadataOutputObjectsDelegate>{
+    
+    AVCaptureSession *_session;
+    AVCaptureDevice *_device;
+    AVCaptureDeviceInput *_input;
+    AVCaptureMetadataOutput *_output;
+    AVCaptureVideoPreviewLayer *_prevLayer;
+    
+    UIView *_highlightView;
+    UILabel *_label;
+
+    
     // Declare variables here to be global through this class.
     // Background image.
     UIImageView *backgroundView ;
@@ -56,9 +67,11 @@
     NSInteger catY;
     NSString *type;
     NSString *info;
+    NSString* first;
     int taggen;
     NSMutableArray *typeArray;
     NSArray *holdingTempResult;
+    NSMutableArray *infoArray;
     
     int offsetForInformation;
 }
@@ -99,15 +112,106 @@
     [self createBackgroundThread];
     //adds motion effect
     [self addMotionEffect];
+    [self blubBlub];
+    [self menuBarToFront];
+    //[self start];
 }
+
+#pragma mark - barcode scan
+-(void)start{
+    
+    _highlightView = [[UIView alloc] init];
+    _highlightView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
+    _highlightView.layer.borderColor = [UIColor greenColor].CGColor;
+    _highlightView.layer.borderWidth = 3;
+    [self.view addSubview:_highlightView];
+    
+    _label = [[UILabel alloc] init];
+    _label.frame = CGRectMake(0, self.view.bounds.size.height - 40, self.view.bounds.size.width, 40);
+    _label.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    _label.backgroundColor = [UIColor colorWithWhite:0.15 alpha:0.65];
+    _label.textColor = [UIColor whiteColor];
+    _label.textAlignment = NSTextAlignmentCenter;
+    _label.text = @"(none)";
+    [self.view addSubview:_label];
+    
+    _session = [[AVCaptureSession alloc] init];
+    _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    NSError *error = nil;
+    
+    _input = [AVCaptureDeviceInput deviceInputWithDevice:_device error:&error];
+    if (_input) {
+        [_session addInput:_input];
+    } else {
+        NSLog(@"Error: %@", error);
+    }
+    
+    _output = [[AVCaptureMetadataOutput alloc] init];
+    [_output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
+    [_session addOutput:_output];
+    
+    _output.metadataObjectTypes = [_output availableMetadataObjectTypes];
+    
+    _prevLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
+    _prevLayer.frame = self.view.bounds;
+    _prevLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    [self.view.layer addSublayer:_prevLayer];
+    
+    _prevLayer.frame = CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70);
+    
+    [_session startRunning];
+    
+    [self.view bringSubviewToFront:_highlightView];
+    [self.view bringSubviewToFront:_label];
+}
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
+{
+    CGRect highlightViewRect = CGRectZero;
+    AVMetadataMachineReadableCodeObject *barCodeObject;
+    NSString *detectionString = nil;
+    NSArray *barCodeTypes = @[AVMetadataObjectTypeUPCECode, AVMetadataObjectTypeCode39Code, AVMetadataObjectTypeCode39Mod43Code,
+                              AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeCode93Code, AVMetadataObjectTypeCode128Code,
+                              AVMetadataObjectTypePDF417Code, AVMetadataObjectTypeQRCode, AVMetadataObjectTypeAztecCode];
+    
+    for (AVMetadataObject *metadata in metadataObjects) {
+       
+        for (NSString *typen in barCodeTypes) {
+            if ([metadata.type isEqualToString:typen])
+            {
+                barCodeObject = (AVMetadataMachineReadableCodeObject *)[_prevLayer transformedMetadataObjectForMetadataObject:(AVMetadataMachineReadableCodeObject *)metadata];
+                highlightViewRect = barCodeObject.bounds;
+                detectionString = [(AVMetadataMachineReadableCodeObject *)metadata stringValue];
+                break;
+            }
+        }
+        
+        if (detectionString != nil)
+        {
+            NSLog(@"%@",detectionString);
+           searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Streckkod contains[c] %@", detectionString]];
+            NSLog(@"%@",searchResults);
+            if([searchResults count]!= 0){
+            _label.text = [searchResults[0] objectForKey:@"Artikelnamn"];
+                
+            }
+            break;
+        }
+        else
+            _label.text = @"(none)";
+    }
+    _highlightView.frame = highlightViewRect;
+}
+
+
 #pragma mark - motion
 -(void)addMotionEffect{
     UIInterpolatingMotionEffect *verticalMotionEffect =
     [[UIInterpolatingMotionEffect alloc]
      initWithKeyPath:@"center.y"
      type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    verticalMotionEffect.minimumRelativeValue = @(-10);
-    verticalMotionEffect.maximumRelativeValue = @(10);
+    verticalMotionEffect.minimumRelativeValue = @(-4);
+    verticalMotionEffect.maximumRelativeValue = @(4);
 
 // Set horizontal effect
     UIInterpolatingMotionEffect *horizontalMotionEffect =
@@ -423,9 +527,8 @@
     }
     
     if([_JsonDataArray count]<=[_ForSearchArray count]){
-        informationController.pageIndex = 0;
-        [informationController changeTextByIndex];
-        [self dropDownInformation];
+        
+
         searchBar.text = nil;
         scrollIndicatorIsShowing = YES;
         [searchBar resignFirstResponder];
@@ -433,10 +536,12 @@
         ShowNoResultsToDisplay = NO;
         _JsonDataArray = _ForSearchArray;
         [ourTableView reloadData];
-            [self callInformationViewFromSearch:0];
+        
         
             if(productViewIsShowing == YES && [_JsonDataArray count] != 0){
+                [self dropDownInformation];
                 [self dataSource];
+                [self callInformationViewFromSearch:0];
             }
     }
     else {
@@ -475,6 +580,7 @@
             _OursearchBar.alpha = 1;
             _OursearchBar.frame = CGRectMake(0, 22,  self.view.frame.size.width, 78);
             if(productViewIsShowing == YES){
+                NSLog(@"product");
                 informationController.view.frame = CGRectMake(0,  self.view.frame.size.height-offsetForInformation, self.view.frame.size.width, self.view.frame.size.height);
                 
             }
@@ -557,14 +663,13 @@
         
         // Load the shared assets in the background.
         for (int i = threadNumber; i < (int)[_ForSearchArray count] ; i+=3) {
-            UIImage *image;
+
             
             if([jsonData GetFilePath:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] == nil){
                 NSData *imageData = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:[_ForSearchArray[i]objectForKey:@"URL"]]];
-                image = [[UIImage alloc] initWithData:imageData];
-                
-                if(image != nil){
-                    [jsonData SetFilePath:[jsonData writeToDisc:image name:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]];
+                //image = [[UIImage alloc] initWithData:imageData];
+                if(imageData != nil){
+                    [jsonData SetFilePath:[jsonData writeToDisc:imageData name:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]] key:[[NSString alloc] initWithFormat:@"%@",[_ForSearchArray[i] objectForKey:@"Artikelnamn"]]];
                 }
             }
         }
@@ -623,7 +728,7 @@
                                 [self.view bringSubviewToFront:_OursearchBar];
                                 [self menuBarToFront];
                                 [_dropButton setImage:MENU forState:UIControlStateNormal];
-            }];
+                            }];
         
     }
     else{
@@ -902,6 +1007,11 @@
     }
      
                      completion:^(BOOL finished) {
+                         if(productViewIsShowing == YES){
+                             [self blubBlub];
+                         }
+
+                         
                      }];
 
 }
@@ -997,7 +1107,7 @@
     
     if(finished && completed && [previousViewControllers count]>0)
     {
-        [informationController changeTextByIndex];
+            [informationController changeTextByIndex];
     }
 }
 
@@ -1034,6 +1144,13 @@
     viewControllers = @[startingViewController];
     //set the PageViewController by storyboard ID.
     [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+}
+-(void)goToPageIndexWithAnimation:(int)number{
+    //Start the page view controller with this first page at index 0;
+    startingViewController = [self viewControllerAtIndex:number];
+    viewControllers = @[startingViewController];
+    //set the PageViewController by storyboard ID.
+    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
 }
 
 #pragma mark - Table
@@ -1126,14 +1243,14 @@
         priceSortButton.hidden = YES;
         informationController.pageIndex = indexPath.row;
         informationIsUp = NO;
-        [UIView animateWithDuration:0.7 animations:^{
-            self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
-                [informationController changeTextByIndex];
-        }];
         
+        self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
+        [informationController changeTextByIndex];
+        
+
         [self transitionFromViewController:self.ListController
                           toViewController: self.pageViewController
-                                  duration:0.4
+                                  duration:0.2
                                    options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                                    // No animation necessary, but docs say this can't be NULL.
                                }
@@ -1155,7 +1272,9 @@
                                         [self.view bringSubviewToFront:self.informationController.view];
                                         [self menuBarToFront];
                                     }
-                                                     completion:^(BOOL finished) {}];
+                                                     completion:^(BOOL finished) {
+                                                         [self blubBlub];
+                                                     }];
                             }];
     }
 }
@@ -1182,7 +1301,7 @@
     int count = 0;
     int j = 0;
     // Match the section titles with the sections
-    NSString* first= [[_JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
+    first= [[_JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
     
     for(int i = 0; i< [_JsonDataArray count]; i++) {
         first= [[_JsonDataArray[count]objectForKey:@"Artikelnamn"] substringToIndex:1];
@@ -1253,8 +1372,18 @@
     if (motion == UIEventSubtypeMotionShake && productViewIsShowing == YES){
         
         int random = (int)[self getRandomNumberBetween:0 maxNumber:[_JsonDataArray count]-1];
-        [self goToPageIndex:random];
+        [self goToPageIndexWithAnimation:random];
         [self callInformationViewFromSearch:random];
+        
+        if(informationIsUp == YES){
+            [startingViewController setAlphaLevel:0.3];
+            [previousPage setAlphaLevel:0.3];
+            [pendingPage setAlphaLevel:0.3];
+        }else{
+            [startingViewController setAlphaLevel:1];
+            [previousPage setAlphaLevel:1];
+            [pendingPage setAlphaLevel:1];
+        }
     }
 }
 
@@ -1266,9 +1395,20 @@
     informationController.arrayFromViewController = _JsonDataArray;
     informationController.pageIndex = index;
     [informationController changeTextByIndex];
-    
-
 }
+
+-(void)blubBlub{
+    if(informationIsUp == NO){
+    [UIView animateWithDuration:0.3 animations:^{
+        self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation-12,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.3 animations:^{
+        self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
+        }];
+    }];
+    }
+}
+
 
 #pragma mark - Category
 
@@ -1278,7 +1418,8 @@
     NSString *finalPatch = [path stringByAppendingPathComponent:@"CategoryList.plist"];
     Categories = [NSDictionary dictionaryWithContentsOfFile:finalPatch];
     typeArray = [[NSMutableArray alloc] init];
-    NSMutableArray *infoArray = [[NSMutableArray alloc] init];
+    infoArray = [[NSMutableArray alloc] init];
+    
     typeArray = [Categories objectForKey:@"Type"];
     infoArray = [Categories objectForKey:@"Info"];
     
@@ -1365,8 +1506,6 @@ float differenceY;
         [UIView animateWithDuration:.25
                      animations:^{
                          [menu HideDownMenuWithStyle:self.view.frame.size.width xCord:xTarget];
-
-                       //  [ setFrame:CGRectMake(xTarget, content.frame.origin.y, content.frame.size.width, content.frame.size.height)];
                      }
         ];
     }
@@ -1374,7 +1513,7 @@ float differenceY;
         CGPoint pointInView = [[touches anyObject] locationInView:self.view];
         float yTarget = pointInView.y - differenceY;
         if(yTarget > informationController.view.frame.size.height){
-            yTarget = informationController.view.frame.size.height;
+       //     yTarget = informationController.view.frame.size.height;
         }
         else if( yTarget > 0){
         [UIView animateWithDuration:.25
@@ -1396,7 +1535,6 @@ float differenceY;
     float xTarget = endPoint.x - differenceX;
     
         if(xTarget > (menu.frame.size.width/4)){
-            xTarget = 0;
             [UIView animateWithDuration:.25
                              animations:^{
                                  [self DropMenu];
@@ -1431,7 +1569,6 @@ float differenceY;
                          [startingViewController setAlphaLevel:0.3];
                          [previousPage setAlphaLevel:0.3];
                          [pendingPage setAlphaLevel:0.3];
-                         // [startingViewController setAlpha:0.4];
                          informationIsUp = YES;
                          informationController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
                          }else if(seachBarShowing == YES){
@@ -1439,7 +1576,6 @@ float differenceY;
                              [startingViewController setAlphaLevel:0.3];
                              [previousPage setAlphaLevel:0.3];
                              [pendingPage setAlphaLevel:0.3];
-                             // [startingViewController setAlpha:0.4];
                              informationIsUp = YES;
                              informationController.view.frame = CGRectMake(0, 40, self.view.frame.size.width, self.view.frame.size.height);}
                      }

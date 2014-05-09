@@ -42,7 +42,7 @@
 -(void)createHead:(NSString *)head{
     UILabel *headLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-40, 50)];
     headLabel.text = head;
-    headLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:25];
+    headLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:30];
     headLabel.shadowColor =[UIColor blackColor];
     headLabel.shadowOffset = CGSizeMake(1, 1);
     headLabel.textColor = [UIColor whiteColor];
@@ -55,7 +55,7 @@
 -(void)createBody:(NSString *)body{
     UILabel *bodyLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, Ycord, self.view.frame.size.width-40, 300)];
     bodyLabel.text = body;
-    bodyLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:16];
+    bodyLabel.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
     bodyLabel.shadowColor =[UIColor blackColor];
     bodyLabel.shadowOffset = CGSizeMake(1, 1);
     bodyLabel.textColor = [UIColor whiteColor];

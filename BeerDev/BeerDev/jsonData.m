@@ -14,7 +14,7 @@ static NSCache * myImageCache;
 
 +(NSData *)GetDataOnline{
     NSError *error;
-    NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://beerdev.tk/sortiment.json"] options:NSDataReadingMappedAlways error:&error];
+    NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://beerdev.info/sortiment.json"] options:NSDataReadingMappedAlways error:&error];
     NSLog(@"error %@",error);
     if(error){
         return [self GetDataOffline];
@@ -42,12 +42,14 @@ static NSCache * myImageCache;
     // Define keys
     NSString *info = @"Info";
     NSString *url = @"URL";
-    NSString *price = @"Utpris exkl moms";
+    NSString *price = @"Utpris";
     NSString *brewery = @"Bryggeri";
     NSString *name = @"Artikelnamn";
     NSString *alc = @"Alkoholhalt";
     NSString *size = @"Storlek";
     NSString *category = @"Kategori";
+    NSString *barcode = @"Streckkod";
+    
     // Create array to hold dictionaries
     NSMutableArray *myObject = [[NSMutableArray alloc] init];
     // Values in foreach loop
@@ -60,6 +62,7 @@ static NSCache * myImageCache;
         NSString *alkohol = [dataDict objectForKey:alc];
         NSString *kategori =[dataDict objectForKey:category];
         NSString *storlek =[dataDict objectForKey:size];
+        NSString *streckkod =[dataDict objectForKey:barcode];
         
         NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                               artikelnamn, name,
@@ -70,6 +73,7 @@ static NSCache * myImageCache;
                               alkohol, alc,
                               kategori, category,
                               storlek, size,
+                              streckkod, barcode,
                               nil];
         [myObject addObject:dict];
     }
@@ -143,13 +147,13 @@ static NSCache * myImageCache;
     return cachedImage;
 }
 
-+(NSString *)writeToDisc:(UIImage*)img name:(NSString *)name{
++(NSString *)writeToDisc:(NSData*)img name:(NSString *)name{
     NSString *path = nil;
     //write a path only if there is an image
     if(img != nil){
         path = [NSHomeDirectory() stringByAppendingPathComponent:[[NSString alloc] initWithFormat:@"Documents/imageCache/%@.png",name]];
-        NSData *myImage =UIImagePNGRepresentation(img);
-        [myImage writeToFile:path atomically:YES];
+        //NSData *myImage =UIImagePNGRepresentation(img);
+        [img writeToFile:path atomically:YES];
     }
     return path;
 }
