@@ -62,14 +62,14 @@
         _omKistanButton.tag = 3;
         _omKistanButton.exclusiveTouch = YES;
         [_omKistanButton setImage:Kistan forState:UIControlStateNormal];
-        self.omKistanButton.frame = CGRectMake((self.frame.size.width/2)+75, 340+correction, 100, 100);
+        self.omKistanButton.frame = CGRectMake((self.frame.size.width/2)-75, 340+correction, 100, 100);
         [self addSubview:_omKistanButton];
         
         _omOssButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _omOssButton.tag = 4;
         _omOssButton.exclusiveTouch = YES;
         [_omOssButton setImage:Utvecklare forState:UIControlStateNormal];
-        self.omOssButton.frame = CGRectMake((self.frame.size.width/2)-75, 340+correction, 100, 100);
+        self.omOssButton.frame = CGRectMake((self.frame.size.width/2)+75, 340+correction, 100, 100);
         [self addSubview:_omOssButton];
     }
     return self;

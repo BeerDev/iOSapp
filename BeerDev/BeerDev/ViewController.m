@@ -17,8 +17,9 @@
     AVCaptureVideoPreviewLayer *_prevLayer;
     
     UIView *_highlightView;
+    UILabel *_label;
     UIView *camera;
-    
+    UIImageView *_overlayImageView;
     // Declare variables here to be global through this class.
     // Background image.
     UIImageView *backgroundView ;
@@ -49,6 +50,7 @@
     
     BOOL seachBarShowing;
     BOOL isAnimating;
+    BOOL foundResult;
     
     PageContentViewController *startingViewController;
     PageContentViewController *pendingPage;
@@ -76,6 +78,7 @@
     NSMutableArray *infoArray;
     
     int offsetForInformation;
+    int holdRandom;
 }
 
 @end
@@ -115,7 +118,7 @@
     //adds motion effect
     [self addMotionEffect];
     [self blubBlub];
-    [self start];
+    [self loadCamera];
 }
 
 #pragma mark - barcode scan
@@ -123,17 +126,32 @@
 
 
 
--(void)start{
+-(void)loadCamera{
     cameraIsShowing = NO;
     camera = [[UIView alloc] init];
+    camera.backgroundColor = [UIColor blackColor];
     camera.frame = CGRectMake(-self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
     [self.view addSubview:camera];
 
     _highlightView = [[UIView alloc] init];
     _highlightView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
-    _highlightView.layer.borderColor = [UIColor redColor].CGColor;
+    _highlightView.layer.borderColor = [UIColor whiteColor].CGColor;
     _highlightView.layer.borderWidth = 3;
     [camera addSubview:_highlightView];
+    
+    _overlayImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"overlay"]];
+    [_overlayImageView setFrame:CGRectMake(camera.frame.size.width/2-125, camera.frame.size.height/2-75, 250, 150)];
+    [camera addSubview:_overlayImageView];
+    
+    _label = [[UILabel alloc] init];
+    _label.frame = CGRectMake(0, self.view.bounds.size.height - 40, self.view.bounds.size.width, 40);
+    _label.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    _label.backgroundColor = [UIColor colorWithWhite:0.15 alpha:0.65];
+    _label.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
+    _label.textColor = [UIColor whiteColor];
+    _label.textAlignment = NSTextAlignmentCenter;
+    _label.text = @"Skanna en streckkod";
+    [camera addSubview:_label];
     
     _session = [[AVCaptureSession alloc] init];
     _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -149,7 +167,6 @@
     _output = [[AVCaptureMetadataOutput alloc] init];
     [_output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
     [_session addOutput:_output];
-    
     _output.metadataObjectTypes = [_output availableMetadataObjectTypes];
 
     _prevLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
@@ -159,7 +176,11 @@
     
     _prevLayer.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     [_session stopRunning];
+
+    
     [camera bringSubviewToFront:_highlightView];
+     [camera bringSubviewToFront:_label];
+    [camera bringSubviewToFront:_overlayImageView];
 }
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
@@ -183,20 +204,33 @@
             }
         }
         
-        if (detectionString != nil)
-        {
-            NSLog(@"%@",detectionString);
-           searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Streckkod contains[c] %@", detectionString]];
-            NSLog(@"%@",searchResults);
-            if([searchResults count]!= 0){
-            // [searchResults[0] objectForKey:@"Artikelnamn"];
+        if (detectionString != nil){
+            searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Streckkod ==[c] %@", detectionString]];
+            
+            if([searchResults count]!= 0 && foundResult == NO){
+                    foundResult = YES;
+                    _JsonDataArray = _ForSearchArray;
+                    NSUInteger index =[_ForSearchArray  indexOfObject:searchResults[0]];
+                    NSLog(@"%lu",(unsigned long)index);
+                    NSLog(@"%@",[_JsonDataArray[index] objectForKey:@"Artikelnamn"]);
+                    [self cameraButtonPressed];
+                    [self switchTo:[self GetCurrentViewController] to:self.pageViewController];
+                    [self goToPageIndex:(int)index];
+                    informationController.pageIndex = index;
+                    [informationController changeTextByIndex];
+                    break;
+            }
+            else if([searchResults count] == 0){
+                _label.text = @"Ingen matchning";
                 
             }
             break;
         }
         else
             NSLog(@"no results");
+           // _label.text = @"Skanna en streckkod";
     }
+    
     _highlightView.frame = highlightViewRect;
 }
 
@@ -322,7 +356,7 @@
     _OursearchBar.backgroundImage= [UIImage alloc];
     _OursearchBar.scopeBarBackgroundImage = nil;
     _OursearchBar.showsScopeBar = YES;
-    _OursearchBar.scopeButtonTitles =[NSArray arrayWithObjects:@"Namn",@"Öltyper", nil];
+    _OursearchBar.scopeButtonTitles =[NSArray arrayWithObjects:@"Namn",@"Öltyper",@"Pris", nil];
     _OursearchBar.scopeBarBackgroundImage = [[UIImage alloc] init];
     _OursearchBar.tintColor = [UIColor whiteColor];
     _OursearchBar.barTintColor = [UIColor clearColor];
@@ -515,7 +549,6 @@
 
 - (void) searchBarCancelButtonClicked:(UISearchBar *)searchBar{
     seachBarShowing = NO;
-    //fix buttons
     [self animateButton:_dropButton Hidden:NO Alpa:1];
     [self animateButton:_searchButton Hidden:NO Alpa:1];
     
@@ -524,9 +557,26 @@
         [self animateButton:priceSortButton Hidden:NO Alpa:1];
     }
     
-    if([_JsonDataArray count]<=[_ForSearchArray count]){
+    if(productViewIsShowing == YES && [_JsonDataArray count] != [_ForSearchArray count]){
+        searchBar.text = nil;
         
-
+        scrollIndicatorIsShowing = YES;
+        [searchBar resignFirstResponder];
+        [self searchBarAnimationUp];
+        ShowNoResultsToDisplay = NO;
+        _JsonDataArray = _ForSearchArray;
+        [ourTableView reloadData];
+        [self dropDownInformation];
+        [self dataSource];
+        [self callInformationViewFromSearch:0];
+    
+    }
+    else if(productViewIsShowing == YES && [_JsonDataArray count] == [_ForSearchArray count]){
+        [searchBar resignFirstResponder];
+        [self searchBarAnimationUp];
+        ShowNoResultsToDisplay = NO;
+    }
+    else if(listViewIsShowing == YES && [_JsonDataArray count] != [_ForSearchArray count]){
         searchBar.text = nil;
         scrollIndicatorIsShowing = YES;
         [searchBar resignFirstResponder];
@@ -534,14 +584,13 @@
         ShowNoResultsToDisplay = NO;
         _JsonDataArray = _ForSearchArray;
         [ourTableView reloadData];
+       // [self dropDownInformation];
+       // [self dataSource];
+       // [self callInformationViewFromSearch:0];
         
-        
-            if(productViewIsShowing == YES && [_JsonDataArray count] != 0){
-                [self dropDownInformation];
-                [self dataSource];
-                [self callInformationViewFromSearch:0];
-            }
     }
+    
+    
     else {
         informationController.pageIndex = 0;
         [informationController changeTextByIndex];
@@ -578,7 +627,6 @@
             _OursearchBar.alpha = 1;
             _OursearchBar.frame = CGRectMake(0, 22,  self.view.frame.size.width, 78);
             if(productViewIsShowing == YES){
-                NSLog(@"product");
                 informationController.view.frame = CGRectMake(0,  self.view.frame.size.height-offsetForInformation, self.view.frame.size.width, self.view.frame.size.height);
                 
             }
@@ -595,7 +643,12 @@
         
         searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Kategori contains[c] %@", _OursearchBar.text]];
         
+    }else if(selectedScope == 2){
+        
+        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Utpris ==[c] %@", _OursearchBar.text]];
+        
     }
+    
     if([searchResults count]>0){
         ShowNoResultsToDisplay = NO;
         _JsonDataArray = searchResults;
@@ -696,6 +749,7 @@
 #pragma mark - Switching between views.
 
 - (void)switchTo:(UIViewController *)from to:(UIViewController *)controller{
+    MenuIsShowing = NO;
     if ([controller isEqual:self.pageViewController]){
         productViewIsShowing = YES;
     }
@@ -733,7 +787,6 @@
     }
     else{
         [menu HideDownMenu:self.view.frame.size.width];
-        MenuIsShowing = NO;
         [self slideAllViews];
         [self menuBarToFront];
         [_dropButton setImage:MENU forState:UIControlStateNormal];
@@ -762,7 +815,6 @@
 }
 
 -(void)pushedMenuButton:(UIButton *)sender{
-    NSLog(@"%ld",(long)sender.tag);
     if(sender.tag == 0){
         [self switchTo:[self GetCurrentViewController] to:self.pageViewController];
     }
@@ -787,7 +839,7 @@
 
 -(void)cameraButtonPressed{
     if(cameraIsShowing == NO){
-        NSLog(@"camera is here");
+         _label.text = @"Skanna en streckkod";
         cameraIsShowing = YES;
         [self.view bringSubviewToFront:camera];
         [_session startRunning];
@@ -799,17 +851,25 @@
         [self menuBarToFront];
 
 
-    }else if(cameraIsShowing == YES){
-            NSLog(@"camera is not");
-         cameraIsShowing = NO;
-    [UIView animateWithDuration:0.4 animations:^{
-        camera.alpha = 0;
-        camera.frame = CGRectMake(self.view.frame.size.width+20, 0, self.view.frame.size.width, self.view.frame.size.height);
-    } completion:^(BOOL finished) {
+    }else if(cameraIsShowing == YES && MenuIsShowing == NO){
+        cameraIsShowing = NO;
+        [UIView animateWithDuration:0.4 animations:^{
+            camera.alpha = 0;
+            camera.frame = CGRectMake(self.view.frame.size.width+20, 0, self.view.frame.size.width, self.view.frame.size.height);
+        } completion:^(BOOL finished) {
         [_session stopRunning];
-        camera.frame = CGRectMake(-self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
-        camera.alpha = 1;
-    }];
+            foundResult = NO;
+            camera.frame = CGRectMake(-self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+            camera.alpha = 1;
+        }];
+    }else if (cameraIsShowing == YES && MenuIsShowing == YES){
+        MenuIsShowing = NO;
+        [menu HideDownMenu:self.view.frame.size.width];
+        [self slideAllViews];
+        [self menuBarToFront];
+        [self animateLabel:_label Hidden:NO Alpa:1];
+        [self animateImage:_overlayImageView Hidden:NO Alpa:1];
+        [_dropButton setImage:MENU forState:UIControlStateNormal];
     }
 }
 
@@ -925,6 +985,8 @@
         [self animateButton:alphabeticSortButton Hidden:YES Alpa:0];
         [self animateButton:priceSortButton Hidden:YES Alpa:0];
         [self animateButton:_cancelSearch Hidden:YES Alpa:0];
+        [self animateLabel:_label Hidden:YES Alpa:0];
+         [self animateImage:_overlayImageView Hidden:YES Alpa:0];
     
         [menu DropDownMenu:self.view.frame.size.width];
         [[menu omOssButton] addTarget:self action:@selector(pushedMenuButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -969,6 +1031,8 @@
                 [self animateButton:_searchButton Hidden:YES Alpa:0];
                 [self animateButton:alphabeticSortButton Hidden:YES Alpa:0];
                 [self animateButton:priceSortButton Hidden:YES Alpa:0];
+                [self animateLabel:_label Hidden:NO Alpa:1];
+                [self animateImage:_overlayImageView Hidden:NO Alpa:1];
             }
             else if( (listViewIsShowing == YES  && thereIsResults == NO) || (productViewIsShowing == YES && thereIsResults == NO)){
                 [self animateButton:_searchButton Hidden:NO Alpa:1];
@@ -998,7 +1062,7 @@
 }
 
 -(void)menuBarToFront{
-    MenuIsShowing = NO;
+
     [self.view bringSubviewToFront:menu];
     [self.view bringSubviewToFront:_dropButton];
     [self.view bringSubviewToFront:_searchButton];
@@ -1015,7 +1079,7 @@
     }
     if(cameraIsShowing == YES){
     //   [self animateButton:_searchButton Hidden:YES Alpa:0];
-    //    [self animateButton:alphabeticSortButton Hidden:YES Alpa:0];
+    //   [self animateButton:alphabeticSortButton Hidden:YES Alpa:0];
     //   [self animateButton:priceSortButton Hidden:YES Alpa:0];
     }
     else if( (listViewIsShowing == YES  && thereIsResults == NO) || (productViewIsShowing == YES && thereIsResults == NO)){
@@ -1040,7 +1104,8 @@
         self.omOssController.view.frame = CGRectMake(0, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
         
         self.categoryController.view.frame = CGRectMake(0, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
-        if(productViewIsShowing == YES){
+        
+        if(productViewIsShowing == YES && cameraIsShowing == NO){
         self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.origin.y,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
             [self.view bringSubviewToFront:informationController.view];
         }
@@ -1048,7 +1113,7 @@
     }
      
                      completion:^(BOOL finished) {
-                         if(productViewIsShowing == YES){
+                         if(productViewIsShowing == YES && cameraIsShowing == NO){
                              [self blubBlub];
                          }
 
@@ -1076,6 +1141,47 @@
                          }];
     }
 }
+
+-(void)animateLabel:(UILabel*)label Hidden:(BOOL)yesOrNo Alpa:(int)zeroOrOne{
+    if(label.hidden == YES){
+        label.hidden = yesOrNo;
+        [UIView animateWithDuration:0.50 animations:^{
+            label.alpha = zeroOrOne;
+        }
+                         completion:^(BOOL finished) {
+                         }];
+        
+    }
+    else {
+        [UIView animateWithDuration:0.45 animations:^{
+            label.alpha = zeroOrOne;
+        }
+                         completion:^(BOOL finished) {
+                             label.hidden = yesOrNo;
+                         }];
+    }
+}
+
+-(void)animateImage:(UIImageView*)view Hidden:(BOOL)yesOrNo Alpa:(int)zeroOrOne{
+    if(view.hidden == YES){
+        view.hidden = yesOrNo;
+        [UIView animateWithDuration:0.50 animations:^{
+            view.alpha = zeroOrOne;
+        }
+                         completion:^(BOOL finished) {
+                         }];
+        
+    }
+    else {
+        [UIView animateWithDuration:0.45 animations:^{
+            view.alpha = zeroOrOne;
+        }
+                         completion:^(BOOL finished) {
+                             view.hidden = yesOrNo;
+                         }];
+    }
+}
+
 
 #pragma mark - Sorting indexs in tableView
 
@@ -1187,6 +1293,8 @@
     [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 -(void)goToPageIndexWithAnimation:(int)number{
+    holdRandom = number;
+
     //Start the page view controller with this first page at index 0;
     startingViewController = [self viewControllerAtIndex:number];
     viewControllers = @[startingViewController];
@@ -1287,11 +1395,11 @@
         
         self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
         [informationController changeTextByIndex];
-        
+        [informationController changeSymbolBack];
 
         [self transitionFromViewController:self.ListController
                           toViewController: self.pageViewController
-                                  duration:0.0
+                                  duration:0.4
                                    options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                                    // No animation necessary, but docs say this can't be NULL.
                                }
@@ -1381,6 +1489,10 @@
     else if([scope isEqualToString:@"Öltyper"]){
         searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Kategori contains[c] %@", searchText]];
     }
+    else if([scope isEqualToString:@"Pris"]){
+        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Utpris == [c] %@", searchText]];
+    }
+
 }
 
 #pragma mark - extra
@@ -1413,15 +1525,27 @@
     if (motion == UIEventSubtypeMotionShake && productViewIsShowing == YES){
         
         int random = (int)[self getRandomNumberBetween:0 maxNumber:[_JsonDataArray count]-1];
+        
+        while (holdRandom == random) {
+            random = (int)[self getRandomNumberBetween:0 maxNumber:[_JsonDataArray count]-1];
+            if([_JsonDataArray count] == 1){
+                random =0;
+                NSLog(@"breaking due to one element");
+                break;
+            }
+        }
+        
         [self goToPageIndexWithAnimation:random];
         [self callInformationViewFromSearch:random];
         
         if(informationIsUp == YES){
+            [informationController changeSymbolToArrow];
             [startingViewController setAlphaLevel:0.3];
             [previousPage setAlphaLevel:0.3];
             [pendingPage setAlphaLevel:0.3];
         }else{
             [startingViewController setAlphaLevel:1];
+            [informationController changeSymbolBack];
             [previousPage setAlphaLevel:1];
             [pendingPage setAlphaLevel:1];
         }
@@ -1536,16 +1660,18 @@ float differenceY;
     
     CGPoint contentTouchPointinY = [[touches anyObject] locationInView:informationController.view];
     differenceY = contentTouchPointinY.y;
+    
 }
 
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
+
     if(MenuIsShowing == YES){
     CGPoint pointInView = [[touches anyObject] locationInView:self.view];
     float xTarget = pointInView.x - differenceX;
-    
-    if(xTarget > menu.frame.size.width)
+        if(xTarget > menu.frame.size.width){
         xTarget = menu.frame.size.width;
-    else if( xTarget < 0)
+        }
+        else if( xTarget < 0)
         xTarget = 0;
         [UIView animateWithDuration:.25
                      animations:^{
@@ -1559,7 +1685,8 @@ float differenceY;
         if(yTarget > informationController.view.frame.size.height){
        //     yTarget = informationController.view.frame.size.height;
         }
-        else if( yTarget > 0){
+        else if( yTarget > 0 ){
+        [informationController changeSymbolBack];
         [UIView animateWithDuration:.25
                          animations:^{
                              [startingViewController setAlphaLevel:0.55];
@@ -1574,6 +1701,8 @@ float differenceY;
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+
+    
     if(MenuIsShowing == YES){
     CGPoint endPoint = [[touches anyObject] locationInView:self.view];
     float xTarget = endPoint.x - differenceX;
@@ -1595,14 +1724,20 @@ float differenceY;
 
         if (yTarget < self.view.frame.size.height-245 && informationIsUp == NO){
             [self informationUp];
+            [informationController changeSymbolToArrow];
         }else if(informationIsUp == NO){
             [self dropDownInformation];
         }
-        else if(yTarget > 50 && informationIsUp == YES){
+        else if(yTarget > 40 && informationIsUp == YES){
             [self dropDownInformation];
         }
-        else if (informationIsUp == YES){
-            [self dropDownInformation];
+        else if (informationIsUp == YES && yTarget< 40){
+            [informationController changeSymbolToArrow];
+            [UIView animateWithDuration:.25
+                             animations:^{
+                                 informationController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);}
+             ];
+           // [self dropDownInformation];
         }
     }
 }
@@ -1627,6 +1762,7 @@ float differenceY;
 }
 
 -(void)dropDownInformation{
+    [informationController changeSymbolBack];
     [UIView animateWithDuration:.25
                      animations:^{
                          [startingViewController setAlphaLevel:1];

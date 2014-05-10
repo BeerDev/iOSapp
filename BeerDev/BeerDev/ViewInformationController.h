@@ -13,5 +13,6 @@
 @property NSArray *arrayFromViewController;
 @property NSUInteger pageIndex;
 -(void)changeTextByIndex;
-
+-(void)changeSymbolToArrow;
+-(void)changeSymbolBack;
 @end

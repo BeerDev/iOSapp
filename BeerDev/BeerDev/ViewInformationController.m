@@ -17,6 +17,8 @@
     UILabel *typeLabel;
     UILabel *proLabel;
     UITextView *infoLabel;
+    
+    UIImageView* symbol;
 }
 
 @end
@@ -32,6 +34,7 @@
     JsonDataArray =  _arrayFromViewController;
     self.view.backgroundColor = [UIColor clearColor];
     [self createLable];
+    [self setSymbol];
 }
 -(void)changeTextByIndex{
     JsonDataArray =  _arrayFromViewController;
@@ -110,11 +113,6 @@
     infoLabel.backgroundColor = [UIColor clearColor];
     infoLabel.userInteractionEnabled = NO;
     infoLabel.textColor = [UIColor whiteColor];
-  //infoLabel.adjustsFontSizeToFitWidth = YES;
-
-
-    //[infoLabel sizeToFit];
-
     [self.view addSubview:infoLabel];
 }
 
@@ -124,6 +122,20 @@
     label.shadowColor =[UIColor blackColor];
     label.shadowOffset = CGSizeMake(1, 1) ;
 
+}
+
+-(void)setSymbol{
+    symbol = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noArrow"]];
+    symbol.frame = CGRectMake(self.view.frame.size.width/2-18, 55,36, 11);
+    symbol.alpha = 0.7;
+    [self.view addSubview:symbol];
+}
+
+-(void)changeSymbolToArrow{
+    symbol.image = [UIImage imageNamed:@"arrowDown"];
+}
+-(void)changeSymbolBack{
+    symbol.image = [UIImage imageNamed:@"noArrow"];
 }
 
 @end

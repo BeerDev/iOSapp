@@ -10,6 +10,8 @@
 @interface OmOssViewController (){
     NSInteger Ycord;
     UIScrollView * scrollView;
+    UIButton *facebookButton;
+
 }
 
 @end
@@ -29,6 +31,7 @@
     [self.view  addSubview:scrollView];
     [scrollView setScrollEnabled:YES];
     [self createOmOss];
+    [self createButton];
     
 }
 
@@ -60,8 +63,22 @@
     scrollView.contentSize = CGSizeMake(self.view.frame.size.width, Ycord + 50);
 }
 
+-(void)createButton{
+    
+    facebookButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [facebookButton setFrame:CGRectMake(self.view.frame.size.width/2-52.5, Ycord, 105, 35)];
+    [facebookButton setImage: [UIImage imageNamed:@"facebook"] forState:UIControlStateNormal];
+    [facebookButton addTarget:self action:@selector(showfacebook:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [scrollView addSubview:facebookButton];
+    Ycord = Ycord + facebookButton.frame.size.height + 20;
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, Ycord + 50);
+
+
+}
+
 -(void)showfacebook:(id)sender{
-    NSURL *fbURL = [[NSURL alloc] initWithString:@"fb://profile/157486664306012"];
+    NSURL *fbURL = [[NSURL alloc] initWithString:@"fb://profile/229588483907154"];
     // check if app is installed
     if ( ! [[UIApplication sharedApplication] canOpenURL:fbURL] ) {
         // if we get here, we can't open the FB app.
