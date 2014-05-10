@@ -43,9 +43,9 @@
     int sizeX;
     
     if(self.view.frame.size.height ==480){
-        sizeX = self.view.frame.size.width-222;
+        sizeX = self.view.frame.size.width-215;
     }else{
-        sizeX = self.view.frame.size.width-198;
+        sizeX = self.view.frame.size.width-188;
     }
     int sizeY   = self.view.frame.size.height-150;
     // Create a information view from our storyboard.
