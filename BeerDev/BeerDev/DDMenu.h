@@ -15,6 +15,7 @@
     UIImage* Kistan;
     UIImage* Oltyper;
     UIImage* Utvecklare;
+    UIImage* barcode;
 }
 
 -(void)DropDownMenu:(float)phoneWidth;
@@ -26,5 +27,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *categoryButton;
 @property (strong, nonatomic) IBOutlet UIButton *listViewButton;
 @property (strong, nonatomic) IBOutlet UIButton *productViewButton;
+@property (strong, nonatomic) IBOutlet UIButton *barcodeScan;
 
 @end

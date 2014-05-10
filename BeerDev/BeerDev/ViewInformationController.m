@@ -39,7 +39,7 @@
     
     brewLabel.text= [JsonDataArray[rightIndex] objectForKey:@"Bryggeri"];
     sizeLabel.text = [[NSString alloc]initWithFormat:@"%@ ml", [JsonDataArray[rightIndex] objectForKey:@"Storlek"]];
-    priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr*", [JsonDataArray[rightIndex] objectForKey:@"Utpris exkl moms"]];
+    priceLabel.text = [[NSString alloc]initWithFormat:@"%@ kr*", [JsonDataArray[rightIndex] objectForKey:@"Utpris"]];
     nameLabel.text= [JsonDataArray[rightIndex]objectForKey:@"Artikelnamn"];
     typeLabel.text =[JsonDataArray[rightIndex] objectForKey:@"Kategori"];
     proLabel.text = [[NSString alloc]initWithFormat:@"%@ %%", [JsonDataArray[rightIndex] objectForKey:@"Alkoholhalt"]];

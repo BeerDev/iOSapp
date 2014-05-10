@@ -21,6 +21,7 @@
         Oltyper = [UIImage imageNamed:@"Oltyper"];
         Kistan = [UIImage imageNamed:@"Kistan"];
         Utvecklare = [UIImage imageNamed:@"Utvecklare"];
+        barcode = [UIImage imageNamed:@"barscan"];
         
         [self setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.55]];
         int correction = 30;
@@ -42,25 +43,33 @@
         self.listViewButton.frame = CGRectMake((self.frame.size.width/2)+75, 80+correction, 100, 100);
         [self addSubview:_listViewButton];
         
+        _barcodeScan = [UIButton buttonWithType:UIButtonTypeCustom];
+        _barcodeScan.tag = 5;
+        _barcodeScan.exclusiveTouch = YES;
+        [_barcodeScan setImage:barcode forState:UIControlStateNormal];
+        self.barcodeScan.frame = CGRectMake((self.frame.size.width/2)-75, 210+correction, 100, 100);
+        [self addSubview:_barcodeScan];
+        
+        
         _categoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _categoryButton.tag = 2;
         _categoryButton.exclusiveTouch = YES;
         [_categoryButton setImage:Oltyper forState:UIControlStateNormal];
-        self.categoryButton.frame = CGRectMake((self.frame.size.width/2)-75, 210+correction, 100, 100);
+        self.categoryButton.frame = CGRectMake((self.frame.size.width/2)+75, 210+correction, 100, 100);
         [self addSubview:_categoryButton];
         
         _omKistanButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _omKistanButton.tag = 3;
         _omKistanButton.exclusiveTouch = YES;
         [_omKistanButton setImage:Kistan forState:UIControlStateNormal];
-        self.omKistanButton.frame = CGRectMake((self.frame.size.width/2)+75, 210+correction, 100, 100);
+        self.omKistanButton.frame = CGRectMake((self.frame.size.width/2)+75, 340+correction, 100, 100);
         [self addSubview:_omKistanButton];
         
         _omOssButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _omOssButton.tag = 4;
         _omOssButton.exclusiveTouch = YES;
         [_omOssButton setImage:Utvecklare forState:UIControlStateNormal];
-        self.omOssButton.frame = CGRectMake((self.frame.size.width/2), 340+correction, 100, 100);
+        self.omOssButton.frame = CGRectMake((self.frame.size.width/2)-75, 340+correction, 100, 100);
         [self addSubview:_omOssButton];
     }
     return self;

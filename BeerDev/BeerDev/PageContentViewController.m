@@ -43,7 +43,7 @@
     int sizeX;
     
     if(self.view.frame.size.height ==480){
-        sizeX = self.view.frame.size.width-225;
+        sizeX = self.view.frame.size.width-222;
     }else{
         sizeX = self.view.frame.size.width-195;
     }

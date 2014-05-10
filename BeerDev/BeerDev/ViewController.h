@@ -31,6 +31,7 @@
 @property (strong, nonatomic) UIButton *searchButton;
 @property (strong, nonatomic) UIButton *dropButton;
 @property (strong, nonatomic) UIButton *cancelSearch;
+@property (strong, nonatomic) UIButton *barcodeScan;
 
 @property float contentOffsetInPage;
 

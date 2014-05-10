@@ -60,4 +60,15 @@
     scrollView.contentSize = CGSizeMake(self.view.frame.size.width, Ycord + 50);
 }
 
+-(void)showfacebook:(id)sender{
+    NSURL *fbURL = [[NSURL alloc] initWithString:@"fb://profile/157486664306012"];
+    // check if app is installed
+    if ( ! [[UIApplication sharedApplication] canOpenURL:fbURL] ) {
+        // if we get here, we can't open the FB app.
+        fbURL = [NSURL URLWithString:@"http://facebook.com/beerdev"]; // direct URL on FB website to open in safari
+    }
+    
+    [[UIApplication sharedApplication] openURL:fbURL];
+}
+
 @end

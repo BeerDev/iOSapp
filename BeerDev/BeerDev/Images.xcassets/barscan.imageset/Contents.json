@@ -2,13 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "heartfilled.png"
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "heartfilled-1.png"
+      "filename" : "barscan-2-1.png"
     }
   ],
   "info" : {

@@ -17,8 +17,7 @@
     AVCaptureVideoPreviewLayer *_prevLayer;
     
     UIView *_highlightView;
-    UILabel *_label;
-
+    UIView *camera;
     
     // Declare variables here to be global through this class.
     // Background image.
@@ -46,8 +45,10 @@
     BOOL ShowNoResultsToDisplay;
     BOOL allowToPress;
     BOOL informationIsUp;
+    BOOL cameraIsShowing;
     
     BOOL seachBarShowing;
+    BOOL isAnimating;
     
     PageContentViewController *startingViewController;
     PageContentViewController *pendingPage;
@@ -58,6 +59,7 @@
     UIImage *MENU;
     UIImage *magnifierCross;
     UIImage *magnifier;
+    UIImage *barscan;
     UITableView *ourTableView;
 
     NSArray *searchResults;
@@ -113,27 +115,25 @@
     //adds motion effect
     [self addMotionEffect];
     [self blubBlub];
-    [self menuBarToFront];
-    //[self start];
+    [self start];
 }
 
 #pragma mark - barcode scan
+//LLAO
+
+
+
 -(void)start{
-    
+    cameraIsShowing = NO;
+    camera = [[UIView alloc] init];
+    camera.frame = CGRectMake(-self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [self.view addSubview:camera];
+
     _highlightView = [[UIView alloc] init];
     _highlightView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin;
-    _highlightView.layer.borderColor = [UIColor greenColor].CGColor;
+    _highlightView.layer.borderColor = [UIColor redColor].CGColor;
     _highlightView.layer.borderWidth = 3;
-    [self.view addSubview:_highlightView];
-    
-    _label = [[UILabel alloc] init];
-    _label.frame = CGRectMake(0, self.view.bounds.size.height - 40, self.view.bounds.size.width, 40);
-    _label.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    _label.backgroundColor = [UIColor colorWithWhite:0.15 alpha:0.65];
-    _label.textColor = [UIColor whiteColor];
-    _label.textAlignment = NSTextAlignmentCenter;
-    _label.text = @"(none)";
-    [self.view addSubview:_label];
+    [camera addSubview:_highlightView];
     
     _session = [[AVCaptureSession alloc] init];
     _device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -151,18 +151,15 @@
     [_session addOutput:_output];
     
     _output.metadataObjectTypes = [_output availableMetadataObjectTypes];
-    
+
     _prevLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
     _prevLayer.frame = self.view.bounds;
     _prevLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    [self.view.layer addSublayer:_prevLayer];
+    [camera.layer addSublayer:_prevLayer];
     
-    _prevLayer.frame = CGRectMake(0, 70, self.view.frame.size.width, self.view.frame.size.height-70);
-    
-    [_session startRunning];
-    
-    [self.view bringSubviewToFront:_highlightView];
-    [self.view bringSubviewToFront:_label];
+    _prevLayer.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    [_session stopRunning];
+    [camera bringSubviewToFront:_highlightView];
 }
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection
@@ -192,13 +189,13 @@
            searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Streckkod contains[c] %@", detectionString]];
             NSLog(@"%@",searchResults);
             if([searchResults count]!= 0){
-            _label.text = [searchResults[0] objectForKey:@"Artikelnamn"];
+            // [searchResults[0] objectForKey:@"Artikelnamn"];
                 
             }
             break;
         }
         else
-            _label.text = @"(none)";
+            NSLog(@"no results");
     }
     _highlightView.frame = highlightViewRect;
 }
@@ -297,6 +294,7 @@
 -(void)createImageAssets{
     magnifier = [UIImage imageNamed:@"magnifier"];
     magnifierCross = [UIImage imageNamed:@"magnifierCross"];
+    barscan = [UIImage imageNamed:@"barscan"];
 }
 
 -(void)createTableAndSearchBar{
@@ -713,7 +711,9 @@
     else if( [controller isEqual:self.categoryController]){
         categoryViewIsShowing = YES;
     }
-    
+    if(cameraIsShowing == YES){
+        [self cameraButtonPressed];
+    }
     if(from != controller){
     [self transitionFromViewController:from
                       toViewController: controller
@@ -762,6 +762,7 @@
 }
 
 -(void)pushedMenuButton:(UIButton *)sender{
+    NSLog(@"%ld",(long)sender.tag);
     if(sender.tag == 0){
         [self switchTo:[self GetCurrentViewController] to:self.pageViewController];
     }
@@ -779,7 +780,37 @@
     else if(sender.tag == 4){
         [self switchTo:[self GetCurrentViewController] to:self.omOssController];
     }
-    
+    else if(sender.tag == 5){
+        [self cameraButtonPressed];
+    }
+}
+
+-(void)cameraButtonPressed{
+    if(cameraIsShowing == NO){
+        NSLog(@"camera is here");
+        cameraIsShowing = YES;
+        [self.view bringSubviewToFront:camera];
+        [_session startRunning];
+    [UIView animateWithDuration:0.4 animations:^{
+        camera.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    } completion:^(BOOL finished) {
+        }];
+        [self DropMenu];
+        [self menuBarToFront];
+
+
+    }else if(cameraIsShowing == YES){
+            NSLog(@"camera is not");
+         cameraIsShowing = NO;
+    [UIView animateWithDuration:0.4 animations:^{
+        camera.alpha = 0;
+        camera.frame = CGRectMake(self.view.frame.size.width+20, 0, self.view.frame.size.width, self.view.frame.size.height);
+    } completion:^(BOOL finished) {
+        [_session stopRunning];
+        camera.frame = CGRectMake(-self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
+        camera.alpha = 1;
+    }];
+    }
 }
 
 -(id)GetCurrentViewController{
@@ -838,11 +869,11 @@
     _cancelSearch.titleLabel.font = [UIFont systemFontOfSize:20];
     [self.view addSubview:_cancelSearch];
     _cancelSearch.hidden = YES;
-    
+
     UIImage *priceSortIcon = [UIImage imageNamed:@"Pris"];
 
     priceSortButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    priceSortButton.frame = CGRectMake(64, 20, 55, 55);
+    priceSortButton.frame = CGRectMake(54, 20, 55, 55);
     [priceSortButton setImage:priceSortIcon forState:UIControlStateNormal];
     [priceSortButton setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
     priceSortButton.titleLabel.font = [UIFont systemFontOfSize:20];
@@ -853,7 +884,7 @@
     
     UIImage *AZ = [UIImage imageNamed:@"A-Z"];
     alphabeticSortButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    alphabeticSortButton.frame = CGRectMake(124, 20, 55, 55);
+    alphabeticSortButton.frame = CGRectMake(104, 20, 55, 55);
     alphabeticSortButton.titleLabel.font = [UIFont systemFontOfSize:20];
     alphabeticSortButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
     [alphabeticSortButton setImage:AZ forState:UIControlStateNormal];
@@ -871,6 +902,7 @@
     [self.view bringSubviewToFront:_dropButton];
     [self.view bringSubviewToFront:_OursearchBar];
     [self.view bringSubviewToFront:_searchButton];
+    [self.view bringSubviewToFront:_barcodeScan];
     [self.view bringSubviewToFront:_cancelSearch];
     
     allowToPress = YES;
@@ -900,6 +932,7 @@
         [[menu categoryButton] addTarget:self action:@selector(pushedMenuButton:) forControlEvents:UIControlEventTouchUpInside];
         [[menu productViewButton] addTarget:self action:@selector(pushedMenuButton:) forControlEvents:UIControlEventTouchUpInside];
         [[menu listViewButton] addTarget:self action:@selector(pushedMenuButton:) forControlEvents:UIControlEventTouchUpInside];
+        [[menu barcodeScan] addTarget:self action:@selector(pushedMenuButton:) forControlEvents:UIControlEventTouchUpInside];
         
         
         [UIView animateWithDuration:0.5 animations:^{
@@ -932,14 +965,18 @@
             else{
             thereIsResults = NO;
             }
-        
-            if( (listViewIsShowing == YES  && thereIsResults == NO) || (productViewIsShowing == YES && thereIsResults == NO)){
+            if(cameraIsShowing == YES){
+                [self animateButton:_searchButton Hidden:YES Alpa:0];
+                [self animateButton:alphabeticSortButton Hidden:YES Alpa:0];
+                [self animateButton:priceSortButton Hidden:YES Alpa:0];
+            }
+            else if( (listViewIsShowing == YES  && thereIsResults == NO) || (productViewIsShowing == YES && thereIsResults == NO)){
                 [self animateButton:_searchButton Hidden:NO Alpa:1];
             }
             else if((listViewIsShowing == YES  && thereIsResults == YES) ||(productViewIsShowing == YES && thereIsResults == YES)){
                 [self animateButton:_cancelSearch Hidden:NO Alpa:1];
             }
-            if(listViewIsShowing == YES){
+            if(listViewIsShowing == YES && cameraIsShowing ==NO){
                 [self animateButton:alphabeticSortButton Hidden:NO Alpa:1];
                 [self animateButton:priceSortButton Hidden:NO Alpa:1];
             }
@@ -976,14 +1013,18 @@
     else{
         thereIsResults = NO;
     }
-    
-    if( (listViewIsShowing == YES  && thereIsResults == NO) || (productViewIsShowing == YES && thereIsResults == NO)){
+    if(cameraIsShowing == YES){
+    //   [self animateButton:_searchButton Hidden:YES Alpa:0];
+    //    [self animateButton:alphabeticSortButton Hidden:YES Alpa:0];
+    //   [self animateButton:priceSortButton Hidden:YES Alpa:0];
+    }
+    else if( (listViewIsShowing == YES  && thereIsResults == NO) || (productViewIsShowing == YES && thereIsResults == NO)){
         [self animateButton:_searchButton Hidden:NO Alpa:1];
     }
     else if((listViewIsShowing == YES && thereIsResults == YES) || (productViewIsShowing == YES && thereIsResults == YES)){
         [self animateButton:_cancelSearch Hidden:NO Alpa:1];
     }
-    if(listViewIsShowing == YES){
+    if(listViewIsShowing == YES && cameraIsShowing == NO){
         [self animateButton:alphabeticSortButton Hidden:NO Alpa:1];
         [self animateButton:priceSortButton Hidden:NO Alpa:1];
     }
@@ -1053,7 +1094,7 @@
 -(void)sortPrice{
     if(ascendingPrice == YES){
         ascendingPrice = NO;
-        _JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms" ascending:ascendingPrice withArray:_JsonDataArray];
+        _JsonDataArray = [self ourSortingFunction:@"Utpris" ascending:ascendingPrice withArray:_JsonDataArray];
         scrollIndicatorIsShowing = NO;
         [ourTableView reloadData];
 
@@ -1063,7 +1104,7 @@
     }
     else if (ascendingPrice == NO){
         ascendingPrice = YES;
-        _JsonDataArray = [self ourSortingFunction:@"Utpris exkl moms" ascending:ascendingPrice withArray:_JsonDataArray];
+        _JsonDataArray = [self ourSortingFunction:@"Utpris" ascending:ascendingPrice withArray:_JsonDataArray];
         scrollIndicatorIsShowing = NO;
         [ourTableView reloadData];
         
@@ -1217,7 +1258,7 @@
         UILabel *priceLabel;
         priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(235,50,60,20)];
         [priceLabel setFont:[UIFont fontWithName:@"Helvetica" size:14]];
-        priceLabel.text =[NSString stringWithFormat:@"%@ kr*",[_JsonDataArray[indexPath.row] objectForKey:@"Utpris exkl moms"]];
+        priceLabel.text =[NSString stringWithFormat:@"%@ kr*",[_JsonDataArray[indexPath.row] objectForKey:@"Utpris"]];
         priceLabel.backgroundColor=[UIColor clearColor];
         priceLabel.numberOfLines=1;
         priceLabel.textColor = [UIColor whiteColor];
@@ -1250,7 +1291,7 @@
 
         [self transitionFromViewController:self.ListController
                           toViewController: self.pageViewController
-                                  duration:0.2
+                                  duration:0.0
                                    options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
                                    // No animation necessary, but docs say this can't be NULL.
                                }
@@ -1399,11 +1440,14 @@
 
 -(void)blubBlub{
     if(informationIsUp == NO){
+        allowToPress = NO;
     [UIView animateWithDuration:0.3 animations:^{
         self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation-12,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:0.3 animations:^{
         self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
+        } completion:^(BOOL finished) {
+            allowToPress = YES;
         }];
     }];
     }
@@ -1509,7 +1553,7 @@ float differenceY;
                      }
         ];
     }
-    if(productViewIsShowing == YES && MenuIsShowing == NO){
+    if(productViewIsShowing == YES && MenuIsShowing == NO && cameraIsShowing == NO){
         CGPoint pointInView = [[touches anyObject] locationInView:self.view];
         float yTarget = pointInView.y - differenceY;
         if(yTarget > informationController.view.frame.size.height){
@@ -1544,7 +1588,7 @@ float differenceY;
             [menu  DropDownMenu:self.view.frame.size.width];
             }
     }
-    if(productViewIsShowing == YES && MenuIsShowing == NO){
+    if(productViewIsShowing == YES && MenuIsShowing == NO && cameraIsShowing == NO){
         CGPoint endPoint = [[touches anyObject] locationInView:self.view];
         float yTarget = endPoint.y - differenceY;
        
