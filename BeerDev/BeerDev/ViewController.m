@@ -815,6 +815,7 @@
 }
 
 -(void)pushedMenuButton:(UIButton *)sender{
+
     if(sender.tag == 0){
         [self switchTo:[self GetCurrentViewController] to:self.pageViewController];
     }
@@ -1095,6 +1096,7 @@
 }
 
 -(void)slideAllViews{
+    allowToPress = NO;
     [UIView animateWithDuration:0.5 animations:^{
         self.pageViewController.view.frame = CGRectMake(0, 0,  self.pageViewController.view.frame.size.width,  self.pageViewController.view.frame.size.height);
         self.ListController.view.frame = CGRectMake(0, 0,  self.ListController.view.frame.size.width,  self.ListController.view.frame.size.height);
@@ -1113,8 +1115,10 @@
     }
      
                      completion:^(BOOL finished) {
+                         allowToPress = YES;
                          if(productViewIsShowing == YES && cameraIsShowing == NO){
                              [self blubBlub];
+                            
                          }
 
                          
