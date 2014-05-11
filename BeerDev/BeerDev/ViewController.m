@@ -241,8 +241,8 @@
     [[UIInterpolatingMotionEffect alloc]
      initWithKeyPath:@"center.y"
      type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    verticalMotionEffect.minimumRelativeValue = @(-4);
-    verticalMotionEffect.maximumRelativeValue = @(4);
+    verticalMotionEffect.minimumRelativeValue = @(-5);
+    verticalMotionEffect.maximumRelativeValue = @(5);
 
 // Set horizontal effect
     UIInterpolatingMotionEffect *horizontalMotionEffect =
@@ -258,6 +258,12 @@
 
 // Add both effects to your view
     [self.pageViewController.view addMotionEffect:group];
+    [[menu omOssButton] addMotionEffect:group];
+    [[menu omKistanButton] addMotionEffect:group];
+    [[menu categoryButton] addMotionEffect:group];
+    [[menu productViewButton] addMotionEffect:group];
+    [[menu listViewButton] addMotionEffect:group];
+    [[menu barcodeScan] addMotionEffect:group];
     //[self.view addMotionEffect:group];
 }
 #pragma mark - on Startup functions
