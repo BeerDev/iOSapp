@@ -432,6 +432,7 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     [_searchButton setImage:magnifier forState:UIControlStateNormal];
+    [self dataSource];
     [self callInformationViewFromSearch:0];
 }
 
@@ -458,6 +459,7 @@
         ShowNoResultsToDisplay = NO;
         _JsonDataArray = searchResults;
         holdingTempResult = searchResults;
+        [self dataSource];
         [ourTableView reloadData];
     }
     else if ([searchResults count] ==0 && productViewIsShowing == YES){
@@ -490,7 +492,7 @@
 -(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     seachBarShowing = NO;
     [self animateButton:_dropButton Hidden:NO Alpa:1];
-    [self callInformationViewFromSearch:0];
+
 
     if(listViewIsShowing == YES){
         [self animateButton:alphabeticSortButton Hidden:NO Alpa:1];
@@ -506,6 +508,7 @@
         
         if(listViewIsShowing == YES){
             [self animateButton:_cancelSearch Hidden:NO Alpa:1];
+            [self callInformationViewFromSearch:0];
         }
         
         //fixa BILDEN
@@ -513,6 +516,7 @@
         if(productViewIsShowing == YES && [_JsonDataArray count] >0 && [_JsonDataArray count]<[_ForSearchArray count]){
             [self dataSource];
             [self animateButton:_cancelSearch Hidden:NO Alpa:1];
+            [self callInformationViewFromSearch:0];
         }
         
         //om du inte får några träffar på produkt vyn gör detta kod.
@@ -618,7 +622,8 @@
     [self animateButton:_searchButton Hidden:YES Alpa:0];
     [self animateButton:alphabeticSortButton Hidden:YES Alpa:0];
     [self animateButton:priceSortButton Hidden:YES Alpa:0];
-    
+    [informationController changeSymbolBack];
+    informationIsUp = NO;
         [_OursearchBar becomeFirstResponder];
         [UIView animateWithDuration:0.3 animations:^{
             [startingViewController setAlphaLevel:1];
@@ -645,7 +650,7 @@
         
     }else if(selectedScope == 2){
         
-        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Utpris ==[c] %@", _OursearchBar.text]];
+        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Utpris.intValue <= %d", [_OursearchBar.text intValue]]];
         
     }
     
@@ -1494,7 +1499,7 @@
         searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Kategori contains[c] %@", searchText]];
     }
     else if([scope isEqualToString:@"Pris"]){
-        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Utpris == [c] %@", searchText]];
+        searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Utpris.intValue <= %d", [searchText intValue]]];
     }
 
 }
@@ -1683,6 +1688,7 @@ float differenceY;
                      }
         ];
     }
+    //informationview
     if(productViewIsShowing == YES && MenuIsShowing == NO && cameraIsShowing == NO){
         CGPoint pointInView = [[touches anyObject] locationInView:self.view];
         float yTarget = pointInView.y - differenceY;
@@ -1721,6 +1727,8 @@ float differenceY;
             [menu  DropDownMenu:self.view.frame.size.width];
             }
     }
+    
+    
     if(productViewIsShowing == YES && MenuIsShowing == NO && cameraIsShowing == NO){
         CGPoint endPoint = [[touches anyObject] locationInView:self.view];
         float yTarget = endPoint.y - differenceY;
@@ -1729,19 +1737,16 @@ float differenceY;
         if (yTarget < self.view.frame.size.height-245 && informationIsUp == NO){
             [self informationUp];
             [informationController changeSymbolToArrow];
-        }else if(informationIsUp == NO){
-            [self dropDownInformation];
         }
         else if(yTarget > 40 && informationIsUp == YES){
             [self dropDownInformation];
         }
         else if (informationIsUp == YES && yTarget< 40){
             [informationController changeSymbolToArrow];
-            [UIView animateWithDuration:.25
-                             animations:^{
-                                 informationController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);}
-             ];
+            [self informationUp];
            // [self dropDownInformation];
+        }else{
+            [self dropDownInformation];
         }
     }
 }
