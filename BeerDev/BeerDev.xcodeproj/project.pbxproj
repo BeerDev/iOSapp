@@ -23,10 +23,10 @@
 		C93AEDB318E5A890003F5A5A /* BeerDevTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C93AEDB218E5A890003F5A5A /* BeerDevTests.m */; };
 		C968218F18F5292600C0ADFD /* PageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C968218E18F5292600C0ADFD /* PageContentViewController.m */; };
 		C968219218F53AB200C0ADFD /* ViewInformationController.m in Sources */ = {isa = PBXBuildFile; fileRef = C968219118F53AB200C0ADFD /* ViewInformationController.m */; };
-		C97097A2191E457800931587 /* json.json in Resources */ = {isa = PBXBuildFile; fileRef = C97097A1191E457800931587 /* json.json */; };
 		C976213319093917002FE71F /* UIResponderKeyboardCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C976213219093917002FE71F /* UIResponderKeyboardCache.m */; };
 		C982E9421908F07800CD7C7B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C982E9411908F07800CD7C7B /* SystemConfiguration.framework */; };
 		C982E9451908F17E00CD7C7B /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C982E9441908F17E00CD7C7B /* Reachability.m */; };
+		C9D8AAD41920C0F900E39F2B /* json.json in Resources */ = {isa = PBXBuildFile; fileRef = C9D8AAD31920C0F900E39F2B /* json.json */; };
 		C9D8CF7318FC10F700ECF8AB /* DDMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D8CF7218FC10F700ECF8AB /* DDMenu.m */; };
 		C9ED1A4518F43CE500842719 /* jsonData.m in Sources */ = {isa = PBXBuildFile; fileRef = C9ED1A4418F43CE500842719 /* jsonData.m */; };
 		CB6416D3190FD5EA00A270D6 /* OmKistanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB6416D2190FD5EA00A270D6 /* OmKistanViewController.m */; };
@@ -69,12 +69,12 @@
 		C968218E18F5292600C0ADFD /* PageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageContentViewController.m; sourceTree = "<group>"; };
 		C968219018F53AB200C0ADFD /* ViewInformationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewInformationController.h; sourceTree = "<group>"; };
 		C968219118F53AB200C0ADFD /* ViewInformationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewInformationController.m; sourceTree = "<group>"; };
-		C97097A1191E457800931587 /* json.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = json.json; sourceTree = "<group>"; };
 		C976213119093917002FE71F /* UIResponderKeyboardCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIResponderKeyboardCache.h; sourceTree = "<group>"; };
 		C976213219093917002FE71F /* UIResponderKeyboardCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIResponderKeyboardCache.m; sourceTree = "<group>"; };
 		C982E9411908F07800CD7C7B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C982E9431908F17E00CD7C7B /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		C982E9441908F17E00CD7C7B /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		C9D8AAD31920C0F900E39F2B /* json.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = json.json; sourceTree = "<group>"; };
 		C9D8CF7118FC10F700ECF8AB /* DDMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDMenu.h; sourceTree = "<group>"; };
 		C9D8CF7218FC10F700ECF8AB /* DDMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDMenu.m; sourceTree = "<group>"; };
 		C9ED1A4318F43CE500842719 /* jsonData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jsonData.h; sourceTree = "<group>"; };
@@ -145,7 +145,7 @@
 		C93AED8D18E5A88F003F5A5A /* BeerDev */ = {
 			isa = PBXGroup;
 			children = (
-				C97097A1191E457800931587 /* json.json */,
+				C9D8AAD31920C0F900E39F2B /* json.json */,
 				CBFA178A190AAA7A0081FC6D /* CategoryList.plist */,
 				C9ED1A4218F43A4F00842719 /* Views */,
 				C9ED1A4118F43A4500842719 /* Classes */,
@@ -300,7 +300,7 @@
 				C93AED9218E5A88F003F5A5A /* InfoPlist.strings in Resources */,
 				CBFA178B190AAA7A0081FC6D /* CategoryList.plist in Resources */,
 				C93AED9B18E5A88F003F5A5A /* Main.storyboard in Resources */,
-				C97097A2191E457800931587 /* json.json in Resources */,
+				C9D8AAD41920C0F900E39F2B /* json.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

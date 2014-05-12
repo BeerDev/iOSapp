@@ -1751,7 +1751,7 @@ float differenceY;
         float yTarget = endPoint.y - differenceY;
        
 
-        if (yTarget < self.view.frame.size.height-245 && informationIsUp == NO){
+        if (yTarget < self.view.frame.size.height-215 && informationIsUp == NO){
             [self informationUp];
             [informationController changeSymbolToArrow];
         }
