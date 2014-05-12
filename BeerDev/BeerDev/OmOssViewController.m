@@ -11,6 +11,7 @@
     NSInteger Ycord;
     UIScrollView * scrollView;
     UIButton *facebookButton;
+    UIButton *homepage;
 
 }
 
@@ -32,7 +33,6 @@
     [scrollView setScrollEnabled:YES];
     [self createOmOss];
     [self createButton];
-    
 }
 
  -(void)createOmOss{

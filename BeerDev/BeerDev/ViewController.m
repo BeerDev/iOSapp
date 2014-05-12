@@ -150,7 +150,7 @@
     _label.font = [UIFont fontWithName:@"Helvetica-Light" size:15];
     _label.textColor = [UIColor whiteColor];
     _label.textAlignment = NSTextAlignmentCenter;
-    _label.text = @"Skanna en streckkod";
+    _label.text = @"Scanna en streckkod";
     [camera addSubview:_label];
     
     _session = [[AVCaptureSession alloc] init];
@@ -205,7 +205,13 @@
         }
         
         if (detectionString != nil){
-            searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Streckkod ==[c] %@", detectionString]];
+            
+            if ([detectionString hasPrefix:@"0"] && [detectionString length] > 1) {
+                detectionString = [detectionString substringFromIndex:1];
+                NSLog(@"removing");
+            }
+            
+            searchResults = [_ForSearchArray filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"Streckkod contains[c] %@", detectionString]];
             
             if([searchResults count]!= 0 && foundResult == NO){
                     foundResult = YES;
@@ -215,8 +221,8 @@
                     NSLog(@"%@",[_JsonDataArray[index] objectForKey:@"Artikelnamn"]);
                     [self cameraButtonPressed];
                     [self switchTo:[self GetCurrentViewController] to:self.pageViewController];
-                    [self goToPageIndex:(int)index];
                     informationController.pageIndex = index;
+                    [self goToPageIndex:(int)index];
                     [informationController changeTextByIndex];
                     break;
             }
@@ -228,7 +234,6 @@
         }
         else
             NSLog(@"no results");
-           // _label.text = @"Skanna en streckkod";
     }
     
     _highlightView.frame = highlightViewRect;
@@ -272,6 +277,9 @@
     // Set backgroundcolor and image.
     self.view.backgroundColor = [UIColor whiteColor];
     
+    UIView *blackview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    blackview.backgroundColor = [UIColor blackColor];
+    blackview.alpha = 0.15;
     if(self.view.frame.size.height == 480){
     backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background4"]];}
     else{
@@ -279,6 +287,8 @@
     }
     backgroundView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     [self.view addSubview:backgroundView];
+    [self.view addSubview:blackview];
+    [self.view bringSubviewToFront:blackview];
     
     // Create omOssController.
     self.omOssController = [self.storyboard instantiateViewControllerWithIdentifier:@"OmossViewController"];
@@ -851,7 +861,7 @@
 
 -(void)cameraButtonPressed{
     if(cameraIsShowing == NO){
-         _label.text = @"Skanna en streckkod";
+         _label.text = @"Scanna en streckkod";
         cameraIsShowing = YES;
         [self.view bringSubviewToFront:camera];
         [_session startRunning];
@@ -865,11 +875,12 @@
 
     }else if(cameraIsShowing == YES && MenuIsShowing == NO){
         cameraIsShowing = NO;
+        [_session stopRunning];
         [UIView animateWithDuration:0.4 animations:^{
             camera.alpha = 0;
             camera.frame = CGRectMake(self.view.frame.size.width+20, 0, self.view.frame.size.width, self.view.frame.size.height);
         } completion:^(BOOL finished) {
-        [_session stopRunning];
+       // [_session stopRunning];
             foundResult = NO;
             camera.frame = CGRectMake(-self.view.frame.size.width, 0, self.view.frame.size.width, self.view.frame.size.height);
             camera.alpha = 1;
@@ -1581,7 +1592,7 @@
     if(informationIsUp == NO){
         allowToPress = NO;
     [UIView animateWithDuration:0.3 animations:^{
-        self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation-12,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
+        self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation-6,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:0.3 animations:^{
         self.informationController.view.frame = CGRectMake(0, self.informationController.view.frame.size.height-offsetForInformation,  self.informationController.view.frame.size.width,  self.informationController.view.frame.size.height);
